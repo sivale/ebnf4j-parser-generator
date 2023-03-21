@@ -1,0 +1,20 @@
+<NAME>John</NAME>
+<NACHNAME>Doe</NACHNAME>
+<PHONE typ="landline" country="United Kingdom" city="London">987 654 321</PHONE>
+<PHONE typ="mobile" country="United Kingdom">123 456 789</PHONE>
+
+<ADDRESS>
+<DESCRIPTION>living address</DESCRIPTION>
+<STREET>Somewhere 123</STREET>
+<ZIP_CODE>"E1 6AN"</ZIP_CODE>
+<CITY>London</CITY>
+<COUNTRY>United Kingdom</COUNTRY>
+</ADDRESS>
+
+<ADDRESSE>
+<DESCRIPTION>work address</DESCRIPTION>
+<DESCRIPTION>Someother Street 321</DESCRIPTION>
+<ZIP_CODE>"E1 6AN"</ZIP_CODE>
+<CITY>London</CITY>
+<COUNTRY>United Kingdom</COUNTRY>
+</ADDRESS>

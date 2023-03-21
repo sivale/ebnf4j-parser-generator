@@ -1,0 +1,5 @@
+Elements = { Word | Whitespace };
+Word = { Buchstaben };
+Buchstaben = Basiclatin - Whitespace;
+Basiclatin = ?BASICLATIN?;
+Whitespace = ?WHITESPACE?;

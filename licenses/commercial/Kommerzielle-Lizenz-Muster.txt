@@ -1,0 +1,83 @@
+1. Präambel
+
+Der Lizenzgeber ist Inhaber aller Rechte an der Software [Name der Software] (nachfolgend „Software“). Der Lizenznehmer wünscht die Nutzung der Software zu kommerziellen Zwecken. Dieser Vertrag regelt die Bedingungen der kommerziellen Lizenz.
+
+2. Definitionen
+
+Software: Das Computerprogramm [Name der Software] in der jeweils vereinbarten Version, inklusive zugehöriger Dokumentation.
+
+Lizenzgebühr: Das vom Lizenznehmer an den Lizenzgeber zu zahlende Entgelt gemäß Abschnitt 4.
+
+Nutzungsumfang: Der in Abschnitt 3 definierte Umfang der erlaubten Nutzung.
+
+3. Lizenzgewährung
+
+Lizenzgeber gewährt dem Lizenznehmer ein nicht-ausschließliches, nicht übertragbares, weltweites Recht, die Software im Rahmen des vereinbarten Nutzungsumfangs zu nutzen.
+
+Nutzungszweck: [z. B. interne Unternehmensprozesse, Vertrieb als eingebettete Komponente etc.]
+
+Nutzungsbeschränkungen: Der Lizenznehmer darf die Software nicht weiterverkaufen, verändern (außer für interne Anpassungen), zurückentwickeln oder in konkurrierenden Produkten einsetzen.
+
+4. Lizenzgebühren und Zahlungsbedingungen
+
+Gebühr: Der Lizenznehmer zahlt an den Lizenzgeber eine einmalige Lizenzgebühr in Höhe von EUR [Betrag] zzgl. gesetzlicher Mehrwertsteuer.
+
+Rechnungsstellung: Lizenzgeber stellt Rechnung nach Vertragsunterzeichnung.
+
+Zahlungsfrist: 30 Tage netto nach Rechnungsdatum.
+
+Verzugszinsen: 5 % über dem Basiszinssatz der Europäischen Zentralbank.
+
+5. Support und Wartung
+
+Lizenzgeber bietet optional Support und Wartung gemäß gesondertem SLA an.
+
+Leistungsumfang, Reaktionszeiten und Preise sind im Anlagevertrag "Support & Wartung" geregelt.
+
+6. Geistiges Eigentum
+
+Alle Rechte, insbesondere Urheberrechte und Markenrechte, verbleiben beim Lizenzgeber.
+
+Der Lizenznehmer erhält keine Eigentumsrechte an der Software, sondern lediglich das in diesem Vertrag geregelte Nutzungsrecht.
+
+7. Vertraulichkeit
+
+Beide Parteien verpflichten sich, sämtliche vertraulichen Informationen, die im Zusammenhang mit diesem Vertrag bekannt werden, streng vertraulich zu behandeln.
+
+Diese Verpflichtung gilt für die Dauer des Vertrags und zwei Jahre darüber hinaus.
+
+8. Gewährleistung und Haftungsbeschränkung
+
+Die Software wird dem Lizenznehmer kostenlos „as is“ bereitgestellt. Jegliche Gewährleistung, insbesondere für die Eignung der Software für einen bestimmten Zweck, ist ausgeschlossen.
+
+Die Haftung des Lizenzgebers für Schäden, gleich aus welchem Rechtsgrund, ist ausgeschlossen, es sei denn, der Schaden wurde vorsätzlich oder grob fahrlässig verursacht.
+
+Für grob fahrlässig verursachte Schäden ist die Haftung auf den typischerweise vorhersehbaren Schaden begrenzt.
+
+Die Haftung für indirekte Schäden, Folgeschäden, entgangenen Gewinn sowie Datenverlust ist ausgeschlossen.
+
+Support- oder Wartungsleistungen sind nicht geschuldet. Der Lizenznehmer kann Anfragen an [E‑Mail-Adresse] richten; ein Anspruch auf Rückmeldung oder Fehlerbehebung besteht nicht.
+
+9. Laufzeit und Beendigung
+
+Laufzeit: Dieser Vertrag tritt mit Unterzeichnung in Kraft und läuft unbefristet.
+
+Kündigung: Beide Parteien können mit einer Frist von 3 Monaten zum Jahresende kündigen.
+
+Aus wichtigem Grund: Das Recht zur fristlosen Kündigung aus wichtigem Grund bleibt unberührt.
+
+10. Allgemeine Bestimmungen
+
+Salvatorische Klausel: Sollte eine Bestimmung dieses Vertrags ganz oder teilweise unwirksam sein, bleibt die Wirksamkeit der übrigen Bestimmungen unberührt.
+
+Änderungen und Ergänzungen: Erfolgen schriftlich und von beiden Parteien unterzeichnet.
+
+Anwendbares Recht: Es gilt das Recht des Staates, in dem der Lizenzgeber seinen Wohnsitz hat.
+
+Gerichtsstand: Ausschließlicher Gerichtsstand für alle Streitigkeiten aus oder im Zusammenhang mit diesem Vertrag ist das Gericht am Wohnsitz des Lizenzgebers. Wohnsitz des Lizenzgebers: [vollständige Adresse: Straße, Ort, Land].
+
+Unterschriften
+
+[Lizenzgeber]            Datum: __________
+
+[Lizenznehmer]           Datum: __________

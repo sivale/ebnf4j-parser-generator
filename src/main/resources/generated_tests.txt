@@ -1,0 +1,2911 @@
+1 : a
+A = "a" ;
+
+2 : p
+A = P ;
+P = "p" ;
+
+3 : 😀
+A = ?EMOTICONS? ;
+
+4 : l
+A = J - "k" ;
+J = "j"|"k"|"l" ;
+
+5 : j
+A = J - K ;
+J = "j"|"k"|"l" ;
+K = "k"|"l" ;
+
+6 : b
+A = "b" - "a";
+
+7 : a
+A = "a" - ("b" | "c");
+
+8 : aaa
+A = { "a" } ;
+
+9 : ppp
+A = { P } ;
+P = "p" ;
+
+10 : 😀😀😀
+A = { ?EMOTICONS? } ;
+
+11 : a
+A = [ "a" ] ;
+
+12 : p
+A = [ P ] ;
+P = "p" ;
+
+13 : 😀
+A = [ ?EMOTICONS? ] ;
+
+14 : a
+A = ( "a" ) ;
+
+15 : p
+A = ( P ) ;
+P = "p" ;
+
+16 : 😀
+A = ( ?EMOTICONS? ) ;
+
+17 : b
+A = "a" | "b" ;
+
+18 : ab
+A = "a" , "b" ;
+
+19 : q
+A = "a" | Q ;
+Q = "q" ;
+
+20 : aq
+A = "a" , Q ;
+Q = "q" ;
+
+21 : л
+A = "a" | ?CYRILLIC? ;
+
+22 : aл
+A = "a" , ?CYRILLIC? ;
+
+23 : b
+A = P | "b" ;
+P = "p" ;
+
+24 : pb
+A = P , "b" ;
+P = "p" ;
+
+25 : q
+A = P | Q ;
+P = "p" ;
+Q = "q" ;
+
+26 : pq
+A = P , Q ;
+P = "p" ;
+Q = "q" ;
+
+27 : л
+A = P | ?CYRILLIC? ;
+P = "p" ;
+
+28 : pл
+A = P , ?CYRILLIC? ;
+P = "p" ;
+
+29 : b
+A = ?EMOTICONS? | "b" ;
+
+30 : 😀b
+A = ?EMOTICONS? , "b" ;
+
+31 : q
+A = ?EMOTICONS? | Q ;
+Q = "q" ;
+
+32 : 😀q
+A = ?EMOTICONS? , Q ;
+Q = "q" ;
+
+33 : л
+A = ?EMOTICONS? | ?CYRILLIC? ;
+
+34 : 😀л
+A = ?EMOTICONS? , ?CYRILLIC? ;
+
+35 : bbb
+A = { "a" | "b" } ;
+
+36 : ababab
+A = { "a" , "b" } ;
+
+37 : qqq
+A = { "a" | Q } ;
+Q = "q" ;
+
+38 : aqaqaq
+A = { "a" , Q } ;
+Q = "q" ;
+
+39 : ллл
+A = { "a" | ?CYRILLIC? } ;
+
+40 : aлaлaл
+A = { "a" , ?CYRILLIC? } ;
+
+41 : bbb
+A = { P | "b" } ;
+P = "p" ;
+
+42 : pbpbpb
+A = { P , "b" } ;
+P = "p" ;
+
+43 : qqq
+A = { P | Q } ;
+P = "p" ;
+Q = "q" ;
+
+44 : pqpqpq
+A = { P , Q } ;
+P = "p" ;
+Q = "q" ;
+
+45 : ллл
+A = { P | ?CYRILLIC? } ;
+P = "p" ;
+
+46 : pлpлpл
+A = { P , ?CYRILLIC? } ;
+P = "p" ;
+
+47 : bbb
+A = { ?EMOTICONS? | "b" } ;
+
+48 : 😀b😀b😀b
+A = { ?EMOTICONS? , "b" } ;
+
+49 : qqq
+A = { ?EMOTICONS? | Q } ;
+Q = "q" ;
+
+50 : 😀q😀q😀q
+A = { ?EMOTICONS? , Q } ;
+Q = "q" ;
+
+51 : ллл
+A = { ?EMOTICONS? | ?CYRILLIC? } ;
+
+52 : 😀л😀л😀л
+A = { ?EMOTICONS? , ?CYRILLIC? } ;
+
+53 : b
+A = [ "a" | "b" ] ;
+
+54 : ab
+A = [ "a" , "b" ] ;
+
+55 : q
+A = [ "a" | Q ] ;
+Q = "q" ;
+
+56 : aq
+A = [ "a" , Q ] ;
+Q = "q" ;
+
+57 : л
+A = [ "a" | ?CYRILLIC? ] ;
+
+58 : aл
+A = [ "a" , ?CYRILLIC? ] ;
+
+59 : b
+A = [ P | "b" ] ;
+P = "p" ;
+
+60 : pb
+A = [ P , "b" ] ;
+P = "p" ;
+
+61 : q
+A = [ P | Q ] ;
+P = "p" ;
+Q = "q" ;
+
+62 : pq
+A = [ P , Q ] ;
+P = "p" ;
+Q = "q" ;
+
+63 : л
+A = [ P | ?CYRILLIC? ] ;
+P = "p" ;
+
+64 : pл
+A = [ P , ?CYRILLIC? ] ;
+P = "p" ;
+
+65 : b
+A = [ ?EMOTICONS? | "b" ] ;
+
+66 : 😀b
+A = [ ?EMOTICONS? , "b" ] ;
+
+67 : q
+A = [ ?EMOTICONS? | Q ] ;
+Q = "q" ;
+
+68 : 😀q
+A = [ ?EMOTICONS? , Q ] ;
+Q = "q" ;
+
+69 : л
+A = [ ?EMOTICONS? | ?CYRILLIC? ] ;
+
+70 : 😀л
+A = [ ?EMOTICONS? , ?CYRILLIC? ] ;
+
+71 : b
+A = ( "a" | "b" ) ;
+
+72 : ab
+A = ( "a" , "b" ) ;
+
+73 : q
+A = ( "a" | Q ) ;
+Q = "q" ;
+
+74 : aq
+A = ( "a" , Q ) ;
+Q = "q" ;
+
+75 : л
+A = ( "a" | ?CYRILLIC? ) ;
+
+76 : aл
+A = ( "a" , ?CYRILLIC? ) ;
+
+77 : b
+A = ( P | "b" ) ;
+P = "p" ;
+
+78 : pb
+A = ( P , "b" ) ;
+P = "p" ;
+
+79 : q
+A = ( P | Q ) ;
+P = "p" ;
+Q = "q" ;
+
+80 : pq
+A = ( P , Q ) ;
+P = "p" ;
+Q = "q" ;
+
+81 : л
+A = ( P | ?CYRILLIC? ) ;
+P = "p" ;
+
+82 : pл
+A = ( P , ?CYRILLIC? ) ;
+P = "p" ;
+
+83 : b
+A = ( ?EMOTICONS? | "b" ) ;
+
+84 : 😀b
+A = ( ?EMOTICONS? , "b" ) ;
+
+85 : q
+A = ( ?EMOTICONS? | Q ) ;
+Q = "q" ;
+
+86 : 😀q
+A = ( ?EMOTICONS? , Q ) ;
+Q = "q" ;
+
+87 : л
+A = ( ?EMOTICONS? | ?CYRILLIC? ) ;
+
+88 : 😀л
+A = ( ?EMOTICONS? , ?CYRILLIC? ) ;
+
+89 : ccc
+A = "a" | { "b" | "c" } ;
+
+90 : bcbcbc
+A = "a" | { "b" , "c" } ;
+
+91 : accc
+A = "a" , { "b" | "c" } ;
+
+92 : abcbcbc
+A = "a" , { "b" , "c" } ;
+
+93 : rrr
+A = "a" | { "b" | R } ;
+R = "r" ;
+
+94 : brbrbr
+A = "a" | { "b" , R } ;
+R = "r" ;
+
+95 : arrr
+A = "a" , { "b" | R } ;
+R = "r" ;
+
+96 : abrbrbr
+A = "a" , { "b" , R } ;
+R = "r" ;
+
+97 : zzz
+A = "a" | { "b" | ?BASIC_LATIN? } ;
+
+98 : bzbzbz
+A = "a" | { "b" , ?BASIC_LATIN? } ;
+
+99 : azzz
+A = "a" , { "b" | ?BASIC_LATIN? } ;
+
+100 : abzbzbz
+A = "a" , { "b" , ?BASIC_LATIN? } ;
+
+101 : ccc
+A = "a" | { Q | "c" } ;
+Q = "q" ;
+
+102 : qcqcqc
+A = "a" | { Q , "c" } ;
+Q = "q" ;
+
+103 : accc
+A = "a" , { Q | "c" } ;
+Q = "q" ;
+
+104 : aqcqcqc
+A = "a" , { Q , "c" } ;
+Q = "q" ;
+
+105 : rrr
+A = "a" | { Q | R } ;
+Q = "q" ;
+R = "r" ;
+
+106 : qrqrqr
+A = "a" | { Q , R } ;
+Q = "q" ;
+R = "r" ;
+
+107 : arrr
+A = "a" , { Q | R } ;
+Q = "q" ;
+R = "r" ;
+
+108 : aqrqrqr
+A = "a" , { Q , R } ;
+Q = "q" ;
+R = "r" ;
+
+109 : zzz
+A = "a" | { Q | ?BASIC_LATIN? } ;
+Q = "q" ;
+
+110 : qzqzqz
+A = "a" | { Q , ?BASIC_LATIN? } ;
+Q = "q" ;
+
+111 : azzz
+A = "a" , { Q | ?BASIC_LATIN? } ;
+Q = "q" ;
+
+112 : aqzqzqz
+A = "a" , { Q , ?BASIC_LATIN? } ;
+Q = "q" ;
+
+113 : ccc
+A = "a" | { ?CYRILLIC? | "c" } ;
+
+114 : лcлcлc
+A = "a" | { ?CYRILLIC? , "c" } ;
+
+115 : accc
+A = "a" , { ?CYRILLIC? | "c" } ;
+
+116 : aлcлcлc
+A = "a" , { ?CYRILLIC? , "c" } ;
+
+117 : rrr
+A = "a" | { ?CYRILLIC? | R } ;
+R = "r" ;
+
+118 : лrлrлr
+A = "a" | { ?CYRILLIC? , R } ;
+R = "r" ;
+
+119 : arrr
+A = "a" , { ?CYRILLIC? | R } ;
+R = "r" ;
+
+120 : aлrлrлr
+A = "a" , { ?CYRILLIC? , R } ;
+R = "r" ;
+
+121 : zzz
+A = "a" | { ?CYRILLIC? | ?BASIC_LATIN? } ;
+
+122 : лzлzлz
+A = "a" | { ?CYRILLIC? , ?BASIC_LATIN? } ;
+
+123 : azzz
+A = "a" , { ?CYRILLIC? | ?BASIC_LATIN? } ;
+
+124 : aлzлzлz
+A = "a" , { ?CYRILLIC? , ?BASIC_LATIN? } ;
+
+125 : ccc
+A = P | { "b" | "c" } ;
+P = "p" ;
+
+126 : bcbcbc
+A = P | { "b" , "c" } ;
+P = "p" ;
+
+127 : pccc
+A = P , { "b" | "c" } ;
+P = "p" ;
+
+128 : pbcbcbc
+A = P , { "b" , "c" } ;
+P = "p" ;
+
+129 : rrr
+A = P | { "b" | R } ;
+P = "p" ;
+R = "r" ;
+
+130 : brbrbr
+A = P | { "b" , R } ;
+P = "p" ;
+R = "r" ;
+
+131 : prrr
+A = P , { "b" | R } ;
+P = "p" ;
+R = "r" ;
+
+132 : pbrbrbr
+A = P , { "b" , R } ;
+P = "p" ;
+R = "r" ;
+
+133 : zzz
+A = P | { "b" | ?BASIC_LATIN? } ;
+P = "p" ;
+
+134 : bzbzbz
+A = P | { "b" , ?BASIC_LATIN? } ;
+P = "p" ;
+
+135 : pzzz
+A = P , { "b" | ?BASIC_LATIN? } ;
+P = "p" ;
+
+136 : pbzbzbz
+A = P , { "b" , ?BASIC_LATIN? } ;
+P = "p" ;
+
+137 : ccc
+A = P | { Q | "c" } ;
+P = "p" ;
+Q = "q" ;
+
+138 : qcqcqc
+A = P | { Q , "c" } ;
+P = "p" ;
+Q = "q" ;
+
+139 : pccc
+A = P , { Q | "c" } ;
+P = "p" ;
+Q = "q" ;
+
+140 : pqcqcqc
+A = P , { Q , "c" } ;
+P = "p" ;
+Q = "q" ;
+
+141 : rrr
+A = P | { Q | R } ;
+P = "p" ;
+Q = "q" ;
+R = "r" ;
+
+142 : qrqrqr
+A = P | { Q , R } ;
+P = "p" ;
+Q = "q" ;
+R = "r" ;
+
+143 : prrr
+A = P , { Q | R } ;
+P = "p" ;
+Q = "q" ;
+R = "r" ;
+
+144 : pqrqrqr
+A = P , { Q , R } ;
+P = "p" ;
+Q = "q" ;
+R = "r" ;
+
+145 : zzz
+A = P | { Q | ?BASIC_LATIN? } ;
+P = "p" ;
+Q = "q" ;
+
+146 : qzqzqz
+A = P | { Q , ?BASIC_LATIN? } ;
+P = "p" ;
+Q = "q" ;
+
+147 : pzzz
+A = P , { Q | ?BASIC_LATIN? } ;
+P = "p" ;
+Q = "q" ;
+
+148 : pqzqzqz
+A = P , { Q , ?BASIC_LATIN? } ;
+P = "p" ;
+Q = "q" ;
+
+149 : ccc
+A = P | { ?CYRILLIC? | "c" } ;
+P = "p" ;
+
+150 : лcлcлc
+A = P | { ?CYRILLIC? , "c" } ;
+P = "p" ;
+
+151 : pccc
+A = P , { ?CYRILLIC? | "c" } ;
+P = "p" ;
+
+152 : pлcлcлc
+A = P , { ?CYRILLIC? , "c" } ;
+P = "p" ;
+
+153 : rrr
+A = P | { ?CYRILLIC? | R } ;
+P = "p" ;
+R = "r" ;
+
+154 : лrлrлr
+A = P | { ?CYRILLIC? , R } ;
+P = "p" ;
+R = "r" ;
+
+155 : prrr
+A = P , { ?CYRILLIC? | R } ;
+P = "p" ;
+R = "r" ;
+
+156 : pлrлrлr
+A = P , { ?CYRILLIC? , R } ;
+P = "p" ;
+R = "r" ;
+
+157 : zzz
+A = P | { ?CYRILLIC? | ?BASIC_LATIN? } ;
+P = "p" ;
+
+158 : лzлzлz
+A = P | { ?CYRILLIC? , ?BASIC_LATIN? } ;
+P = "p" ;
+
+159 : pzzz
+A = P , { ?CYRILLIC? | ?BASIC_LATIN? } ;
+P = "p" ;
+
+160 : pлzлzлz
+A = P , { ?CYRILLIC? , ?BASIC_LATIN? } ;
+P = "p" ;
+
+161 : ccc
+A = ?EMOTICONS? | { "b" | "c" } ;
+
+162 : bcbcbc
+A = ?EMOTICONS? | { "b" , "c" } ;
+
+163 : 😀ccc
+A = ?EMOTICONS? , { "b" | "c" } ;
+
+164 : 😀bcbcbc
+A = ?EMOTICONS? , { "b" , "c" } ;
+
+165 : rrr
+A = ?EMOTICONS? | { "b" | R } ;
+R = "r" ;
+
+166 : brbrbr
+A = ?EMOTICONS? | { "b" , R } ;
+R = "r" ;
+
+167 : 😀rrr
+A = ?EMOTICONS? , { "b" | R } ;
+R = "r" ;
+
+168 : 😀brbrbr
+A = ?EMOTICONS? , { "b" , R } ;
+R = "r" ;
+
+169 : zzz
+A = ?EMOTICONS? | { "b" | ?BASIC_LATIN? } ;
+
+170 : bzbzbz
+A = ?EMOTICONS? | { "b" , ?BASIC_LATIN? } ;
+
+171 : 😀zzz
+A = ?EMOTICONS? , { "b" | ?BASIC_LATIN? } ;
+
+172 : 😀bzbzbz
+A = ?EMOTICONS? , { "b" , ?BASIC_LATIN? } ;
+
+173 : ccc
+A = ?EMOTICONS? | { Q | "c" } ;
+Q = "q" ;
+
+174 : qcqcqc
+A = ?EMOTICONS? | { Q , "c" } ;
+Q = "q" ;
+
+175 : 😀ccc
+A = ?EMOTICONS? , { Q | "c" } ;
+Q = "q" ;
+
+176 : 😀qcqcqc
+A = ?EMOTICONS? , { Q , "c" } ;
+Q = "q" ;
+
+177 : rrr
+A = ?EMOTICONS? | { Q | R } ;
+Q = "q" ;
+R = "r" ;
+
+178 : qrqrqr
+A = ?EMOTICONS? | { Q , R } ;
+Q = "q" ;
+R = "r" ;
+
+179 : 😀rrr
+A = ?EMOTICONS? , { Q | R } ;
+Q = "q" ;
+R = "r" ;
+
+180 : 😀qrqrqr
+A = ?EMOTICONS? , { Q , R } ;
+Q = "q" ;
+R = "r" ;
+
+181 : zzz
+A = ?EMOTICONS? | { Q | ?BASIC_LATIN? } ;
+Q = "q" ;
+
+182 : qzqzqz
+A = ?EMOTICONS? | { Q , ?BASIC_LATIN? } ;
+Q = "q" ;
+
+183 : 😀zzz
+A = ?EMOTICONS? , { Q | ?BASIC_LATIN? } ;
+Q = "q" ;
+
+184 : 😀qzqzqz
+A = ?EMOTICONS? , { Q , ?BASIC_LATIN? } ;
+Q = "q" ;
+
+185 : ccc
+A = ?EMOTICONS? | { ?CYRILLIC? | "c" } ;
+
+186 : лcлcлc
+A = ?EMOTICONS? | { ?CYRILLIC? , "c" } ;
+
+187 : 😀ccc
+A = ?EMOTICONS? , { ?CYRILLIC? | "c" } ;
+
+188 : 😀лcлcлc
+A = ?EMOTICONS? , { ?CYRILLIC? , "c" } ;
+
+189 : rrr
+A = ?EMOTICONS? | { ?CYRILLIC? | R } ;
+R = "r" ;
+
+190 : лrлrлr
+A = ?EMOTICONS? | { ?CYRILLIC? , R } ;
+R = "r" ;
+
+191 : 😀rrr
+A = ?EMOTICONS? , { ?CYRILLIC? | R } ;
+R = "r" ;
+
+192 : 😀лrлrлr
+A = ?EMOTICONS? , { ?CYRILLIC? , R } ;
+R = "r" ;
+
+193 : zzz
+A = ?EMOTICONS? | { ?CYRILLIC? | ?BASIC_LATIN? } ;
+
+194 : лzлzлz
+A = ?EMOTICONS? | { ?CYRILLIC? , ?BASIC_LATIN? } ;
+
+195 : 😀zzz
+A = ?EMOTICONS? , { ?CYRILLIC? | ?BASIC_LATIN? } ;
+
+196 : 😀лzлzлz
+A = ?EMOTICONS? , { ?CYRILLIC? , ?BASIC_LATIN? } ;
+
+197 : c
+A = "a" | [ "b" | "c" ] ;
+
+198 : bc
+A = "a" | [ "b" , "c" ] ;
+
+199 : ac
+A = "a" , [ "b" | "c" ] ;
+
+200 : abc
+A = "a" , [ "b" , "c" ] ;
+
+201 : r
+A = "a" | [ "b" | R ] ;
+R = "r" ;
+
+202 : br
+A = "a" | [ "b" , R ] ;
+R = "r" ;
+
+203 : ar
+A = "a" , [ "b" | R ] ;
+R = "r" ;
+
+204 : abr
+A = "a" , [ "b" , R ] ;
+R = "r" ;
+
+205 : z
+A = "a" | [ "b" | ?BASIC_LATIN? ] ;
+
+206 : bz
+A = "a" | [ "b" , ?BASIC_LATIN? ] ;
+
+207 : az
+A = "a" , [ "b" | ?BASIC_LATIN? ] ;
+
+208 : abz
+A = "a" , [ "b" , ?BASIC_LATIN? ] ;
+
+209 : c
+A = "a" | [ Q | "c" ] ;
+Q = "q" ;
+
+210 : qc
+A = "a" | [ Q , "c" ] ;
+Q = "q" ;
+
+211 : ac
+A = "a" , [ Q | "c" ] ;
+Q = "q" ;
+
+212 : aqc
+A = "a" , [ Q , "c" ] ;
+Q = "q" ;
+
+213 : r
+A = "a" | [ Q | R ] ;
+Q = "q" ;
+R = "r" ;
+
+214 : qr
+A = "a" | [ Q , R ] ;
+Q = "q" ;
+R = "r" ;
+
+215 : ar
+A = "a" , [ Q | R ] ;
+Q = "q" ;
+R = "r" ;
+
+216 : aqr
+A = "a" , [ Q , R ] ;
+Q = "q" ;
+R = "r" ;
+
+217 : z
+A = "a" | [ Q | ?BASIC_LATIN? ] ;
+Q = "q" ;
+
+218 : qz
+A = "a" | [ Q , ?BASIC_LATIN? ] ;
+Q = "q" ;
+
+219 : az
+A = "a" , [ Q | ?BASIC_LATIN? ] ;
+Q = "q" ;
+
+220 : aqz
+A = "a" , [ Q , ?BASIC_LATIN? ] ;
+Q = "q" ;
+
+221 : c
+A = "a" | [ ?CYRILLIC? | "c" ] ;
+
+222 : лc
+A = "a" | [ ?CYRILLIC? , "c" ] ;
+
+223 : ac
+A = "a" , [ ?CYRILLIC? | "c" ] ;
+
+224 : aлc
+A = "a" , [ ?CYRILLIC? , "c" ] ;
+
+225 : r
+A = "a" | [ ?CYRILLIC? | R ] ;
+R = "r" ;
+
+226 : лr
+A = "a" | [ ?CYRILLIC? , R ] ;
+R = "r" ;
+
+227 : ar
+A = "a" , [ ?CYRILLIC? | R ] ;
+R = "r" ;
+
+228 : aлr
+A = "a" , [ ?CYRILLIC? , R ] ;
+R = "r" ;
+
+229 : z
+A = "a" | [ ?CYRILLIC? | ?BASIC_LATIN? ] ;
+
+230 : лz
+A = "a" | [ ?CYRILLIC? , ?BASIC_LATIN? ] ;
+
+231 : az
+A = "a" , [ ?CYRILLIC? | ?BASIC_LATIN? ] ;
+
+232 : aлz
+A = "a" , [ ?CYRILLIC? , ?BASIC_LATIN? ] ;
+
+233 : c
+A = P | [ "b" | "c" ] ;
+P = "p" ;
+
+234 : bc
+A = P | [ "b" , "c" ] ;
+P = "p" ;
+
+235 : pc
+A = P , [ "b" | "c" ] ;
+P = "p" ;
+
+236 : pbc
+A = P , [ "b" , "c" ] ;
+P = "p" ;
+
+237 : r
+A = P | [ "b" | R ] ;
+P = "p" ;
+R = "r" ;
+
+238 : br
+A = P | [ "b" , R ] ;
+P = "p" ;
+R = "r" ;
+
+239 : pr
+A = P , [ "b" | R ] ;
+P = "p" ;
+R = "r" ;
+
+240 : pbr
+A = P , [ "b" , R ] ;
+P = "p" ;
+R = "r" ;
+
+241 : z
+A = P | [ "b" | ?BASIC_LATIN? ] ;
+P = "p" ;
+
+242 : bz
+A = P | [ "b" , ?BASIC_LATIN? ] ;
+P = "p" ;
+
+243 : pz
+A = P , [ "b" | ?BASIC_LATIN? ] ;
+P = "p" ;
+
+244 : pbz
+A = P , [ "b" , ?BASIC_LATIN? ] ;
+P = "p" ;
+
+245 : c
+A = P | [ Q | "c" ] ;
+P = "p" ;
+Q = "q" ;
+
+246 : qc
+A = P | [ Q , "c" ] ;
+P = "p" ;
+Q = "q" ;
+
+247 : pc
+A = P , [ Q | "c" ] ;
+P = "p" ;
+Q = "q" ;
+
+248 : pqc
+A = P , [ Q , "c" ] ;
+P = "p" ;
+Q = "q" ;
+
+249 : r
+A = P | [ Q | R ] ;
+P = "p" ;
+Q = "q" ;
+R = "r" ;
+
+250 : qr
+A = P | [ Q , R ] ;
+P = "p" ;
+Q = "q" ;
+R = "r" ;
+
+251 : pr
+A = P , [ Q | R ] ;
+P = "p" ;
+Q = "q" ;
+R = "r" ;
+
+252 : pqr
+A = P , [ Q , R ] ;
+P = "p" ;
+Q = "q" ;
+R = "r" ;
+
+253 : z
+A = P | [ Q | ?BASIC_LATIN? ] ;
+P = "p" ;
+Q = "q" ;
+
+254 : qz
+A = P | [ Q , ?BASIC_LATIN? ] ;
+P = "p" ;
+Q = "q" ;
+
+255 : pz
+A = P , [ Q | ?BASIC_LATIN? ] ;
+P = "p" ;
+Q = "q" ;
+
+256 : pqz
+A = P , [ Q , ?BASIC_LATIN? ] ;
+P = "p" ;
+Q = "q" ;
+
+257 : c
+A = P | [ ?CYRILLIC? | "c" ] ;
+P = "p" ;
+
+258 : лc
+A = P | [ ?CYRILLIC? , "c" ] ;
+P = "p" ;
+
+259 : pc
+A = P , [ ?CYRILLIC? | "c" ] ;
+P = "p" ;
+
+260 : pлc
+A = P , [ ?CYRILLIC? , "c" ] ;
+P = "p" ;
+
+261 : r
+A = P | [ ?CYRILLIC? | R ] ;
+P = "p" ;
+R = "r" ;
+
+262 : лr
+A = P | [ ?CYRILLIC? , R ] ;
+P = "p" ;
+R = "r" ;
+
+263 : pr
+A = P , [ ?CYRILLIC? | R ] ;
+P = "p" ;
+R = "r" ;
+
+264 : pлr
+A = P , [ ?CYRILLIC? , R ] ;
+P = "p" ;
+R = "r" ;
+
+265 : z
+A = P | [ ?CYRILLIC? | ?BASIC_LATIN? ] ;
+P = "p" ;
+
+266 : лz
+A = P | [ ?CYRILLIC? , ?BASIC_LATIN? ] ;
+P = "p" ;
+
+267 : pz
+A = P , [ ?CYRILLIC? | ?BASIC_LATIN? ] ;
+P = "p" ;
+
+268 : pлz
+A = P , [ ?CYRILLIC? , ?BASIC_LATIN? ] ;
+P = "p" ;
+
+269 : c
+A = ?EMOTICONS? | [ "b" | "c" ] ;
+
+270 : bc
+A = ?EMOTICONS? | [ "b" , "c" ] ;
+
+271 : 😀c
+A = ?EMOTICONS? , [ "b" | "c" ] ;
+
+272 : 😀bc
+A = ?EMOTICONS? , [ "b" , "c" ] ;
+
+273 : r
+A = ?EMOTICONS? | [ "b" | R ] ;
+R = "r" ;
+
+274 : br
+A = ?EMOTICONS? | [ "b" , R ] ;
+R = "r" ;
+
+275 : 😀r
+A = ?EMOTICONS? , [ "b" | R ] ;
+R = "r" ;
+
+276 : 😀br
+A = ?EMOTICONS? , [ "b" , R ] ;
+R = "r" ;
+
+277 : z
+A = ?EMOTICONS? | [ "b" | ?BASIC_LATIN? ] ;
+
+278 : bz
+A = ?EMOTICONS? | [ "b" , ?BASIC_LATIN? ] ;
+
+279 : 😀z
+A = ?EMOTICONS? , [ "b" | ?BASIC_LATIN? ] ;
+
+280 : 😀bz
+A = ?EMOTICONS? , [ "b" , ?BASIC_LATIN? ] ;
+
+281 : c
+A = ?EMOTICONS? | [ Q | "c" ] ;
+Q = "q" ;
+
+282 : qc
+A = ?EMOTICONS? | [ Q , "c" ] ;
+Q = "q" ;
+
+283 : 😀c
+A = ?EMOTICONS? , [ Q | "c" ] ;
+Q = "q" ;
+
+284 : 😀qc
+A = ?EMOTICONS? , [ Q , "c" ] ;
+Q = "q" ;
+
+285 : r
+A = ?EMOTICONS? | [ Q | R ] ;
+Q = "q" ;
+R = "r" ;
+
+286 : qr
+A = ?EMOTICONS? | [ Q , R ] ;
+Q = "q" ;
+R = "r" ;
+
+287 : 😀r
+A = ?EMOTICONS? , [ Q | R ] ;
+Q = "q" ;
+R = "r" ;
+
+288 : 😀qr
+A = ?EMOTICONS? , [ Q , R ] ;
+Q = "q" ;
+R = "r" ;
+
+289 : z
+A = ?EMOTICONS? | [ Q | ?BASIC_LATIN? ] ;
+Q = "q" ;
+
+290 : qz
+A = ?EMOTICONS? | [ Q , ?BASIC_LATIN? ] ;
+Q = "q" ;
+
+291 : 😀z
+A = ?EMOTICONS? , [ Q | ?BASIC_LATIN? ] ;
+Q = "q" ;
+
+292 : 😀qz
+A = ?EMOTICONS? , [ Q , ?BASIC_LATIN? ] ;
+Q = "q" ;
+
+293 : c
+A = ?EMOTICONS? | [ ?CYRILLIC? | "c" ] ;
+
+294 : лc
+A = ?EMOTICONS? | [ ?CYRILLIC? , "c" ] ;
+
+295 : 😀c
+A = ?EMOTICONS? , [ ?CYRILLIC? | "c" ] ;
+
+296 : 😀лc
+A = ?EMOTICONS? , [ ?CYRILLIC? , "c" ] ;
+
+297 : r
+A = ?EMOTICONS? | [ ?CYRILLIC? | R ] ;
+R = "r" ;
+
+298 : лr
+A = ?EMOTICONS? | [ ?CYRILLIC? , R ] ;
+R = "r" ;
+
+299 : 😀r
+A = ?EMOTICONS? , [ ?CYRILLIC? | R ] ;
+R = "r" ;
+
+300 : 😀лr
+A = ?EMOTICONS? , [ ?CYRILLIC? , R ] ;
+R = "r" ;
+
+301 : z
+A = ?EMOTICONS? | [ ?CYRILLIC? | ?BASIC_LATIN? ] ;
+
+302 : лz
+A = ?EMOTICONS? | [ ?CYRILLIC? , ?BASIC_LATIN? ] ;
+
+303 : 😀z
+A = ?EMOTICONS? , [ ?CYRILLIC? | ?BASIC_LATIN? ] ;
+
+304 : 😀лz
+A = ?EMOTICONS? , [ ?CYRILLIC? , ?BASIC_LATIN? ] ;
+
+305 : c
+A = "a" | ( "b" | "c" ) ;
+
+306 : bc
+A = "a" | ( "b" , "c" ) ;
+
+307 : ac
+A = "a" , ( "b" | "c" ) ;
+
+308 : abc
+A = "a" , ( "b" , "c" ) ;
+
+309 : r
+A = "a" | ( "b" | R ) ;
+R = "r" ;
+
+310 : br
+A = "a" | ( "b" , R ) ;
+R = "r" ;
+
+311 : ar
+A = "a" , ( "b" | R ) ;
+R = "r" ;
+
+312 : abr
+A = "a" , ( "b" , R ) ;
+R = "r" ;
+
+313 : z
+A = "a" | ( "b" | ?BASIC_LATIN? ) ;
+
+314 : bz
+A = "a" | ( "b" , ?BASIC_LATIN? ) ;
+
+315 : az
+A = "a" , ( "b" | ?BASIC_LATIN? ) ;
+
+316 : abz
+A = "a" , ( "b" , ?BASIC_LATIN? ) ;
+
+317 : c
+A = "a" | ( Q | "c" ) ;
+Q = "q" ;
+
+318 : qc
+A = "a" | ( Q , "c" ) ;
+Q = "q" ;
+
+319 : ac
+A = "a" , ( Q | "c" ) ;
+Q = "q" ;
+
+320 : aqc
+A = "a" , ( Q , "c" ) ;
+Q = "q" ;
+
+321 : r
+A = "a" | ( Q | R ) ;
+Q = "q" ;
+R = "r" ;
+
+322 : qr
+A = "a" | ( Q , R ) ;
+Q = "q" ;
+R = "r" ;
+
+323 : ar
+A = "a" , ( Q | R ) ;
+Q = "q" ;
+R = "r" ;
+
+324 : aqr
+A = "a" , ( Q , R ) ;
+Q = "q" ;
+R = "r" ;
+
+325 : z
+A = "a" | ( Q | ?BASIC_LATIN? ) ;
+Q = "q" ;
+
+326 : qz
+A = "a" | ( Q , ?BASIC_LATIN? ) ;
+Q = "q" ;
+
+327 : az
+A = "a" , ( Q | ?BASIC_LATIN? ) ;
+Q = "q" ;
+
+328 : aqz
+A = "a" , ( Q , ?BASIC_LATIN? ) ;
+Q = "q" ;
+
+329 : c
+A = "a" | ( ?CYRILLIC? | "c" ) ;
+
+330 : лc
+A = "a" | ( ?CYRILLIC? , "c" ) ;
+
+331 : ac
+A = "a" , ( ?CYRILLIC? | "c" ) ;
+
+332 : aлc
+A = "a" , ( ?CYRILLIC? , "c" ) ;
+
+333 : r
+A = "a" | ( ?CYRILLIC? | R ) ;
+R = "r" ;
+
+334 : лr
+A = "a" | ( ?CYRILLIC? , R ) ;
+R = "r" ;
+
+335 : ar
+A = "a" , ( ?CYRILLIC? | R ) ;
+R = "r" ;
+
+336 : aлr
+A = "a" , ( ?CYRILLIC? , R ) ;
+R = "r" ;
+
+337 : z
+A = "a" | ( ?CYRILLIC? | ?BASIC_LATIN? ) ;
+
+338 : лz
+A = "a" | ( ?CYRILLIC? , ?BASIC_LATIN? ) ;
+
+339 : az
+A = "a" , ( ?CYRILLIC? | ?BASIC_LATIN? ) ;
+
+340 : aлz
+A = "a" , ( ?CYRILLIC? , ?BASIC_LATIN? ) ;
+
+341 : c
+A = P | ( "b" | "c" ) ;
+P = "p" ;
+
+342 : bc
+A = P | ( "b" , "c" ) ;
+P = "p" ;
+
+343 : pc
+A = P , ( "b" | "c" ) ;
+P = "p" ;
+
+344 : pbc
+A = P , ( "b" , "c" ) ;
+P = "p" ;
+
+345 : r
+A = P | ( "b" | R ) ;
+P = "p" ;
+R = "r" ;
+
+346 : br
+A = P | ( "b" , R ) ;
+P = "p" ;
+R = "r" ;
+
+347 : pr
+A = P , ( "b" | R ) ;
+P = "p" ;
+R = "r" ;
+
+348 : pbr
+A = P , ( "b" , R ) ;
+P = "p" ;
+R = "r" ;
+
+349 : z
+A = P | ( "b" | ?BASIC_LATIN? ) ;
+P = "p" ;
+
+350 : bz
+A = P | ( "b" , ?BASIC_LATIN? ) ;
+P = "p" ;
+
+351 : pz
+A = P , ( "b" | ?BASIC_LATIN? ) ;
+P = "p" ;
+
+352 : pbz
+A = P , ( "b" , ?BASIC_LATIN? ) ;
+P = "p" ;
+
+353 : c
+A = P | ( Q | "c" ) ;
+P = "p" ;
+Q = "q" ;
+
+354 : qc
+A = P | ( Q , "c" ) ;
+P = "p" ;
+Q = "q" ;
+
+355 : pc
+A = P , ( Q | "c" ) ;
+P = "p" ;
+Q = "q" ;
+
+356 : pqc
+A = P , ( Q , "c" ) ;
+P = "p" ;
+Q = "q" ;
+
+357 : r
+A = P | ( Q | R ) ;
+P = "p" ;
+Q = "q" ;
+R = "r" ;
+
+358 : qr
+A = P | ( Q , R ) ;
+P = "p" ;
+Q = "q" ;
+R = "r" ;
+
+359 : pr
+A = P , ( Q | R ) ;
+P = "p" ;
+Q = "q" ;
+R = "r" ;
+
+360 : pqr
+A = P , ( Q , R ) ;
+P = "p" ;
+Q = "q" ;
+R = "r" ;
+
+361 : z
+A = P | ( Q | ?BASIC_LATIN? ) ;
+P = "p" ;
+Q = "q" ;
+
+362 : qz
+A = P | ( Q , ?BASIC_LATIN? ) ;
+P = "p" ;
+Q = "q" ;
+
+363 : pz
+A = P , ( Q | ?BASIC_LATIN? ) ;
+P = "p" ;
+Q = "q" ;
+
+364 : pqz
+A = P , ( Q , ?BASIC_LATIN? ) ;
+P = "p" ;
+Q = "q" ;
+
+365 : c
+A = P | ( ?CYRILLIC? | "c" ) ;
+P = "p" ;
+
+366 : лc
+A = P | ( ?CYRILLIC? , "c" ) ;
+P = "p" ;
+
+367 : pc
+A = P , ( ?CYRILLIC? | "c" ) ;
+P = "p" ;
+
+368 : pлc
+A = P , ( ?CYRILLIC? , "c" ) ;
+P = "p" ;
+
+369 : r
+A = P | ( ?CYRILLIC? | R ) ;
+P = "p" ;
+R = "r" ;
+
+370 : лr
+A = P | ( ?CYRILLIC? , R ) ;
+P = "p" ;
+R = "r" ;
+
+371 : pr
+A = P , ( ?CYRILLIC? | R ) ;
+P = "p" ;
+R = "r" ;
+
+372 : pлr
+A = P , ( ?CYRILLIC? , R ) ;
+P = "p" ;
+R = "r" ;
+
+373 : z
+A = P | ( ?CYRILLIC? | ?BASIC_LATIN? ) ;
+P = "p" ;
+
+374 : лz
+A = P | ( ?CYRILLIC? , ?BASIC_LATIN? ) ;
+P = "p" ;
+
+375 : pz
+A = P , ( ?CYRILLIC? | ?BASIC_LATIN? ) ;
+P = "p" ;
+
+376 : pлz
+A = P , ( ?CYRILLIC? , ?BASIC_LATIN? ) ;
+P = "p" ;
+
+377 : c
+A = ?EMOTICONS? | ( "b" | "c" ) ;
+
+378 : bc
+A = ?EMOTICONS? | ( "b" , "c" ) ;
+
+379 : 😀c
+A = ?EMOTICONS? , ( "b" | "c" ) ;
+
+380 : 😀bc
+A = ?EMOTICONS? , ( "b" , "c" ) ;
+
+381 : r
+A = ?EMOTICONS? | ( "b" | R ) ;
+R = "r" ;
+
+382 : br
+A = ?EMOTICONS? | ( "b" , R ) ;
+R = "r" ;
+
+383 : 😀r
+A = ?EMOTICONS? , ( "b" | R ) ;
+R = "r" ;
+
+384 : 😀br
+A = ?EMOTICONS? , ( "b" , R ) ;
+R = "r" ;
+
+385 : z
+A = ?EMOTICONS? | ( "b" | ?BASIC_LATIN? ) ;
+
+386 : bz
+A = ?EMOTICONS? | ( "b" , ?BASIC_LATIN? ) ;
+
+387 : 😀z
+A = ?EMOTICONS? , ( "b" | ?BASIC_LATIN? ) ;
+
+388 : 😀bz
+A = ?EMOTICONS? , ( "b" , ?BASIC_LATIN? ) ;
+
+389 : c
+A = ?EMOTICONS? | ( Q | "c" ) ;
+Q = "q" ;
+
+390 : qc
+A = ?EMOTICONS? | ( Q , "c" ) ;
+Q = "q" ;
+
+391 : 😀c
+A = ?EMOTICONS? , ( Q | "c" ) ;
+Q = "q" ;
+
+392 : 😀qc
+A = ?EMOTICONS? , ( Q , "c" ) ;
+Q = "q" ;
+
+393 : r
+A = ?EMOTICONS? | ( Q | R ) ;
+Q = "q" ;
+R = "r" ;
+
+394 : qr
+A = ?EMOTICONS? | ( Q , R ) ;
+Q = "q" ;
+R = "r" ;
+
+395 : 😀r
+A = ?EMOTICONS? , ( Q | R ) ;
+Q = "q" ;
+R = "r" ;
+
+396 : 😀qr
+A = ?EMOTICONS? , ( Q , R ) ;
+Q = "q" ;
+R = "r" ;
+
+397 : z
+A = ?EMOTICONS? | ( Q | ?BASIC_LATIN? ) ;
+Q = "q" ;
+
+398 : qz
+A = ?EMOTICONS? | ( Q , ?BASIC_LATIN? ) ;
+Q = "q" ;
+
+399 : 😀z
+A = ?EMOTICONS? , ( Q | ?BASIC_LATIN? ) ;
+Q = "q" ;
+
+400 : 😀qz
+A = ?EMOTICONS? , ( Q , ?BASIC_LATIN? ) ;
+Q = "q" ;
+
+401 : c
+A = ?EMOTICONS? | ( ?CYRILLIC? | "c" ) ;
+
+402 : лc
+A = ?EMOTICONS? | ( ?CYRILLIC? , "c" ) ;
+
+403 : 😀c
+A = ?EMOTICONS? , ( ?CYRILLIC? | "c" ) ;
+
+404 : 😀лc
+A = ?EMOTICONS? , ( ?CYRILLIC? , "c" ) ;
+
+405 : r
+A = ?EMOTICONS? | ( ?CYRILLIC? | R ) ;
+R = "r" ;
+
+406 : лr
+A = ?EMOTICONS? | ( ?CYRILLIC? , R ) ;
+R = "r" ;
+
+407 : 😀r
+A = ?EMOTICONS? , ( ?CYRILLIC? | R ) ;
+R = "r" ;
+
+408 : 😀лr
+A = ?EMOTICONS? , ( ?CYRILLIC? , R ) ;
+R = "r" ;
+
+409 : z
+A = ?EMOTICONS? | ( ?CYRILLIC? | ?BASIC_LATIN? ) ;
+
+410 : лz
+A = ?EMOTICONS? | ( ?CYRILLIC? , ?BASIC_LATIN? ) ;
+
+411 : 😀z
+A = ?EMOTICONS? , ( ?CYRILLIC? | ?BASIC_LATIN? ) ;
+
+412 : 😀лz
+A = ?EMOTICONS? , ( ?CYRILLIC? , ?BASIC_LATIN? ) ;
+
+413 : bbb
+A = { "a" | "b" } | "c" ;
+
+414 : bbbc
+A = { "a" | "b" } , "c" ;
+
+415 : ababab
+A = { "a" , "b" } | "c" ;
+
+416 : abababc
+A = { "a" , "b" } , "c" ;
+
+417 : bbb
+A = { "a" | "b" } | R ;
+R = "r" ;
+
+418 : bbbr
+A = { "a" | "b" } , R ;
+R = "r" ;
+
+419 : ababab
+A = { "a" , "b" } | R ;
+R = "r" ;
+
+420 : abababr
+A = { "a" , "b" } , R ;
+R = "r" ;
+
+421 : bbb
+A = { "a" | "b" } | ?BASIC_LATIN? ;
+
+422 : bbbz
+A = { "a" | "b" } , ?BASIC_LATIN? ;
+
+423 : ababab
+A = { "a" , "b" } | ?BASIC_LATIN? ;
+
+424 : abababz
+A = { "a" , "b" } , ?BASIC_LATIN? ;
+
+425 : qqq
+A = { "a" | Q } | "c" ;
+Q = "q" ;
+
+426 : qqqc
+A = { "a" | Q } , "c" ;
+Q = "q" ;
+
+427 : aqaqaq
+A = { "a" , Q } | "c" ;
+Q = "q" ;
+
+428 : aqaqaqc
+A = { "a" , Q } , "c" ;
+Q = "q" ;
+
+429 : qqq
+A = { "a" | Q } | R ;
+Q = "q" ;
+R = "r" ;
+
+430 : qqqr
+A = { "a" | Q } , R ;
+Q = "q" ;
+R = "r" ;
+
+431 : aqaqaq
+A = { "a" , Q } | R ;
+Q = "q" ;
+R = "r" ;
+
+432 : aqaqaqr
+A = { "a" , Q } , R ;
+Q = "q" ;
+R = "r" ;
+
+433 : qqq
+A = { "a" | Q } | ?BASIC_LATIN? ;
+Q = "q" ;
+
+434 : qqqz
+A = { "a" | Q } , ?BASIC_LATIN? ;
+Q = "q" ;
+
+435 : aqaqaq
+A = { "a" , Q } | ?BASIC_LATIN? ;
+Q = "q" ;
+
+436 : aqaqaqz
+A = { "a" , Q } , ?BASIC_LATIN? ;
+Q = "q" ;
+
+437 : ллл
+A = { "a" | ?CYRILLIC? } | "c" ;
+
+438 : лллc
+A = { "a" | ?CYRILLIC? } , "c" ;
+
+439 : aлaлaл
+A = { "a" , ?CYRILLIC? } | "c" ;
+
+440 : aлaлaлc
+A = { "a" , ?CYRILLIC? } , "c" ;
+
+441 : ллл
+A = { "a" | ?CYRILLIC? } | R ;
+R = "r" ;
+
+442 : лллr
+A = { "a" | ?CYRILLIC? } , R ;
+R = "r" ;
+
+443 : aлaлaл
+A = { "a" , ?CYRILLIC? } | R ;
+R = "r" ;
+
+444 : aлaлaлr
+A = { "a" , ?CYRILLIC? } , R ;
+R = "r" ;
+
+445 : ллл
+A = { "a" | ?CYRILLIC? } | ?BASIC_LATIN? ;
+
+446 : лллz
+A = { "a" | ?CYRILLIC? } , ?BASIC_LATIN? ;
+
+447 : aлaлaл
+A = { "a" , ?CYRILLIC? } | ?BASIC_LATIN? ;
+
+448 : aлaлaлz
+A = { "a" , ?CYRILLIC? } , ?BASIC_LATIN? ;
+
+449 : bbb
+A = { P | "b" } | "c" ;
+P = "p" ;
+
+450 : bbbc
+A = { P | "b" } , "c" ;
+P = "p" ;
+
+451 : pbpbpb
+A = { P , "b" } | "c" ;
+P = "p" ;
+
+452 : pbpbpbc
+A = { P , "b" } , "c" ;
+P = "p" ;
+
+453 : bbb
+A = { P | "b" } | R ;
+P = "p" ;
+R = "r" ;
+
+454 : bbbr
+A = { P | "b" } , R ;
+P = "p" ;
+R = "r" ;
+
+455 : pbpbpb
+A = { P , "b" } | R ;
+P = "p" ;
+R = "r" ;
+
+456 : pbpbpbr
+A = { P , "b" } , R ;
+P = "p" ;
+R = "r" ;
+
+457 : bbb
+A = { P | "b" } | ?BASIC_LATIN? ;
+P = "p" ;
+
+458 : bbbz
+A = { P | "b" } , ?BASIC_LATIN? ;
+P = "p" ;
+
+459 : pbpbpb
+A = { P , "b" } | ?BASIC_LATIN? ;
+P = "p" ;
+
+460 : pbpbpbz
+A = { P , "b" } , ?BASIC_LATIN? ;
+P = "p" ;
+
+461 : qqq
+A = { P | Q } | "c" ;
+P = "p" ;
+Q = "q" ;
+
+462 : qqqc
+A = { P | Q } , "c" ;
+P = "p" ;
+Q = "q" ;
+
+463 : pqpqpq
+A = { P , Q } | "c" ;
+P = "p" ;
+Q = "q" ;
+
+464 : pqpqpqc
+A = { P , Q } , "c" ;
+P = "p" ;
+Q = "q" ;
+
+465 : qqq
+A = { P | Q } | R ;
+P = "p" ;
+Q = "q" ;
+R = "r" ;
+
+466 : qqqr
+A = { P | Q } , R ;
+P = "p" ;
+Q = "q" ;
+R = "r" ;
+
+467 : pqpqpq
+A = { P , Q } | R ;
+P = "p" ;
+Q = "q" ;
+R = "r" ;
+
+468 : pqpqpqr
+A = { P , Q } , R ;
+P = "p" ;
+Q = "q" ;
+R = "r" ;
+
+469 : qqq
+A = { P | Q } | ?BASIC_LATIN? ;
+P = "p" ;
+Q = "q" ;
+
+470 : qqqz
+A = { P | Q } , ?BASIC_LATIN? ;
+P = "p" ;
+Q = "q" ;
+
+471 : pqpqpq
+A = { P , Q } | ?BASIC_LATIN? ;
+P = "p" ;
+Q = "q" ;
+
+472 : pqpqpqz
+A = { P , Q } , ?BASIC_LATIN? ;
+P = "p" ;
+Q = "q" ;
+
+473 : ллл
+A = { P | ?CYRILLIC? } | "c" ;
+P = "p" ;
+
+474 : лллc
+A = { P | ?CYRILLIC? } , "c" ;
+P = "p" ;
+
+475 : pлpлpл
+A = { P , ?CYRILLIC? } | "c" ;
+P = "p" ;
+
+476 : pлpлpлc
+A = { P , ?CYRILLIC? } , "c" ;
+P = "p" ;
+
+477 : ллл
+A = { P | ?CYRILLIC? } | R ;
+P = "p" ;
+R = "r" ;
+
+478 : лллr
+A = { P | ?CYRILLIC? } , R ;
+P = "p" ;
+R = "r" ;
+
+479 : pлpлpл
+A = { P , ?CYRILLIC? } | R ;
+P = "p" ;
+R = "r" ;
+
+480 : pлpлpлr
+A = { P , ?CYRILLIC? } , R ;
+P = "p" ;
+R = "r" ;
+
+481 : ллл
+A = { P | ?CYRILLIC? } | ?BASIC_LATIN? ;
+P = "p" ;
+
+482 : лллz
+A = { P | ?CYRILLIC? } , ?BASIC_LATIN? ;
+P = "p" ;
+
+483 : pлpлpл
+A = { P , ?CYRILLIC? } | ?BASIC_LATIN? ;
+P = "p" ;
+
+484 : pлpлpлz
+A = { P , ?CYRILLIC? } , ?BASIC_LATIN? ;
+P = "p" ;
+
+485 : bbb
+A = { ?EMOTICONS? | "b" } | "c" ;
+
+486 : bbbc
+A = { ?EMOTICONS? | "b" } , "c" ;
+
+487 : 😀b😀b😀b
+A = { ?EMOTICONS? , "b" } | "c" ;
+
+488 : 😀b😀b😀bc
+A = { ?EMOTICONS? , "b" } , "c" ;
+
+489 : bbb
+A = { ?EMOTICONS? | "b" } | R ;
+R = "r" ;
+
+490 : bbbr
+A = { ?EMOTICONS? | "b" } , R ;
+R = "r" ;
+
+491 : 😀b😀b😀b
+A = { ?EMOTICONS? , "b" } | R ;
+R = "r" ;
+
+492 : 😀b😀b😀br
+A = { ?EMOTICONS? , "b" } , R ;
+R = "r" ;
+
+493 : bbb
+A = { ?EMOTICONS? | "b" } | ?BASIC_LATIN? ;
+
+494 : bbbz
+A = { ?EMOTICONS? | "b" } , ?BASIC_LATIN? ;
+
+495 : 😀b😀b😀b
+A = { ?EMOTICONS? , "b" } | ?BASIC_LATIN? ;
+
+496 : 😀b😀b😀bz
+A = { ?EMOTICONS? , "b" } , ?BASIC_LATIN? ;
+
+497 : qqq
+A = { ?EMOTICONS? | Q } | "c" ;
+Q = "q" ;
+
+498 : qqqc
+A = { ?EMOTICONS? | Q } , "c" ;
+Q = "q" ;
+
+499 : 😀q😀q😀q
+A = { ?EMOTICONS? , Q } | "c" ;
+Q = "q" ;
+
+500 : 😀q😀q😀qc
+A = { ?EMOTICONS? , Q } , "c" ;
+Q = "q" ;
+
+501 : qqq
+A = { ?EMOTICONS? | Q } | R ;
+Q = "q" ;
+R = "r" ;
+
+502 : qqqr
+A = { ?EMOTICONS? | Q } , R ;
+Q = "q" ;
+R = "r" ;
+
+503 : 😀q😀q😀q
+A = { ?EMOTICONS? , Q } | R ;
+Q = "q" ;
+R = "r" ;
+
+504 : 😀q😀q😀qr
+A = { ?EMOTICONS? , Q } , R ;
+Q = "q" ;
+R = "r" ;
+
+505 : qqq
+A = { ?EMOTICONS? | Q } | ?BASIC_LATIN? ;
+Q = "q" ;
+
+506 : qqqz
+A = { ?EMOTICONS? | Q } , ?BASIC_LATIN? ;
+Q = "q" ;
+
+507 : 😀q😀q😀q
+A = { ?EMOTICONS? , Q } | ?BASIC_LATIN? ;
+Q = "q" ;
+
+508 : 😀q😀q😀qz
+A = { ?EMOTICONS? , Q } , ?BASIC_LATIN? ;
+Q = "q" ;
+
+509 : ллл
+A = { ?EMOTICONS? | ?CYRILLIC? } | "c" ;
+
+510 : лллc
+A = { ?EMOTICONS? | ?CYRILLIC? } , "c" ;
+
+511 : 😀л😀л😀л
+A = { ?EMOTICONS? , ?CYRILLIC? } | "c" ;
+
+512 : 😀л😀л😀лc
+A = { ?EMOTICONS? , ?CYRILLIC? } , "c" ;
+
+513 : ллл
+A = { ?EMOTICONS? | ?CYRILLIC? } | R ;
+R = "r" ;
+
+514 : лллr
+A = { ?EMOTICONS? | ?CYRILLIC? } , R ;
+R = "r" ;
+
+515 : 😀л😀л😀л
+A = { ?EMOTICONS? , ?CYRILLIC? } | R ;
+R = "r" ;
+
+516 : 😀л😀л😀лr
+A = { ?EMOTICONS? , ?CYRILLIC? } , R ;
+R = "r" ;
+
+517 : ллл
+A = { ?EMOTICONS? | ?CYRILLIC? } | ?BASIC_LATIN? ;
+
+518 : лллz
+A = { ?EMOTICONS? | ?CYRILLIC? } , ?BASIC_LATIN? ;
+
+519 : 😀л😀л😀л
+A = { ?EMOTICONS? , ?CYRILLIC? } | ?BASIC_LATIN? ;
+
+520 : 😀л😀л😀лz
+A = { ?EMOTICONS? , ?CYRILLIC? } , ?BASIC_LATIN? ;
+
+521 : b
+A = [ "a" | "b" ] | "c" ;
+
+522 : bc
+A = [ "a" | "b" ] , "c" ;
+
+523 : ab
+A = [ "a" , "b" ] | "c" ;
+
+524 : abc
+A = [ "a" , "b" ] , "c" ;
+
+525 : b
+A = [ "a" | "b" ] | R ;
+R = "r" ;
+
+526 : br
+A = [ "a" | "b" ] , R ;
+R = "r" ;
+
+527 : ab
+A = [ "a" , "b" ] | R ;
+R = "r" ;
+
+528 : abr
+A = [ "a" , "b" ] , R ;
+R = "r" ;
+
+529 : b
+A = [ "a" | "b" ] | ?BASIC_LATIN? ;
+
+530 : bz
+A = [ "a" | "b" ] , ?BASIC_LATIN? ;
+
+531 : ab
+A = [ "a" , "b" ] | ?BASIC_LATIN? ;
+
+532 : abz
+A = [ "a" , "b" ] , ?BASIC_LATIN? ;
+
+533 : q
+A = [ "a" | Q ] | "c" ;
+Q = "q" ;
+
+534 : qc
+A = [ "a" | Q ] , "c" ;
+Q = "q" ;
+
+535 : aq
+A = [ "a" , Q ] | "c" ;
+Q = "q" ;
+
+536 : aqc
+A = [ "a" , Q ] , "c" ;
+Q = "q" ;
+
+537 : q
+A = [ "a" | Q ] | R ;
+Q = "q" ;
+R = "r" ;
+
+538 : qr
+A = [ "a" | Q ] , R ;
+Q = "q" ;
+R = "r" ;
+
+539 : aq
+A = [ "a" , Q ] | R ;
+Q = "q" ;
+R = "r" ;
+
+540 : aqr
+A = [ "a" , Q ] , R ;
+Q = "q" ;
+R = "r" ;
+
+541 : q
+A = [ "a" | Q ] | ?BASIC_LATIN? ;
+Q = "q" ;
+
+542 : qz
+A = [ "a" | Q ] , ?BASIC_LATIN? ;
+Q = "q" ;
+
+543 : aq
+A = [ "a" , Q ] | ?BASIC_LATIN? ;
+Q = "q" ;
+
+544 : aqz
+A = [ "a" , Q ] , ?BASIC_LATIN? ;
+Q = "q" ;
+
+545 : л
+A = [ "a" | ?CYRILLIC? ] | "c" ;
+
+546 : лc
+A = [ "a" | ?CYRILLIC? ] , "c" ;
+
+547 : aл
+A = [ "a" , ?CYRILLIC? ] | "c" ;
+
+548 : aлc
+A = [ "a" , ?CYRILLIC? ] , "c" ;
+
+549 : л
+A = [ "a" | ?CYRILLIC? ] | R ;
+R = "r" ;
+
+550 : лr
+A = [ "a" | ?CYRILLIC? ] , R ;
+R = "r" ;
+
+551 : aл
+A = [ "a" , ?CYRILLIC? ] | R ;
+R = "r" ;
+
+552 : aлr
+A = [ "a" , ?CYRILLIC? ] , R ;
+R = "r" ;
+
+553 : л
+A = [ "a" | ?CYRILLIC? ] | ?BASIC_LATIN? ;
+
+554 : лz
+A = [ "a" | ?CYRILLIC? ] , ?BASIC_LATIN? ;
+
+555 : aл
+A = [ "a" , ?CYRILLIC? ] | ?BASIC_LATIN? ;
+
+556 : aлz
+A = [ "a" , ?CYRILLIC? ] , ?BASIC_LATIN? ;
+
+557 : b
+A = [ P | "b" ] | "c" ;
+P = "p" ;
+
+558 : bc
+A = [ P | "b" ] , "c" ;
+P = "p" ;
+
+559 : pb
+A = [ P , "b" ] | "c" ;
+P = "p" ;
+
+560 : pbc
+A = [ P , "b" ] , "c" ;
+P = "p" ;
+
+561 : b
+A = [ P | "b" ] | R ;
+P = "p" ;
+R = "r" ;
+
+562 : br
+A = [ P | "b" ] , R ;
+P = "p" ;
+R = "r" ;
+
+563 : pb
+A = [ P , "b" ] | R ;
+P = "p" ;
+R = "r" ;
+
+564 : pbr
+A = [ P , "b" ] , R ;
+P = "p" ;
+R = "r" ;
+
+565 : b
+A = [ P | "b" ] | ?BASIC_LATIN? ;
+P = "p" ;
+
+566 : bz
+A = [ P | "b" ] , ?BASIC_LATIN? ;
+P = "p" ;
+
+567 : pb
+A = [ P , "b" ] | ?BASIC_LATIN? ;
+P = "p" ;
+
+568 : pbz
+A = [ P , "b" ] , ?BASIC_LATIN? ;
+P = "p" ;
+
+569 : q
+A = [ P | Q ] | "c" ;
+P = "p" ;
+Q = "q" ;
+
+570 : qc
+A = [ P | Q ] , "c" ;
+P = "p" ;
+Q = "q" ;
+
+571 : pq
+A = [ P , Q ] | "c" ;
+P = "p" ;
+Q = "q" ;
+
+572 : pqc
+A = [ P , Q ] , "c" ;
+P = "p" ;
+Q = "q" ;
+
+573 : q
+A = [ P | Q ] | R ;
+P = "p" ;
+Q = "q" ;
+R = "r" ;
+
+574 : qr
+A = [ P | Q ] , R ;
+P = "p" ;
+Q = "q" ;
+R = "r" ;
+
+575 : pq
+A = [ P , Q ] | R ;
+P = "p" ;
+Q = "q" ;
+R = "r" ;
+
+576 : pqr
+A = [ P , Q ] , R ;
+P = "p" ;
+Q = "q" ;
+R = "r" ;
+
+577 : q
+A = [ P | Q ] | ?BASIC_LATIN? ;
+P = "p" ;
+Q = "q" ;
+
+578 : qz
+A = [ P | Q ] , ?BASIC_LATIN? ;
+P = "p" ;
+Q = "q" ;
+
+579 : pq
+A = [ P , Q ] | ?BASIC_LATIN? ;
+P = "p" ;
+Q = "q" ;
+
+580 : pqz
+A = [ P , Q ] , ?BASIC_LATIN? ;
+P = "p" ;
+Q = "q" ;
+
+581 : л
+A = [ P | ?CYRILLIC? ] | "c" ;
+P = "p" ;
+
+582 : лc
+A = [ P | ?CYRILLIC? ] , "c" ;
+P = "p" ;
+
+583 : pл
+A = [ P , ?CYRILLIC? ] | "c" ;
+P = "p" ;
+
+584 : pлc
+A = [ P , ?CYRILLIC? ] , "c" ;
+P = "p" ;
+
+585 : л
+A = [ P | ?CYRILLIC? ] | R ;
+P = "p" ;
+R = "r" ;
+
+586 : лr
+A = [ P | ?CYRILLIC? ] , R ;
+P = "p" ;
+R = "r" ;
+
+587 : pл
+A = [ P , ?CYRILLIC? ] | R ;
+P = "p" ;
+R = "r" ;
+
+588 : pлr
+A = [ P , ?CYRILLIC? ] , R ;
+P = "p" ;
+R = "r" ;
+
+589 : л
+A = [ P | ?CYRILLIC? ] | ?BASIC_LATIN? ;
+P = "p" ;
+
+590 : лz
+A = [ P | ?CYRILLIC? ] , ?BASIC_LATIN? ;
+P = "p" ;
+
+591 : pл
+A = [ P , ?CYRILLIC? ] | ?BASIC_LATIN? ;
+P = "p" ;
+
+592 : pлz
+A = [ P , ?CYRILLIC? ] , ?BASIC_LATIN? ;
+P = "p" ;
+
+593 : b
+A = [ ?EMOTICONS? | "b" ] | "c" ;
+
+594 : bc
+A = [ ?EMOTICONS? | "b" ] , "c" ;
+
+595 : 😀b
+A = [ ?EMOTICONS? , "b" ] | "c" ;
+
+596 : 😀bc
+A = [ ?EMOTICONS? , "b" ] , "c" ;
+
+597 : b
+A = [ ?EMOTICONS? | "b" ] | R ;
+R = "r" ;
+
+598 : br
+A = [ ?EMOTICONS? | "b" ] , R ;
+R = "r" ;
+
+599 : 😀b
+A = [ ?EMOTICONS? , "b" ] | R ;
+R = "r" ;
+
+600 : 😀br
+A = [ ?EMOTICONS? , "b" ] , R ;
+R = "r" ;
+
+601 : b
+A = [ ?EMOTICONS? | "b" ] | ?BASIC_LATIN? ;
+
+602 : bz
+A = [ ?EMOTICONS? | "b" ] , ?BASIC_LATIN? ;
+
+603 : 😀b
+A = [ ?EMOTICONS? , "b" ] | ?BASIC_LATIN? ;
+
+604 : 😀bz
+A = [ ?EMOTICONS? , "b" ] , ?BASIC_LATIN? ;
+
+605 : q
+A = [ ?EMOTICONS? | Q ] | "c" ;
+Q = "q" ;
+
+606 : qc
+A = [ ?EMOTICONS? | Q ] , "c" ;
+Q = "q" ;
+
+607 : 😀q
+A = [ ?EMOTICONS? , Q ] | "c" ;
+Q = "q" ;
+
+608 : 😀qc
+A = [ ?EMOTICONS? , Q ] , "c" ;
+Q = "q" ;
+
+609 : q
+A = [ ?EMOTICONS? | Q ] | R ;
+Q = "q" ;
+R = "r" ;
+
+610 : qr
+A = [ ?EMOTICONS? | Q ] , R ;
+Q = "q" ;
+R = "r" ;
+
+611 : 😀q
+A = [ ?EMOTICONS? , Q ] | R ;
+Q = "q" ;
+R = "r" ;
+
+612 : 😀qr
+A = [ ?EMOTICONS? , Q ] , R ;
+Q = "q" ;
+R = "r" ;
+
+613 : q
+A = [ ?EMOTICONS? | Q ] | ?BASIC_LATIN? ;
+Q = "q" ;
+
+614 : qz
+A = [ ?EMOTICONS? | Q ] , ?BASIC_LATIN? ;
+Q = "q" ;
+
+615 : 😀q
+A = [ ?EMOTICONS? , Q ] | ?BASIC_LATIN? ;
+Q = "q" ;
+
+616 : 😀qz
+A = [ ?EMOTICONS? , Q ] , ?BASIC_LATIN? ;
+Q = "q" ;
+
+617 : л
+A = [ ?EMOTICONS? | ?CYRILLIC? ] | "c" ;
+
+618 : лc
+A = [ ?EMOTICONS? | ?CYRILLIC? ] , "c" ;
+
+619 : 😀л
+A = [ ?EMOTICONS? , ?CYRILLIC? ] | "c" ;
+
+620 : 😀лc
+A = [ ?EMOTICONS? , ?CYRILLIC? ] , "c" ;
+
+621 : л
+A = [ ?EMOTICONS? | ?CYRILLIC? ] | R ;
+R = "r" ;
+
+622 : лr
+A = [ ?EMOTICONS? | ?CYRILLIC? ] , R ;
+R = "r" ;
+
+623 : 😀л
+A = [ ?EMOTICONS? , ?CYRILLIC? ] | R ;
+R = "r" ;
+
+624 : 😀лr
+A = [ ?EMOTICONS? , ?CYRILLIC? ] , R ;
+R = "r" ;
+
+625 : л
+A = [ ?EMOTICONS? | ?CYRILLIC? ] | ?BASIC_LATIN? ;
+
+626 : лz
+A = [ ?EMOTICONS? | ?CYRILLIC? ] , ?BASIC_LATIN? ;
+
+627 : 😀л
+A = [ ?EMOTICONS? , ?CYRILLIC? ] | ?BASIC_LATIN? ;
+
+628 : 😀лz
+A = [ ?EMOTICONS? , ?CYRILLIC? ] , ?BASIC_LATIN? ;
+
+629 : b
+A = ( "a" | "b" ) | "c" ;
+
+630 : bc
+A = ( "a" | "b" ) , "c" ;
+
+631 : ab
+A = ( "a" , "b" ) | "c" ;
+
+632 : abc
+A = ( "a" , "b" ) , "c" ;
+
+633 : b
+A = ( "a" | "b" ) | R ;
+R = "r" ;
+
+634 : br
+A = ( "a" | "b" ) , R ;
+R = "r" ;
+
+635 : ab
+A = ( "a" , "b" ) | R ;
+R = "r" ;
+
+636 : abr
+A = ( "a" , "b" ) , R ;
+R = "r" ;
+
+637 : b
+A = ( "a" | "b" ) | ?BASIC_LATIN? ;
+
+638 : bz
+A = ( "a" | "b" ) , ?BASIC_LATIN? ;
+
+639 : ab
+A = ( "a" , "b" ) | ?BASIC_LATIN? ;
+
+640 : abz
+A = ( "a" , "b" ) , ?BASIC_LATIN? ;
+
+641 : q
+A = ( "a" | Q ) | "c" ;
+Q = "q" ;
+
+642 : qc
+A = ( "a" | Q ) , "c" ;
+Q = "q" ;
+
+643 : aq
+A = ( "a" , Q ) | "c" ;
+Q = "q" ;
+
+644 : aqc
+A = ( "a" , Q ) , "c" ;
+Q = "q" ;
+
+645 : q
+A = ( "a" | Q ) | R ;
+Q = "q" ;
+R = "r" ;
+
+646 : qr
+A = ( "a" | Q ) , R ;
+Q = "q" ;
+R = "r" ;
+
+647 : aq
+A = ( "a" , Q ) | R ;
+Q = "q" ;
+R = "r" ;
+
+648 : aqr
+A = ( "a" , Q ) , R ;
+Q = "q" ;
+R = "r" ;
+
+649 : q
+A = ( "a" | Q ) | ?BASIC_LATIN? ;
+Q = "q" ;
+
+650 : qz
+A = ( "a" | Q ) , ?BASIC_LATIN? ;
+Q = "q" ;
+
+651 : aq
+A = ( "a" , Q ) | ?BASIC_LATIN? ;
+Q = "q" ;
+
+652 : aqz
+A = ( "a" , Q ) , ?BASIC_LATIN? ;
+Q = "q" ;
+
+653 : л
+A = ( "a" | ?CYRILLIC? ) | "c" ;
+
+654 : лc
+A = ( "a" | ?CYRILLIC? ) , "c" ;
+
+655 : aл
+A = ( "a" , ?CYRILLIC? ) | "c" ;
+
+656 : aлc
+A = ( "a" , ?CYRILLIC? ) , "c" ;
+
+657 : л
+A = ( "a" | ?CYRILLIC? ) | R ;
+R = "r" ;
+
+658 : лr
+A = ( "a" | ?CYRILLIC? ) , R ;
+R = "r" ;
+
+659 : aл
+A = ( "a" , ?CYRILLIC? ) | R ;
+R = "r" ;
+
+660 : aлr
+A = ( "a" , ?CYRILLIC? ) , R ;
+R = "r" ;
+
+661 : л
+A = ( "a" | ?CYRILLIC? ) | ?BASIC_LATIN? ;
+
+662 : лz
+A = ( "a" | ?CYRILLIC? ) , ?BASIC_LATIN? ;
+
+663 : aл
+A = ( "a" , ?CYRILLIC? ) | ?BASIC_LATIN? ;
+
+664 : aлz
+A = ( "a" , ?CYRILLIC? ) , ?BASIC_LATIN? ;
+
+665 : b
+A = ( P | "b" ) | "c" ;
+P = "p" ;
+
+666 : bc
+A = ( P | "b" ) , "c" ;
+P = "p" ;
+
+667 : pb
+A = ( P , "b" ) | "c" ;
+P = "p" ;
+
+668 : pbc
+A = ( P , "b" ) , "c" ;
+P = "p" ;
+
+669 : b
+A = ( P | "b" ) | R ;
+P = "p" ;
+R = "r" ;
+
+670 : br
+A = ( P | "b" ) , R ;
+P = "p" ;
+R = "r" ;
+
+671 : pb
+A = ( P , "b" ) | R ;
+P = "p" ;
+R = "r" ;
+
+672 : pbr
+A = ( P , "b" ) , R ;
+P = "p" ;
+R = "r" ;
+
+673 : b
+A = ( P | "b" ) | ?BASIC_LATIN? ;
+P = "p" ;
+
+674 : bz
+A = ( P | "b" ) , ?BASIC_LATIN? ;
+P = "p" ;
+
+675 : pb
+A = ( P , "b" ) | ?BASIC_LATIN? ;
+P = "p" ;
+
+676 : pbz
+A = ( P , "b" ) , ?BASIC_LATIN? ;
+P = "p" ;
+
+677 : q
+A = ( P | Q ) | "c" ;
+P = "p" ;
+Q = "q" ;
+
+678 : qc
+A = ( P | Q ) , "c" ;
+P = "p" ;
+Q = "q" ;
+
+679 : pq
+A = ( P , Q ) | "c" ;
+P = "p" ;
+Q = "q" ;
+
+680 : pqc
+A = ( P , Q ) , "c" ;
+P = "p" ;
+Q = "q" ;
+
+681 : q
+A = ( P | Q ) | R ;
+P = "p" ;
+Q = "q" ;
+R = "r" ;
+
+682 : qr
+A = ( P | Q ) , R ;
+P = "p" ;
+Q = "q" ;
+R = "r" ;
+
+683 : pq
+A = ( P , Q ) | R ;
+P = "p" ;
+Q = "q" ;
+R = "r" ;
+
+684 : pqr
+A = ( P , Q ) , R ;
+P = "p" ;
+Q = "q" ;
+R = "r" ;
+
+685 : q
+A = ( P | Q ) | ?BASIC_LATIN? ;
+P = "p" ;
+Q = "q" ;
+
+686 : qz
+A = ( P | Q ) , ?BASIC_LATIN? ;
+P = "p" ;
+Q = "q" ;
+
+687 : pq
+A = ( P , Q ) | ?BASIC_LATIN? ;
+P = "p" ;
+Q = "q" ;
+
+688 : pqz
+A = ( P , Q ) , ?BASIC_LATIN? ;
+P = "p" ;
+Q = "q" ;
+
+689 : л
+A = ( P | ?CYRILLIC? ) | "c" ;
+P = "p" ;
+
+690 : лc
+A = ( P | ?CYRILLIC? ) , "c" ;
+P = "p" ;
+
+691 : pл
+A = ( P , ?CYRILLIC? ) | "c" ;
+P = "p" ;
+
+692 : pлc
+A = ( P , ?CYRILLIC? ) , "c" ;
+P = "p" ;
+
+693 : л
+A = ( P | ?CYRILLIC? ) | R ;
+P = "p" ;
+R = "r" ;
+
+694 : лr
+A = ( P | ?CYRILLIC? ) , R ;
+P = "p" ;
+R = "r" ;
+
+695 : pл
+A = ( P , ?CYRILLIC? ) | R ;
+P = "p" ;
+R = "r" ;
+
+696 : pлr
+A = ( P , ?CYRILLIC? ) , R ;
+P = "p" ;
+R = "r" ;
+
+697 : л
+A = ( P | ?CYRILLIC? ) | ?BASIC_LATIN? ;
+P = "p" ;
+
+698 : лz
+A = ( P | ?CYRILLIC? ) , ?BASIC_LATIN? ;
+P = "p" ;
+
+699 : pл
+A = ( P , ?CYRILLIC? ) | ?BASIC_LATIN? ;
+P = "p" ;
+
+700 : pлz
+A = ( P , ?CYRILLIC? ) , ?BASIC_LATIN? ;
+P = "p" ;
+
+701 : b
+A = ( ?EMOTICONS? | "b" ) | "c" ;
+
+702 : bc
+A = ( ?EMOTICONS? | "b" ) , "c" ;
+
+703 : 😀b
+A = ( ?EMOTICONS? , "b" ) | "c" ;
+
+704 : 😀bc
+A = ( ?EMOTICONS? , "b" ) , "c" ;
+
+705 : b
+A = ( ?EMOTICONS? | "b" ) | R ;
+R = "r" ;
+
+706 : br
+A = ( ?EMOTICONS? | "b" ) , R ;
+R = "r" ;
+
+707 : 😀b
+A = ( ?EMOTICONS? , "b" ) | R ;
+R = "r" ;
+
+708 : 😀br
+A = ( ?EMOTICONS? , "b" ) , R ;
+R = "r" ;
+
+709 : b
+A = ( ?EMOTICONS? | "b" ) | ?BASIC_LATIN? ;
+
+710 : bz
+A = ( ?EMOTICONS? | "b" ) , ?BASIC_LATIN? ;
+
+711 : 😀b
+A = ( ?EMOTICONS? , "b" ) | ?BASIC_LATIN? ;
+
+712 : 😀bz
+A = ( ?EMOTICONS? , "b" ) , ?BASIC_LATIN? ;
+
+713 : q
+A = ( ?EMOTICONS? | Q ) | "c" ;
+Q = "q" ;
+
+714 : qc
+A = ( ?EMOTICONS? | Q ) , "c" ;
+Q = "q" ;
+
+715 : 😀q
+A = ( ?EMOTICONS? , Q ) | "c" ;
+Q = "q" ;
+
+716 : 😀qc
+A = ( ?EMOTICONS? , Q ) , "c" ;
+Q = "q" ;
+
+717 : q
+A = ( ?EMOTICONS? | Q ) | R ;
+Q = "q" ;
+R = "r" ;
+
+718 : qr
+A = ( ?EMOTICONS? | Q ) , R ;
+Q = "q" ;
+R = "r" ;
+
+719 : 😀q
+A = ( ?EMOTICONS? , Q ) | R ;
+Q = "q" ;
+R = "r" ;
+
+720 : 😀qr
+A = ( ?EMOTICONS? , Q ) , R ;
+Q = "q" ;
+R = "r" ;
+
+721 : q
+A = ( ?EMOTICONS? | Q ) | ?BASIC_LATIN? ;
+Q = "q" ;
+
+722 : qz
+A = ( ?EMOTICONS? | Q ) , ?BASIC_LATIN? ;
+Q = "q" ;
+
+723 : 😀q
+A = ( ?EMOTICONS? , Q ) | ?BASIC_LATIN? ;
+Q = "q" ;
+
+724 : 😀qz
+A = ( ?EMOTICONS? , Q ) , ?BASIC_LATIN? ;
+Q = "q" ;
+
+725 : л
+A = ( ?EMOTICONS? | ?CYRILLIC? ) | "c" ;
+
+726 : лc
+A = ( ?EMOTICONS? | ?CYRILLIC? ) , "c" ;
+
+727 : 😀л
+A = ( ?EMOTICONS? , ?CYRILLIC? ) | "c" ;
+
+728 : 😀лc
+A = ( ?EMOTICONS? , ?CYRILLIC? ) , "c" ;
+
+729 : л
+A = ( ?EMOTICONS? | ?CYRILLIC? ) | R ;
+R = "r" ;
+
+730 : лr
+A = ( ?EMOTICONS? | ?CYRILLIC? ) , R ;
+R = "r" ;
+
+731 : 😀л
+A = ( ?EMOTICONS? , ?CYRILLIC? ) | R ;
+R = "r" ;
+
+732 : 😀лr
+A = ( ?EMOTICONS? , ?CYRILLIC? ) , R ;
+R = "r" ;
+
+733 : л
+A = ( ?EMOTICONS? | ?CYRILLIC? ) | ?BASIC_LATIN? ;
+
+734 : лz
+A = ( ?EMOTICONS? | ?CYRILLIC? ) , ?BASIC_LATIN? ;
+
+735 : 😀л
+A = ( ?EMOTICONS? , ?CYRILLIC? ) | ?BASIC_LATIN? ;
+
+736 : 😀лz
+A = ( ?EMOTICONS? , ?CYRILLIC? ) , ?BASIC_LATIN? ;
+
