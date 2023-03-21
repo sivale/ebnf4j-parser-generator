@@ -1,0 +1,20 @@
+<NAME>Silvio</NAME>
+<NACHNAME>Sverko</NACHNAME>
+<TELEFON typ="festnetz" land="Deutschland" stadt="München">15982623</TELEFON>
+<TELEFON typ="mobil" land="Deutschland">017641421466</TELEFON>
+
+<ADRESSE>
+<BESCHREIBUNG>Wohnadresse</BESCHREIBUNG>
+<STRASSE>Englschalkinger Str. 138</STRASSE>
+<PLZ>81925</PLZ>
+<STADT>München</STADT>
+<LAND>Deutschland</LAND>
+</ADRESSE>
+
+<ADRESSE>
+<BESCHREIBUNG>Arbeitsplatz</BESCHREIBUNG>
+<STRASSE>Karlstr. 60</STRASSE>
+<PLZ>80333</PLZ>
+<STADT>München</STADT>
+<LAND>Deutschland</LAND>
+</ADRESSE>
