@@ -7,25 +7,25 @@ public class CombinationsCreator {
   public static List<String> elements1 = List.of("\"a\"","P","?EMOTICONS?");
   public static List<String> elements2 = List.of("\"b\"","Q","?CYRILLIC?");
   public static List<String> elements3 = List.of("\"c\"","R","?BASIC_LATIN?");
-  public static List<String> exceptionElements = List.of("J - \"k\"", "J - K", "(-\"k\")", "(-K)");
+  public static List<String> exceptionElements = List.of("J - \"k\"", "J - K"); //, "(-\"k\")", "(-K)" are not allowed by the ebnf syntax
   public static List<String> openingBraces = List.of("{","[","(");
   public static List<String> closingBraces = List.of("}","]",")");
   public static List<String> operators = List.of("|",",");
   public static String terminator = ";";
   public static int cnt=0;
 
-  public static void createSingleElementCombinations (){
+  public static List<String[]> createSingleElementCombinations (){
+    List<String[]> combinations = new ArrayList<>();
     for (String element : elements1){
-      System.out.print(++cnt + " : ");
-      createSingleElementInputStrings(element);
-      System.out.print("A = ");
-      System.out.print(element+" ");
-      System.out.println(terminator);
+      String input = createSingleElementInputStrings(element);
+      String ebnfDefinition = ("A = ");
+      ebnfDefinition += (element+" ");
+      ebnfDefinition += (terminator);
       if (element.equals("P") || element.equals("-p")){
-        System.out.println("P = \"p\" ;");
+        ebnfDefinition += ("P = \"p\" ;");
       }
-      System.out.println();
     }
+    return combinations;
   }
 
   public static List<String[]> createSingleExceptionElementCombinations (){
@@ -36,10 +36,10 @@ public class CombinationsCreator {
       ebnfDefinition +=  element+" ";
       ebnfDefinition += (terminator);
       if (element.contains("J")){
-        ebnfDefinition += ("J = \"j\", \"k\", \"l\" ;");
+        ebnfDefinition += ("J = \"j\"|\"k\"|\"l\" ;");
       }
       if (element.contains("K")){
-        ebnfDefinition += ("K = \"k\", \"l\" ;");
+        ebnfDefinition += ("K = \"k\"|\"l\" ;");
       }
       combinations.add(new String[]{input, ebnfDefinition});
     }
@@ -200,7 +200,7 @@ public class CombinationsCreator {
       case "[" : output += element; break;
       case "{" : output += element + element + element; break;
     }
-    return element;
+    return output;
   }
 
   public static String createTwoCombinedElementsInputStrings(String elem1, String elem2, String operator){
@@ -323,11 +323,11 @@ public class CombinationsCreator {
   }
   public static List<String[]> getAllCombos(){
     List<String[]> combos = new ArrayList<>();
-    //combos.addAll(createTwoEmbracedElementsCombinations());
-    //combos.addAll(createOneElementBeforeTwoEmbracedElementsCombinations());
-    //combos.addAll(createEmbracedSingleElementCombinations());
-    //combos.addAll(createTwoElementsCombinations());
-    //combos.addAll(createOneElementAfterTwoEmbracedElementsCombinations());
+    combos.addAll(createTwoEmbracedElementsCombinations());
+    combos.addAll(createOneElementBeforeTwoEmbracedElementsCombinations());
+    combos.addAll(createEmbracedSingleElementCombinations());
+    combos.addAll(createTwoElementsCombinations());
+    combos.addAll(createOneElementAfterTwoEmbracedElementsCombinations());
     combos.addAll(createSingleExceptionElementCombinations());
     return combos;
   }
