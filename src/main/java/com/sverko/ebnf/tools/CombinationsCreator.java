@@ -1,5 +1,8 @@
 package com.sverko.ebnf.tools;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +15,6 @@ public class CombinationsCreator {
   public static List<String> closingBraces = List.of("}","]",")");
   public static List<String> operators = List.of("|",",");
   public static String terminator = ";";
-  public static int cnt=0;
 
   public static List<String[]> createSingleElementCombinations (){
     List<String[]> combinations = new ArrayList<>();
