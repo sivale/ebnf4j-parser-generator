@@ -12,23 +12,14 @@ import java.util.List;
 public class UTF8FileToStringArrayList {
 
     public static List<String> loadFileIntoStringList(String filename) throws IOException {
-        List <String> stringList = new ArrayList<>(100);
-        FileInputStream fs = new FileInputStream(filename);
-        InputStreamReader isr = new InputStreamReader(fs, StandardCharsets.UTF_8);
-        // here happens the conversion from UTF8 to UTF16
-        Reader bfs = new BufferedReader(isr);
-        int c;
-        String s="";
-        while ((c = bfs.read()) > -1){
-            if (Character.isHighSurrogate((char)c)) {
-                s += Character.toString(c);
-                continue;
-            } else if (Character.isLowSurrogate((char)c)) {
-                s += Character.toString(c);
-            } else {
-                s = Character.toString(c);
+        List<String> stringList = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(
+            new InputStreamReader(new FileInputStream(filename), StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                stringList.add(line);
             }
-          stringList.add(s);
         }
         return stringList;
     }
