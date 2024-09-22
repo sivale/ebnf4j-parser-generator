@@ -4,7 +4,6 @@ package com.sverko.ebnf;
 import com.sverko.ebnf.tools.TerminalNodeFactory;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
 
 public class EbnfParseTree {
   static Map<String, ParseNode> nodeMap = new HashMap<>();
