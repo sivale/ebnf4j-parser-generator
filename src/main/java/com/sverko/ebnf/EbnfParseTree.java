@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Stack;
 
 public class EbnfParseTree {
-  static Stack<ParseNode> crumbs = new Stack<>();
   static Map<String, ParseNode> nodeMap = new HashMap<>();
 
   public static ParseNode getStartNode() {
@@ -186,7 +185,7 @@ public class EbnfParseTree {
         .returnRightNode(new PositionNode())
         .returnDownNode(createNonTerminalNode("syntactic exception"))
         .returnDownNode(new PositionNode())
-        /**
+        /*
          *  In this place the spec defines, that a syntactic exception must not create
          *  self references like xx = "A" - xx; that could lead to paradoxes.
          *  be aware that this restriction is not enforced by this API
