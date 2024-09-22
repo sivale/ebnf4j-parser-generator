@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Stack;
 
 public class EbnfParseTree {
-
   static Stack<ParseNode> crumbs = new Stack<>();
   static Map<String, ParseNode> nodeMap = new HashMap<>();
 
@@ -121,7 +120,7 @@ public class EbnfParseTree {
         nodeMap.get("second terminal character").parent.getRightNode()
         .returnRightNode(new PositionNode())
         .linkDownNode(nodeMap.get("second quote symbol"));
-        nodeMap.get("second quote symbol").parent.parent
+        nodeMap.get("terminal string").parent
         .returnRightNode(new OrNode())
         .returnDownNode(createNonTerminalNode("special sequence"))
         .returnDownNode(new PositionNode())
@@ -177,8 +176,6 @@ public class EbnfParseTree {
         .returnDownNode(new PositionNode())
         .returnDownNode(TerminalNodeFactory.createSimpleTerminalNode(""));
         nodeMap.get("syntactic factor").parent
-        //.returnRightNode(new OrNode().linkDownNode(nodeMap.get("syntactic primary")))
-        //.swapNode(pickCrumbUp())
         .returnRightNode(new PositionNode())
         .returnDownNode(new LoopNode(1))
         .returnDownNode(new PositionNode())
@@ -189,8 +186,12 @@ public class EbnfParseTree {
         .returnRightNode(new PositionNode())
         .returnDownNode(createNonTerminalNode("syntactic exception"))
         .returnDownNode(new PositionNode())
-        .returnDownNode(createNonTerminalNode("syntactic factor no meta"))
-        .linkDownNode(nodeMap.get("syntactic primary").getDownNode().getRightNode()); //special construction due to specification which could not be built by parsing an ebnf definition
+        /**
+         *  In this place the spec defines, that a syntactic exception must not create
+         *  self references like xx = "A" - xx; that could lead to paradoxes.
+         *  be aware that this restriction is not enforced by this API
+         */
+        .linkDownNode(nodeMap.get("syntactic primary"));
         nodeMap.get("syntactic term").parent
         .returnRightNode(new PositionNode())
         .returnDownNode(new LoopNode())
