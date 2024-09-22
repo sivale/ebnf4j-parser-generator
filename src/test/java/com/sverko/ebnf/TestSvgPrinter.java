@@ -12,8 +12,8 @@ public class TestSvgPrinter {
   }
 
   public static void main(String[] args) throws IOException {
-    TestSvgPrinter p = new TestSvgPrinter();
-    p.testPrintingOfAntiNodes();
+    SvgPrinter printer = new SvgPrinter(EbnfParseTree.getStartNode());
+    printer.printParseTreeToFile("/tmp/main-parse-tree.svg");
   }
 
 }
