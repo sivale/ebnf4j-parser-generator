@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 import org.junit.jupiter.api.Test;
 
 public class TestBiggerShemas implements ParseNodeEventListener{
-
+  @Test
   public void testNumberPlateRecognition() throws IOException {
     EbnfParserGenerator generator = new EbnfParserGenerator();
     Predicate<Integer> allowedSigns = (i) -> Character.UnicodeBlock.of(i) == UnicodeBlock.BASIC_LATIN && Character.isUpperCase(i) ||  "ÜÄÖ".contains(String.valueOf(Character.toChars(i)));
@@ -47,8 +47,8 @@ public class TestBiggerShemas implements ParseNodeEventListener{
   public static void main(String[] args) throws IOException {
     TestBiggerShemas shemaTester = new TestBiggerShemas();
     Instant start = Instant.now();
-    //shemaTester.testNumberPlateRecognition();
-    //shemaTester.testAddressbookParser();
+    shemaTester.testNumberPlateRecognition();
+    shemaTester.testAddressbookParser();
     shemaTester.testBasicIdentationShema();
     Instant end = Instant.now();
     Duration timeElapsed = Duration.between(start, end);
