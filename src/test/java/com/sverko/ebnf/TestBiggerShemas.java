@@ -13,7 +13,8 @@ public class TestBiggerShemas implements ParseNodeEventListener{
     Predicate<Integer> allowedSigns = (i) -> Character.UnicodeBlock.of(i) == UnicodeBlock.BASIC_LATIN && Character.isUpperCase(i) ||  "ÜÄÖ".contains(String.valueOf(Character.toChars(i)));
     generator.addSpecialSequence("?GERMAN_CAPITALS?",allowedSigns);
     Parser kennzeichenParser = generator.getParser("src/main/resources/kennzeichen.ebnf");
-    //SvgPrinter printer = new SvgPrinter(kennzeichenParser.startNode);
+    SvgPrinter printer = new SvgPrinter(kennzeichenParser.startNode);
+    printer.printParseTreeToFile("/tmp/kennzeichen.svg");
     kennzeichenParser.assignNodeEventListener("KENNZEICHEN",this);
     //kennzeichenParser.assignNodeEventListener("LASTNAME",this);
     kennzeichenParser.parse("src/main/resources/kennzeichen.txt");

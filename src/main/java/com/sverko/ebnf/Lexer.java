@@ -1,19 +1,25 @@
 package com.sverko.ebnf;
 
+import com.sverko.ebnf.Lexer.DownRightNode.Builder;
+import com.sverko.ebnf.tools.UnicodeString;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
-
 public class Lexer {
-
+  public static Builder builder() {
+    return new Builder();
+  }
   private DownRightNode rootNode;
   private MatchType matchType = MatchType.CASE_INSENSITIVE;
+  private boolean IGNORE_WHITESPACE = true;
   private BiFunction<DownRightNode, Integer, Boolean> matchTester;
 
   private enum MatchType {
     CASE_SENSITIVE,
     CASE_INSENSITIVE
   }
+
+
 
   public Lexer(Set<String> tokens) {
     buildLexerTree(tokens);
@@ -24,6 +30,11 @@ public class Lexer {
     this.matchType = caseSensitive ? MatchType.CASE_SENSITIVE : MatchType.CASE_INSENSITIVE;
     buildLexerTree(tokens);
     chooseMatchTester();
+  }
+
+  public Lexer (Set<String> tokens, boolean caseSensitive, boolean ignoreWhitespace) {
+    this(tokens, caseSensitive);
+    IGNORE_WHITESPACE = ignoreWhitespace;
   }
 
   public Lexer() {
@@ -38,10 +49,10 @@ public class Lexer {
     }
   }
 
-  void buildLexerTree(Set<String> tokens) {
+  void buildLexerTree(Set<String> keywords) {
     rootNode = null;
-
-    for (String token : tokens) {
+    if (keywords == null) { return; }
+    for (String token : keywords) {
       if (token == null || token.isEmpty()) continue;
       char[] chars = token.toCharArray();
 
@@ -99,22 +110,17 @@ public class Lexer {
     }
   }
 
-  private boolean matchChar(DownRightNode node, char c) {
-    if (node.codePoints == null || node.codePoints.length == 0) return false;
-    if (matchType == MatchType.CASE_SENSITIVE) {
-      return node.codePoints[0] == c;
-    } else {
-      return Character.toUpperCase(node.codePoints[0]) == Character.toUpperCase(c);
-    }
-  }
-
   public List<String> lexText(List<String> lines) {
     List<String> tokens = new ArrayList<>();
 
     if (rootNode == null) {
       for (String line : lines) {
-        for (int i = 0; i < line.length(); i++) {
-          tokens.add(Character.toString(line.charAt(i)));
+        UnicodeString unicodeLine = new UnicodeString(line);
+        for (int i = 0; i < unicodeLine.length(); i++) {
+           String singleUnicodeCharacter = unicodeLine.getStringAt(i);
+           if(!Character.isWhitespace(singleUnicodeCharacter.codePointAt(0)) && IGNORE_WHITESPACE) {
+             tokens.add(singleUnicodeCharacter);
+           }
         }
       }
       return tokens;
@@ -132,6 +138,10 @@ public class Lexer {
 
         while (j < line.length()) {
           c = line.charAt(j);
+          if (Character.isWhitespace(c) && IGNORE_WHITESPACE) {
+            j++;
+            continue;
+          }
           while (currentNode != null && !matchTester.apply(currentNode, c)) {
             currentNode = currentNode.getFirstSibling();
           }
@@ -158,9 +168,14 @@ public class Lexer {
 
     return tokens;
   }
-
-  // (Rest der Klasse bleibt unverändert)
-  // ... ab printNodeGraph() alles unverändert belassen
+  private boolean matchChar(DownRightNode node, char c) {
+    if (node.codePoints == null || node.codePoints.length == 0) return false;
+    if (matchType == MatchType.CASE_SENSITIVE) {
+      return node.codePoints[0] == c;
+    } else {
+      return Character.toUpperCase(node.codePoints[0]) == Character.toUpperCase(c);
+    }
+  }
 
   public void printNodeGraph() {
     if (rootNode != null) {
@@ -310,6 +325,27 @@ public class Lexer {
     @Override
     public String toString() {
       return codePoints == null ? "" : String.valueOf(codePoints) + (stopMark ? "*" : " ");
+    }
+    public static class Builder {
+      Set<String> tokens = null;
+      boolean ignoreWhitespace = true;
+      boolean ignoreCase = false;
+
+      Builder tokens(Set<String> tokens){
+        this.tokens = tokens;
+        return this;
+      }
+      Builder ignoreWhitespace(boolean ignoreWhitespace){
+        this.ignoreWhitespace = ignoreWhitespace;
+        return this;
+      }
+      Builder ignoreCase(boolean ignoreCase){
+        this.ignoreCase = ignoreCase;
+        return this;
+      }
+      Lexer build(){
+        return new Lexer(tokens, ignoreCase, ignoreWhitespace);
+      }
     }
   }
 }

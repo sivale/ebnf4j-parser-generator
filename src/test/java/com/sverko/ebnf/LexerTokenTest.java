@@ -8,6 +8,43 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LexerTokenTest {
+  @Test
+  public void lexerShouldHandleUnicodeText() {
+    Lexer lexer = new Lexer();
+    List<String> input = List.of("😀q😀q😀q");
+    List<String> result = lexer.lexText(input);
+    List<String> expected = List.of("😀","q","😀","q","😀","q");
+    assertEquals(expected, result, "Der Lexer sollte auch Surrogates korrekt parsen");
+  }
+
+  @Test
+  public void lexerShouldAlsoTokenizeUnicodeTextWhenKeywordsAreGiven() {
+    Set<String> tokens = new HashSet<>(Arrays.asList("😀q😀q", "😀q"));
+    List<String> input = List.of("😀q😀q😀q");
+    Lexer lexer = new Lexer(tokens);
+    List<String> result = lexer.lexText(input);
+    List<String> expected = List.of("😀q😀q","😀q");
+    assertEquals(expected, result, "Der Lexer sollte Texte mit Surrogates in Tokens umwandeln");
+  }
+
+  @Test
+  public void lexerShouldHonourIgnoreWhitespace() {
+    List<String> input = List.of("a b");
+    Lexer lexer = Lexer.builder().ignoreWhitespace(true).build();
+    List<String> result = lexer.lexText(input);
+    List<String> expected = List.of("a","b");
+    assertEquals(expected, result, "Der Lexer soll Whitespace überspringen");
+  }
+
+  @Test
+  public void lexerShouldHonourIgnoreWhitespace2() {
+    Set<String> tokens = Set.of("ab");
+    List<String> input = List.of("a b");
+    Lexer lexer = Lexer.builder().tokens(tokens).ignoreWhitespace(true).build();
+    List<String> result = lexer.lexText(input);
+    List<String> expected = List.of("ab");
+    assertEquals(expected, result, "Der Lexer soll Whitespace überspringen");
+  }
 
   @Test
   public void lexerShouldMatchFullTokens() throws IOException {

@@ -37,6 +37,4 @@ public class NonTerminalNode extends ParseNode {
 			l.parseNodeEventOccurred(new ParseNodeEvent(this, resultString));
 		}
 	}
-
-
 }
