@@ -1,0 +1,93 @@
+Sample Agreement for a Commercial Software License (English Version)
+
+Between
+
+Licensor:
+Silvio Šverko, [Address], hereinafter "Licensor",
+
+and
+
+Licensee:
+[Name of Licensee], represented by [Name of Representative], [Address], hereinafter "Licensee".
+
+1. Preamble
+
+The Licensor is the owner of all rights in the software [Name of the Software] (the "Software"). The Licensee wishes to use the Software for commercial purposes. This agreement governs the terms of the commercial license.
+
+2. Definitions
+
+Software: The computer program [Name of the Software] in the agreed version, including associated documentation.
+
+License Fee: The fee payable by the Licensee to the Licensor in accordance with Section 4.
+
+Scope of Use: The permitted use as defined in Section 3.
+
+3. Grant of License
+
+Licensor grants Licensee a non-exclusive, non-transferable, worldwide right to use the Software within the agreed Scope of Use.
+
+Purpose of use: [e.g., internal business processes, distribution as an embedded component, etc.]
+
+Restrictions: The Licensee shall not resell, modify (except for internal adaptations), reverse-engineer, or use the Software in competing products.
+
+4. License Fees and Payment Terms
+
+Fee: The Licensee shall pay to the Licensor a one-time license fee of EUR [Amount] plus applicable VAT.
+
+Invoicing: Licensor shall issue an invoice upon execution of this agreement.
+
+Payment Terms: 30 days net from the invoice date.
+
+Default Interest: 5% above the base rate of the European Central Bank.
+
+5. Support and Maintenance
+
+Licensor may optionally provide support and maintenance pursuant to a separate SLA.
+
+Scope of services, response times, and pricing are governed by the annex "Support & Maintenance".
+
+6. Intellectual Property
+
+All rights, including copyright and trademark rights, remain with the Licensor.
+
+The Licensee acquires no ownership rights in the Software, only the usage rights granted herein.
+
+7. Confidentiality
+
+Both parties agree to treat all confidential information disclosed in connection with this agreement as strictly confidential.
+
+This obligation shall survive for the duration of the agreement and for two years thereafter.
+
+8. Warranty and Limitation of Liability
+
+The Software is provided to the Licensee free of charge "as is". All warranties, including fitness for a particular purpose, are excluded to the fullest extent permitted by mandatory applicable law.
+
+Except as required by mandatory applicable law, the Licensor's liability for damages, regardless of the legal basis, is excluded unless the damage was caused by willful misconduct or gross negligence. In jurisdictions where exclusion or limitation of liability for slight negligence is not permitted, the Licensor's liability for slight negligence is limited to typical foreseeable damages.
+
+Liability for indirect damages, consequential losses, lost profits, and data loss is excluded to the extent permitted by mandatory applicable law.
+
+Support or maintenance services are not owed. The Licensee may send requests to [email address], but there is no entitlement to a response or remedy.
+
+If any provision of this agreement conflicts with mandatory local law that cannot validly be waived, such provision shall be deemed modified to the minimum extent necessary to comply, and the remainder of this agreement shall remain in full force and effect.
+
+9. Term and Termination
+
+Term: This agreement enters into force upon signature and continues indefinitely.
+
+Termination: Either party may terminate with three months' notice to the end of a calendar year.
+
+For cause: The right to terminate for cause without notice remains unaffected.
+
+10. General Provisions
+
+Severability: Should any provision of this agreement be or become invalid or unenforceable, the validity of the remaining provisions shall not be affected. The invalid provision shall be replaced by a valid one that comes closest to the economic intent.
+
+Amendments: Must be in writing and signed by both parties.
+
+Governing Law: The laws of the jurisdiction in which the Licensor is domiciled shall govern this agreement.
+
+Jurisdiction: Exclusive venue for all disputes arising out of or in connection with this agreement shall be the courts located at the Licensor's place of residence. Licensor’s place of residence: [full address, including street, city, country].
+
+Signatures
+
+[Licensor]            Date: __________
