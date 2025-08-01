@@ -19,11 +19,3 @@
 
 ---
 
-## 🚀 Beispiel
-
-```java
-EbnfParserGenerator generator = new EbnfParserGenerator("src/test/resources/simple.ebnf");
-Parser parser = generator.generate();
-
-ParseNode result = parser.parse("1 + 2 * 3");
-System.out.println(result.toStringTree());
