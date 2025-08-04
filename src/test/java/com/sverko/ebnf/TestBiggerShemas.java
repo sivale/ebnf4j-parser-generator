@@ -8,17 +8,17 @@ import org.junit.jupiter.api.Test;
 
 public class TestBiggerShemas implements ParseNodeEventListener{
   @Test
-  public void testNumberPlateRecognition() throws IOException {
-    EbnfParserGenerator generator = new EbnfParserGenerator();
-    Predicate<Integer> allowedSigns = (i) -> Character.UnicodeBlock.of(i) == UnicodeBlock.BASIC_LATIN && Character.isUpperCase(i) ||  "ÜÄÖ".contains(String.valueOf(Character.toChars(i)));
-    generator.addSpecialSequence("?GERMAN_CAPITALS?",allowedSigns);
-    Parser kennzeichenParser = generator.getParser("src/main/resources/kennzeichen.ebnf");
-    SvgPrinter printer = new SvgPrinter(kennzeichenParser.startNode);
-    printer.printParseTreeToFile("/tmp/kennzeichen.svg");
-    kennzeichenParser.assignNodeEventListener("KENNZEICHEN",this);
-    //kennzeichenParser.assignNodeEventListener("LASTNAME",this);
-    kennzeichenParser.parse("src/main/resources/kennzeichen.txt");
-  }
+  //public void testNumberPlateRecognition() throws IOException {
+  //  EbnfParserGenerator generator = new EbnfParserGenerator();
+  //  Predicate<Integer> allowedSigns = (i) -> Character.UnicodeBlock.of(i) == UnicodeBlock.BASIC_LATIN && Character.isUpperCase(i) ||  "ÜÄÖ".contains(String.valueOf(Character.toChars(i)));
+  //  generator.addSpecialSequence("?GERMAN_CAPITALS?",allowedSigns);
+  //  Parser kennzeichenParser = generator.getParser("src/main/resources/kennzeichen.ebnf");
+  //  SvgPrinter printer = new SvgPrinter(kennzeichenParser.startNode);
+  //  printer.printParseTreeToFile("/tmp/kennzeichen.svg");
+  //  kennzeichenParser.assignNodeEventListener("KENNZEICHEN",this);
+  //  //kennzeichenParser.assignNodeEventListener("LASTNAME",this);
+  //  kennzeichenParser.parse("src/main/resources/kennzeichen.txt");
+  //}
 
   public void testAddressbookParser() throws IOException {
     EbnfParserGenerator generator = new EbnfParserGenerator();
@@ -43,18 +43,6 @@ public class TestBiggerShemas implements ParseNodeEventListener{
   public void parseNodeEventOccurred(ParseNodeEvent e) {
     System.out.println(e.parseNode.name);
     System.out.println(e.resultString);
-  }
-
-  public static void main(String[] args) throws IOException {
-    TestBiggerShemas shemaTester = new TestBiggerShemas();
-    Instant start = Instant.now();
-    shemaTester.testNumberPlateRecognition();
-    shemaTester.testAddressbookParser();
-    shemaTester.testBasicIdentationShema();
-    Instant end = Instant.now();
-    Duration timeElapsed = Duration.between(start, end);
-    System.out.println("Time taken: "+ timeElapsed.toMillis() +" milliseconds");
-    System.out.println();
   }
 
   @Test

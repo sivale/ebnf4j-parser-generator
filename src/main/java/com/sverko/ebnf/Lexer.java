@@ -139,6 +139,9 @@ public class Lexer {
         while (j < line.length()) {
           c = line.charAt(j);
           if (Character.isWhitespace(c) && IGNORE_WHITESPACE) {
+            if (j == i){
+              i++;
+            }
             j++;
             continue;
           }

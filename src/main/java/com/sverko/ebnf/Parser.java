@@ -89,6 +89,12 @@ public class Parser {
 		nodeMap.get(nodeName).addEventListener(listener);
 	}
 
+	public void assignNodeEventListeners(ParseNodeEventListener listener, String... nodeNames){
+		for(String nodeName : nodeNames) {
+			assignNodeEventListener(nodeName,listener);
+		}
+	}
+
 	public void setAcceptsWhitespace(boolean acceptsWhitespace, ParseNode parentNode){
 		
 		parentNode.acceptsWhitespace = acceptsWhitespace;
