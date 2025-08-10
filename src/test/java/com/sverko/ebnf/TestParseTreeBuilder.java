@@ -750,7 +750,7 @@ public class TestParseTreeBuilder {
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new PositionNode()
-        .setDownNode(createCharacterRangeBasedTerminalNode(Character::isWhitespace))
+        .setDownNode(createCharacterRangeBasedTerminalNode(Character::isWhitespace,"?WHITESPACE?"))
     );
     Assertions.assertTrue(NodeTreeComparisons.isSameStructure(ntn, generator.getFirstNode()));
   }
@@ -766,7 +766,7 @@ public class TestParseTreeBuilder {
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new PositionNode().setDownNode(cstn("a"))
             .setRightNode(new PositionNode()
-                .setDownNode(createCharacterRangeBasedTerminalNode(Character::isWhitespace)))
+                .setDownNode(createCharacterRangeBasedTerminalNode(Character::isWhitespace,"?WHITESPACE")))
                 .setRightNode(new PositionNode()
                     .setDownNode(cstn("b"))
                 )
@@ -783,7 +783,7 @@ public class TestParseTreeBuilder {
         List.of("A", "=", "{", "?", "WHITESPACE", "?", "}", ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
-    ntn.setDownNode(new LoopNode().setDownNode(new PositionNode().setDownNode(createCharacterRangeBasedTerminalNode(Character::isWhitespace))));
+    ntn.setDownNode(new LoopNode().setDownNode(new PositionNode().setDownNode(createCharacterRangeBasedTerminalNode(Character::isWhitespace,"WHITESPACE?"))));
     Assertions.assertTrue(NodeTreeComparisons.isSameStructure(ntn, generator.getFirstNode()));
   }
 
@@ -796,7 +796,7 @@ public class TestParseTreeBuilder {
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new OrNode().setDownNode(new PositionNode().setDownNode(cstn("\uD83D\uDE00")))
-        .setRightNode(new OrNode().setDownNode(new PositionNode().setDownNode(createCharacterRangeBasedTerminalNode(Character::isBmpCodePoint))))
+        .setRightNode(new OrNode().setDownNode(new PositionNode().setDownNode(createCharacterRangeBasedTerminalNode(Character::isBmpCodePoint,"?ANY?"))))
     );
     Assertions.assertTrue(NodeTreeComparisons.isSameStructure(ntn, generator.getFirstNode()));
   }
@@ -814,7 +814,7 @@ public class TestParseTreeBuilder {
         .setDownNode(new OrNode()
                 .setDownNode(new PositionNode().setDownNode(cstn("\uD83D\uDE00")))
                 .setRightNode(new OrNode()
-                    .setDownNode(new PositionNode().setDownNode(createCharacterRangeBasedTerminalNode(Character::isBmpCodePoint)))
+                    .setDownNode(new PositionNode().setDownNode(createCharacterRangeBasedTerminalNode(Character::isBmpCodePoint,"?ANY?")))
                 )
             )
         );
@@ -832,7 +832,7 @@ public class TestParseTreeBuilder {
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new LoopNode(3,3)
         .setDownNode(new PositionNode()
-            .setDownNode(createCharacterRangeBasedTerminalNode(Character::isBmpCodePoint))
+            .setDownNode(createCharacterRangeBasedTerminalNode(Character::isBmpCodePoint,"?ANY?"))
         )
     );
     Assertions.assertTrue(NodeTreeComparisons.isSameStructure(ntn, generator.getFirstNode()));

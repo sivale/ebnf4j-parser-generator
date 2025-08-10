@@ -18,8 +18,8 @@ public class ParseTreeBuilder implements ParseNodeEventListener {
 
   public ParseTreeBuilder(Parser ebnfParserGenerator) {
     generator = ebnfParserGenerator;
-    definedNtnNodes.put("LF", new NonTerminalNode("LF").setDownNode(new PositionNode().setDownNode(TerminalNodeFactory.cstn("\n"))));
-    definedNtnNodes.put("HT", new NonTerminalNode("HT").setDownNode(new PositionNode().setDownNode(TerminalNodeFactory.cstn("\u0009"))));
+    definedNtnNodes.put("LF", new NonTerminalNode("LF").setDownNode(new PositionNode().setDownNode(TerminalNodeFactory.cstn("\n"))));     // LineFeed
+    definedNtnNodes.put("HT", new NonTerminalNode("HT").setDownNode(new PositionNode().setDownNode(TerminalNodeFactory.cstn("\u0009")))); // Horizontal Tab
   }
 
   /**
@@ -196,10 +196,10 @@ public class ParseTreeBuilder implements ParseNodeEventListener {
       case "special sequence":
         if (tail instanceof PositionNode) {
           tail.setDownNode(TerminalNodeFactory.createCharacterRangeBasedTerminalNode(
-              generator.getSpecialSequence(e.resultString)));
+              generator.getSpecialSequence(e.resultString), e.resultString));
         } else {
           tail = tail.returnDownNode(new PositionNode().setDownNode(TerminalNodeFactory.createCharacterRangeBasedTerminalNode(
-                  generator.getSpecialSequence(e.resultString))));
+                  generator.getSpecialSequence(e.resultString),e.resultString)));
         }
         break;
 

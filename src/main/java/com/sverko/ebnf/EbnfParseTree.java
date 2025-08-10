@@ -91,7 +91,7 @@ public class EbnfParseTree {
         .returnDownNode(createNonTerminalNode("terminal character"))
         .returnDownNode(new PositionNode())
         .returnDownNode(
-            TerminalNodeFactory.createCharacterRangeBasedTerminalNode(Character::isDefined));
+            TerminalNodeFactory.createCharacterRangeBasedTerminalNode(Character::isDefined,"?ANY?"));
         nodeMap.get("first terminal character").parent
         .returnRightNode(new PositionNode())
         .returnDownNode(new LoopNode())
