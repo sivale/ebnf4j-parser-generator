@@ -4,6 +4,7 @@ import com.sverko.ebnf.tools.ParseNodeParserFactory;
 import com.sverko.ebnf.tools.UTF8FileToStringArrayList;
 import java.io.IOException;
 import java.lang.Character.UnicodeBlock;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +37,11 @@ public class Parser {
 		return parse(startNode);
 	}
 
-	public int parse(String textLocation) throws IOException {
+	public int parse(String text) {
+		return parse(lexer.lexText(text), startNode);
+	}
+
+	public int parse(Path textLocation) throws IOException {
 		return parse(lexer.lexText(UTF8FileToStringArrayList.loadFileIntoStringList(textLocation)), startNode);
 	}
 

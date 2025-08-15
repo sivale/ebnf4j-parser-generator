@@ -4,6 +4,7 @@ package com.sverko.ebnf;
 import com.sverko.ebnf.tools.ParseNodeParserFactory;
 import com.sverko.ebnf.tools.UTF8FileToStringArrayList;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,11 +16,11 @@ public class EbnfParserGenerator extends Parser {
 		startNode = EbnfParseTree.getStartNode();
 	}
 
-	public Parser getParser (String shemaLocation) throws IOException{
+	public Parser getParser (Path shemaLocation) throws IOException{
 		return getParser(shemaLocation,true);
 	}
 
-  public Parser getParser(String shemaLocation, boolean ignoreWhitespace) throws IOException {
+  public Parser getParser(Path shemaLocation, boolean ignoreWhitespace) throws IOException {
 		Lexer shemaLexer = new Lexer();
 		return getParser(shemaLexer.lexText(UTF8FileToStringArrayList.loadFileIntoStringList(shemaLocation)),ignoreWhitespace);
 	}

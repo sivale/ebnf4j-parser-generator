@@ -1,5 +1,6 @@
 package com.sverko.ebnf;
 
+import com.sverko.ebnf.SvgPrinter.SvgNode.ParseNodeType;
 import com.sverko.ebnf.tools.UnicodeString;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -51,6 +52,9 @@ public class SvgPrinter {
         childNode.id = ++id;
         childNode.setNodeType(getSvgNodeType(parseNode.getDownNode()));
         childNode.textInside = getTextInside(parseNode.getDownNode());
+        if(getSvgNodeType(parseNode.downNode) == ParseNodeType.TERMINAL_NODE){
+          childNode.textBelow = ((TerminalNode) parseNode.getDownNode()).getTag();
+        }
         makeSvgNodesTree(parseNode.getDownNode(), childNode);
       }
     }
@@ -260,6 +264,9 @@ public class SvgPrinter {
         break;
         case TERMINAL_NODE: {
           // draw octagon
+          double centerX = node.col * 100 + offsetFromLeft + 25;
+          double centerY = node.row * 100 + offsetFromTop + 25;
+
           sb.append("<polygon points='"
               + (node.col * 100 + offsetFromLeft) + "," + (node.row * 100 + 16.67 + offsetFromTop) +
               " " + (node.col * 100 + 16.67 + offsetFromLeft) + "," + (node.row * 100
@@ -286,9 +293,11 @@ public class SvgPrinter {
               node.textInside +
               "</text>\n");
 
-
-        }
-        break;
+          sb.append("<text x='" + centerX + "' y='" + (centerY + 35) +
+              "' font-family='Arial' font-size='10' text-anchor='middle'>" +
+              node.textBelow +
+              "</text>\n");
+        } break;
         case NON_TERMINAL_NODE: {
           sb.append("<rect width='70' height='50'" +
               " x='" + (node.col * 100 - 10 + offsetFromLeft) +
@@ -489,6 +498,7 @@ public class SvgPrinter {
 
     int col, row, id;
     String textInside;
+    String textBelow;
 
     public SvgNode(int col, int row) {
       this.col = col;

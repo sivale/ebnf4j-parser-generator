@@ -152,6 +152,13 @@ public class LexerTokenTest {
     lexer.buildLexerTree(tokens);
     lexer.printNodeGraph();
   }
+  @Test
+  public void testLexerAcceptStrings() {
+    Set<String> keywords = new HashSet<>(Arrays.asList("si","no"));
+    Lexer lexer = new Lexer(keywords);
+    List<String> tokens = lexer.lexText("abc\nsi\nef");
+    assert(tokens.contains("si"));
+  }
 }
 
 

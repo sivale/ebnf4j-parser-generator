@@ -110,6 +110,11 @@ public class Lexer {
     }
   }
 
+  public List<String> lexText(String text) {
+    List<String> lines = Arrays.asList(text.split("\n"));
+    return lexText(lines);
+  }
+
   public List<String> lexText(List<String> lines) {
     List<String> tokens = new ArrayList<>();
 
