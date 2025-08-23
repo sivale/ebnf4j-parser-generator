@@ -1,10 +1,8 @@
 package com.sverko.ebnf;
 
 import java.io.IOException;
-import java.lang.Character.UnicodeBlock;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.function.Predicate;
 import org.junit.jupiter.api.Test;
 
 public class TestSimpleEbnf {

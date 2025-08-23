@@ -20,6 +20,7 @@ public class Parser {
 	ParseNode startNode;
 	Map<String,ParseNode> nodeMap;
 	Map<String, Predicate<Integer>> specialSequences = new HashMap<>();
+  List<String> eventNodeNames = new ArrayList<>();
 
 	public Parser(){
 
@@ -48,6 +49,7 @@ public class Parser {
 
 	private int parse(ParseNode startNode){
 		assignParserToEachNode(startNode);
+
 		return startNode.callReceived(getNextToken(startNode.acceptsWhitespace));
 	}
 
@@ -94,13 +96,20 @@ public class Parser {
 		nodeMap.get(nodeName).addEventListener(listener);
 	}
 
-	public void assignNodeEventListeners(ParseNodeEventListener listener, String... nodeNames){
-		for(String nodeName : nodeNames) {
-			assignNodeEventListener(nodeName,listener);
-		}
-	}
+  public void assignNodeEventListeners(ParseNodeEventListener listener, String... nodeNames){
+    if (nodeNames == null || nodeNames.length == 0) {
+      // no explicit node names, so assign to all nodes
+      for (Map.Entry<String, ParseNode> e : nodeMap.entrySet()) {
+        e.getValue().addEventListener(listener);
+      }
+      return;
+    }
+    for(String nodeName : nodeNames) {
+      assignNodeEventListener(nodeName,listener);
+    }
+  }
 
-	public void setAcceptsWhitespace(boolean acceptsWhitespace, ParseNode parentNode){
+  public void setAcceptsWhitespace(boolean acceptsWhitespace, ParseNode parentNode){
 		
 		parentNode.acceptsWhitespace = acceptsWhitespace;
 		if(parentNode.hasDownNode()){

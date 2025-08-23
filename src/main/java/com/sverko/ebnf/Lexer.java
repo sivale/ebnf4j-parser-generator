@@ -1,44 +1,57 @@
 package com.sverko.ebnf;
-
-import com.sverko.ebnf.Lexer.DownRightNode.Builder;
 import com.sverko.ebnf.tools.UnicodeString;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
+
 public class Lexer {
   public static Builder builder() {
     return new Builder();
   }
   private DownRightNode rootNode;
-  private MatchType matchType = MatchType.CASE_INSENSITIVE;
+  private MatchType matchType;
   private boolean IGNORE_WHITESPACE = true;
   private BiFunction<DownRightNode, Integer, Boolean> matchTester;
+  private boolean PRESERVE_WS_IN_QUOTES = false;
 
   private enum MatchType {
     CASE_SENSITIVE,
     CASE_INSENSITIVE
   }
 
-
-
   public Lexer(Set<String> tokens) {
-    buildLexerTree(tokens);
-    chooseMatchTester();
+    this(tokens, false,  true, false);
   }
 
   public Lexer(Set<String> tokens, boolean caseSensitive) {
+    this(tokens, caseSensitive,  true, false);
+  }
+
+  public Lexer (Set<String> tokens, boolean caseSensitive, boolean ignoreWhitespace) {
+    this(tokens, caseSensitive, ignoreWhitespace, false);
+  }
+
+  public Lexer (Set<String> tokens, boolean caseSensitive, boolean ignoreWhitespace, boolean preserveWhitespaceInQuotes) {
     this.matchType = caseSensitive ? MatchType.CASE_SENSITIVE : MatchType.CASE_INSENSITIVE;
+    this.IGNORE_WHITESPACE = ignoreWhitespace;
+    this.PRESERVE_WS_IN_QUOTES = preserveWhitespaceInQuotes;
     buildLexerTree(tokens);
     chooseMatchTester();
   }
 
-  public Lexer (Set<String> tokens, boolean caseSensitive, boolean ignoreWhitespace) {
-    this(tokens, caseSensitive);
-    IGNORE_WHITESPACE = ignoreWhitespace;
+  public Lexer(boolean ignoreWhitespace, boolean preserveWhitespaceInQuotes) {
+    this.matchType = MatchType.CASE_INSENSITIVE;
+    this.IGNORE_WHITESPACE = ignoreWhitespace;
+    this.PRESERVE_WS_IN_QUOTES = preserveWhitespaceInQuotes;
+    this.rootNode = null;
+    chooseMatchTester();
   }
 
   public Lexer() {
+    this.matchType = MatchType.CASE_INSENSITIVE;
+    this.PRESERVE_WS_IN_QUOTES = false;
     this.rootNode = null;
+    chooseMatchTester();
   }
 
   private void chooseMatchTester() {
@@ -120,12 +133,49 @@ public class Lexer {
 
     if (rootNode == null) {
       for (String line : lines) {
+        boolean inString = false;
+        char currentQuote = 0;
         UnicodeString unicodeLine = new UnicodeString(line);
-        for (int i = 0; i < unicodeLine.length(); i++) {
-           String singleUnicodeCharacter = unicodeLine.getStringAt(i);
-           if(!Character.isWhitespace(singleUnicodeCharacter.codePointAt(0)) && IGNORE_WHITESPACE) {
-             tokens.add(singleUnicodeCharacter);
-           }
+        for (int idx = 0; idx < unicodeLine.length(); idx++) {
+          String chStr = unicodeLine.getStringAt(idx);
+          char ch = chStr.charAt(0);
+
+          if (PRESERVE_WS_IN_QUOTES && (ch == '"' || ch == '\'')) {
+            // When preserve is enabled and we encounter a quote, collect the whole quoted region
+            // into a single token INCLUDING the surrounding quotes and inner whitespace
+            StringBuilder quoted = new StringBuilder();
+            char quote = ch;
+            inString = true;
+            currentQuote = quote;
+            quoted.append(chStr); // opening quote
+            idx++;
+            while (idx < unicodeLine.length()) {
+              String inner = unicodeLine.getStringAt(idx);
+              quoted.append(inner);
+              if (inner.charAt(0) == quote) {
+                // closing quote reached
+                inString = false;
+                currentQuote = 0;
+                break;
+              }
+              idx++;
+            }
+            tokens.add(quoted.toString());
+            continue;
+          }
+
+          if (Character.isWhitespace(ch)) {
+            if (PRESERVE_WS_IN_QUOTES && inString) {
+              // This branch is kept for robustness if unbalanced quotes occur; otherwise
+              // quoted paths are handled above and won't come here while inString == true.
+              tokens.add(chStr);
+            } else if (!IGNORE_WHITESPACE) {
+              tokens.add(chStr);
+            }
+            continue;
+          }
+
+          tokens.add(chStr);
         }
       }
       return tokens;
@@ -134,6 +184,50 @@ public class Lexer {
     for (String line : lines) {
       int i = 0;
       while (i < line.length()) {
+        // 1) Skip leading whitespace of the next token if configured to ignore it
+        if (IGNORE_WHITESPACE) {
+          while (i < line.length() && Character.isWhitespace(line.charAt(i))) {
+            i++;
+          }
+          if (i >= line.length()) break;
+        }
+
+        // 2) If preserve-in-quotes is enabled and the next char starts a quoted block,
+        //    consume the entire quoted string and emit it as ONE token (including quotes)
+        if (PRESERVE_WS_IN_QUOTES && (line.charAt(i) == '"' || line.charAt(i) == '\'')) {
+          char quote = line.charAt(i);
+          int start = i;
+          i++; // consume opening quote
+          boolean closed = false;
+          while (i < line.length()) {
+            char c = line.charAt(i);
+            if (c == quote) {
+              i++; // consume closing quote
+              closed = true;
+              break;
+            }
+            i++;
+          }
+          if (closed) {
+            String grouped = line.substring(start, i);
+            String inner = grouped.substring(1, grouped.length() - 1);
+            boolean hasAlnum = inner.chars().anyMatch(Character::isLetterOrDigit);
+            if (hasAlnum) {
+              tokens.add(grouped);
+            } else {
+              // Fallback: don't group pseudo-strings like "\" , \""
+              tokens.add(Character.toString(quote));
+              // Reprocess the remainder starting right after opening quote
+              i = start + 1;
+            }
+          } else {
+            // Unterminated quote -> emit only the opening quote
+            tokens.add(Character.toString(quote));
+          }
+          continue;
+        }
+
+        // 3) Normal longest-match via trie
         int longestMatchLength = 0;
         String longestMatch = null;
         DownRightNode currentNode = rootNode;
@@ -144,7 +238,8 @@ public class Lexer {
         while (j < line.length()) {
           c = line.charAt(j);
           if (Character.isWhitespace(c) && IGNORE_WHITESPACE) {
-            if (j == i){
+            if (j == i) {
+              // safeguard: should rarely happen due to step 1, but keep behavior consistent
               i++;
             }
             j++;
@@ -173,9 +268,9 @@ public class Lexer {
         }
       }
     }
-
     return tokens;
   }
+
   private boolean matchChar(DownRightNode node, char c) {
     if (node.codePoints == null || node.codePoints.length == 0) return false;
     if (matchType == MatchType.CASE_SENSITIVE) {
@@ -186,11 +281,19 @@ public class Lexer {
   }
 
   public void printNodeGraph() {
+    List<String> outputGraph = new ArrayList<>();
     if (rootNode != null) {
-      ArrayList<String> outputGraph = new ArrayList<String>();
-      printGraphFrom(rootNode, 0, 1,  "-> ", outputGraph);
+      printGraphFrom(rootNode, 0, 1, "-> ", outputGraph);
       outputGraph.forEach(System.out::println);
     }
+  }
+
+  public String getOutputGraph() {
+    List<String> outputGraph = new ArrayList<>();
+    if (rootNode != null) {
+      printGraphFrom(rootNode, 0, 1, "-> ", outputGraph);
+    }
+    return String.join("\n", outputGraph);
   }
 
   private void printGraphFrom(DownRightNode node, int line, int column, String prefix, List<String> outputGraph) {
@@ -334,26 +437,33 @@ public class Lexer {
     public String toString() {
       return codePoints == null ? "" : String.valueOf(codePoints) + (stopMark ? "*" : " ");
     }
-    public static class Builder {
-      Set<String> tokens = null;
-      boolean ignoreWhitespace = true;
-      boolean ignoreCase = false;
+  }
 
-      Builder tokens(Set<String> tokens){
-        this.tokens = tokens;
-        return this;
-      }
-      Builder ignoreWhitespace(boolean ignoreWhitespace){
-        this.ignoreWhitespace = ignoreWhitespace;
-        return this;
-      }
-      Builder ignoreCase(boolean ignoreCase){
-        this.ignoreCase = ignoreCase;
-        return this;
-      }
-      Lexer build(){
-        return new Lexer(tokens, ignoreCase, ignoreWhitespace);
-      }
+  public static class Builder {
+    Set<String> tokens = null;
+    boolean ignoreWhitespace = true;
+    boolean ignoreCase = false;
+    boolean preserveWhitespaceInQuotes = false;
+
+    Builder tokens(Set<String> tokens){
+      this.tokens = tokens;
+      return this;
+    }
+    Builder ignoreWhitespace(boolean ignoreWhitespace){
+      this.ignoreWhitespace = ignoreWhitespace;
+      return this;
+    }
+    Builder ignoreCase(boolean ignoreCase){
+      this.ignoreCase = ignoreCase;
+      return this;
+    }
+    // Neuer Builder-Schalter
+    Builder preserveWhitespaceInQuotes(boolean preserve){
+      this.preserveWhitespaceInQuotes = preserve;
+      return this;
+    }
+    Lexer build(){
+      return new Lexer(tokens, ignoreCase, ignoreWhitespace, preserveWhitespaceInQuotes);
     }
   }
 }
