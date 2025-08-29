@@ -12,15 +12,19 @@ public class NonTerminalNode extends ParseNode {
 	}
 	
 	@Override
-	public int callReceived(int token) {
+  public int callReceived(int token) {
+    // remember start token index for this node
+    this.frmPtr = token;
 
-		int receivedResult = downNode.callReceived(token);
-		if (receivedResult > 0){
-			resultString = tokens.getSubstring(token, receivedResult);
-			fireParseNodeEvent();
-		}
-		return receivedResult;
-	}
+    int receivedResult = this.downNode.callReceived(token);
+    if (receivedResult > 0) {
+      this.toPtr = receivedResult;
+      this.resultString = this.tokens.getSubstring(token, receivedResult);
+      this.fireParseNodeEvent();
+    }
+
+    return receivedResult;
+  }
 
 	String getResultString (){
 		return resultString;
