@@ -19,16 +19,16 @@ public class Lexer {
     CASE_INSENSITIVE
   }
 
-  public Lexer(Set<String> tokens) {
-    this(tokens, false,  true, false);
+  public Lexer(Set<String> keywords) {
+    this(keywords, false,  true, false);
   }
 
-  public Lexer(Set<String> tokens, boolean caseSensitive) {
-    this(tokens, caseSensitive,  true, false);
+  public Lexer(Set<String> keywords, boolean caseSensitive) {
+    this(keywords, caseSensitive,  true, false);
   }
 
-  public Lexer (Set<String> tokens, boolean caseSensitive, boolean ignoreWhitespace) {
-    this(tokens, caseSensitive, ignoreWhitespace, false);
+  public Lexer (Set<String> keywords, boolean caseSensitive, boolean ignoreWhitespace) {
+    this(keywords, caseSensitive, ignoreWhitespace, false);
   }
 
   public Lexer (Set<String> tokens, boolean caseSensitive, boolean ignoreWhitespace, boolean preserveWhitespaceInQuotes) {
@@ -440,30 +440,30 @@ public class Lexer {
   }
 
   public static class Builder {
-    Set<String> tokens = null;
+    Set<String> keywords = null;
     boolean ignoreWhitespace = true;
     boolean ignoreCase = false;
     boolean preserveWhitespaceInQuotes = false;
 
-    Builder tokens(Set<String> tokens){
-      this.tokens = tokens;
+    public Builder tokens(Set<String> tokens){
+      this.keywords = tokens;
       return this;
     }
-    Builder ignoreWhitespace(boolean ignoreWhitespace){
+    public Builder ignoreWhitespace(boolean ignoreWhitespace){
       this.ignoreWhitespace = ignoreWhitespace;
       return this;
     }
-    Builder ignoreCase(boolean ignoreCase){
+    public Builder ignoreCase(boolean ignoreCase){
       this.ignoreCase = ignoreCase;
       return this;
     }
     // Neuer Builder-Schalter
-    Builder preserveWhitespaceInQuotes(boolean preserve){
+    public Builder preserveWhitespaceInQuotes(boolean preserve){
       this.preserveWhitespaceInQuotes = preserve;
       return this;
     }
-    Lexer build(){
-      return new Lexer(tokens, ignoreCase, ignoreWhitespace, preserveWhitespaceInQuotes);
+    public Lexer build(){
+      return new Lexer(keywords, ignoreCase, ignoreWhitespace, preserveWhitespaceInQuotes);
     }
   }
 }
