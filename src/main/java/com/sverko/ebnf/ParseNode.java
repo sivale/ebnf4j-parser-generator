@@ -26,7 +26,7 @@ public abstract class ParseNode implements CalledNode{
 		this.acceptsWhitespace = acceptsWhitespace;
 		return this;
 	}
-	protected String getName() {
+	public String getName() {
 		return name;
 	}
 	protected boolean acceptsWhitespace=false;
