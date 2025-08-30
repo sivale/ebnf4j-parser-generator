@@ -17,7 +17,6 @@ public class TerminalNode extends ParseNode {
 	}
 
 	public String getTag() {
-		// Fallbacks, damit immer etwas Sinnvolles angezeigt wird
 		if (tag != null && !tag.isEmpty()) return tag;
 		if (name != null && !name.isEmpty()) return name;
 		return "<terminal>";

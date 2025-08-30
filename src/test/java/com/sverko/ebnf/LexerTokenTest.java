@@ -46,9 +46,9 @@ public class LexerTokenTest {
   }
   @Test
   public void lexerShouldHonourIgnoreWhitespace2() {
-    Set<String> tokens = Set.of("ab");
+    Set<String> keywords = Set.of("ab");
     List<String> input = List.of("a b");
-    Lexer lexer = Lexer.builder().tokens(tokens).ignoreWhitespace(true).build();
+    Lexer lexer = Lexer.builder().keywords(keywords).ignoreWhitespace(true).build();
     List<String> result = lexer.lexText(input);
     List<String> expected = List.of("ab");
     assertEquals(expected, result, "lexer should ignore whitespace");
@@ -156,59 +156,25 @@ public class LexerTokenTest {
     List<String> tokens = lexer.lexText("abc\nsi\nef");
     assert(tokens.contains("si"));
   }
-  @Test
-  public void lexerShouldGroupQuotedTerminalStrings_noKeywords_usingStringInput() {
-    String input = "MYDEF = \"one two three\" , \"four\", \"five\";";
-    Lexer lexer = Lexer.builder()
-        .ignoreWhitespace(true)
-        .preserveWhitespaceInQuotes(true)
-        .build();
-    List<String> result = lexer.lexText(input);
-    List<String> quoted = new ArrayList<>();
-    for (String t : result) {
-      if (t.length() >= 2 && t.startsWith("\"") && t.endsWith("\"")) {
-        quoted.add(t);
-      }
-    }
 
-    List<String> expectedQuoted = List.of("\"one two three\"", "\"four\"", "\"five\"");
-    assertEquals(expectedQuoted, quoted,
-        "Each double-quoted terminal string must be a single token including quotes and inner spaces.");
+  @Test
+  public void lexerShouldPreserveWhitespaceInTerminalStringsIfToldSo() {
+    String input = "MYDEF = \"one two three\" , \"four\", \"five\";";
+    EbnfParserGenerator shemaParser = new EbnfParserGenerator();
+    shemaParser.lexer = Lexer.builder().preserveWhitespaceInQuotes(true).build();
+    List<String> singleCodepointList = shemaParser.lexer.lexText(input);
+    Parser textParser = shemaParser.getParser(singleCodepointList,true);
+    int foundTokens = textParser.parse("one two three four five");
+    assert (foundTokens == 3);
   }
 
   @Test
-  public void lexerShouldGroupQuotedTerminalStrings_withKeywords_usingStringInput() {
-    String input = "MYDEF = \"one two three\" , \"four\", \"five\";";
-    Set<String> tokens = new HashSet<>(Arrays.asList("MYDEF", "=", ",", ";"));
-    Lexer lexer = Lexer.builder()
-        .tokens(tokens)
-        .ignoreWhitespace(true)
-        .preserveWhitespaceInQuotes(true)
-        .build();
+  public void lexerShouldNotPreserveWhitespaceInTerminalStringsIfNotToldSo() {
+    List<String> input = List.of("'a b'");
+    Lexer lexer = Lexer.builder().ignoreWhitespace(true).preserveWhitespaceInQuotes(false).build();
     List<String> result = lexer.lexText(input);
-    List<String> quoted = new ArrayList<>();
-    for (String t : result) {
-      if (t.length() >= 2 && t.startsWith("\"") && t.endsWith("\"")) {
-        quoted.add(t);
-      }
-    }
-    List<String> expectedQuoted = List.of("\"one two three\"", "\"four\"", "\"five\"");
-    assertEquals(expectedQuoted, quoted,
-        "With keywords active, each double-quoted terminal string must still be a single token.");
-  }
-
-  @Test
-  public void lexerShouldNotGroupQuotedTerminalStrings_whenPreserveDisabled_noKeywords() {
-    String input = "MYDEF = \"one two three\" , \"four\", \"five\";";
-    Lexer lexer = Lexer.builder()
-        .ignoreWhitespace(true)
-        .preserveWhitespaceInQuotes(false)
-        .build();
-    List<String> result = lexer.lexText(input);
-    boolean hasGroupedQuotedToken = result.stream()
-        .anyMatch(t -> t.length() >= 2 && t.startsWith("\"") && t.endsWith("\""));
-    assertFalse(hasGroupedQuotedToken,
-        "Without preserveWhitespaceInQuotes, quoted regions must not become single tokens.");
+    List<String> expected = List.of("'","a","b","'");
+    assertEquals(expected, result, "lexer should ignore whitespace");
   }
 }
 

@@ -229,8 +229,8 @@ public class ParseTreeBuilder implements ParseNodeEventListener {
     return firstNonTerminalNode;
   }
 
-  Map<String, ParseNode> getNamedNodes() { return definedNtnNodes; }
-  Set<String> getLexerTokens() { return terminalStrings; }
+  public Map<String, ParseNode> getNamedNodes() { return definedNtnNodes; }
+  public Set<String> getLexerTokens() { return terminalStrings; }
   // a parent on the level above might not exist
   private ParseNode getUpperLevelParentNode(ParseNode curNode) {
     if (curNode.hasParent()) {

@@ -1,37 +1,33 @@
 package com.sverko.ebnf;
+
 import com.sverko.ebnf.tools.UnicodeString;
+
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 public class Lexer {
-  public static Builder builder() {
-    return new Builder();
-  }
+  public static Builder builder() { return new Builder(); }
+
   private DownRightNode rootNode;
   private MatchType matchType;
   private boolean IGNORE_WHITESPACE = true;
   private BiFunction<DownRightNode, Integer, Boolean> matchTester;
   private boolean PRESERVE_WS_IN_QUOTES = false;
 
-  private enum MatchType {
-    CASE_SENSITIVE,
-    CASE_INSENSITIVE
-  }
+  private enum MatchType { CASE_SENSITIVE, CASE_INSENSITIVE }
 
-  public Lexer(Set<String> keywords) {
-    this(keywords, false,  true, false);
-  }
+  public Lexer(Set<String> keywords) { this(keywords, false, true, false); }
 
   public Lexer(Set<String> keywords, boolean caseSensitive) {
-    this(keywords, caseSensitive,  true, false);
+    this(keywords, caseSensitive, true, false);
   }
 
-  public Lexer (Set<String> keywords, boolean caseSensitive, boolean ignoreWhitespace) {
-    this(keywords, caseSensitive, ignoreWhitespace, false);
+  public Lexer(Set<String> tokens, boolean caseSensitive, boolean ignoreWhitespace) {
+    this(tokens, caseSensitive, ignoreWhitespace, false);
   }
 
-  public Lexer (Set<String> tokens, boolean caseSensitive, boolean ignoreWhitespace, boolean preserveWhitespaceInQuotes) {
+  public Lexer(Set<String> tokens, boolean caseSensitive, boolean ignoreWhitespace, boolean preserveWhitespaceInQuotes) {
     this.matchType = caseSensitive ? MatchType.CASE_SENSITIVE : MatchType.CASE_INSENSITIVE;
     this.IGNORE_WHITESPACE = ignoreWhitespace;
     this.PRESERVE_WS_IN_QUOTES = preserveWhitespaceInQuotes;
@@ -64,7 +60,8 @@ public class Lexer {
 
   void buildLexerTree(Set<String> keywords) {
     rootNode = null;
-    if (keywords == null) { return; }
+    if (keywords == null) return;
+
     for (String token : keywords) {
       if (token == null || token.isEmpty()) continue;
       char[] chars = token.toCharArray();
@@ -74,7 +71,7 @@ public class Lexer {
       }
 
       DownRightNode current = rootNode;
-      DownRightNode previous = null;
+      DownRightNode previous;
 
       for (int i = 0; i < chars.length; i++) {
         if (i == 0) {
@@ -84,7 +81,6 @@ public class Lexer {
             previous = sibling;
             sibling = sibling.getFirstSibling();
           }
-
           if (sibling == null) {
             DownRightNode newNode = new DownRightNode(new char[]{chars[i]});
             if (previous == null) {
@@ -105,7 +101,6 @@ public class Lexer {
             previous = child;
             child = child.getFirstSibling();
           }
-
           if (child == null) {
             DownRightNode newNode = new DownRightNode(new char[]{chars[i]});
             if (previous == null) {
@@ -131,131 +126,100 @@ public class Lexer {
   public List<String> lexText(List<String> lines) {
     List<String> tokens = new ArrayList<>();
 
+    // -------------------------
+    // FALL 1: Kein Keyword-Trie → Schema/Metasprache: zeichenweise tokenisieren.
+    // Quotes separat; in Quotes: WS erhalten (wenn PRESERVE_WS_IN_QUOTES).
+    // -------------------------
     if (rootNode == null) {
       for (String line : lines) {
-        boolean inString = false;
-        char currentQuote = 0;
-        UnicodeString unicodeLine = new UnicodeString(line);
-        for (int idx = 0; idx < unicodeLine.length(); idx++) {
-          String chStr = unicodeLine.getStringAt(idx);
-          char ch = chStr.charAt(0);
+        UnicodeString ul = new UnicodeString(line);
+        boolean inQuotes = false;
+        char quoteChar = 0;
 
-          if (PRESERVE_WS_IN_QUOTES && (ch == '"' || ch == '\'')) {
-            // When preserve is enabled and we encounter a quote, collect the whole quoted region
-            // into a single token INCLUDING the surrounding quotes and inner whitespace
-            StringBuilder quoted = new StringBuilder();
-            char quote = ch;
-            inString = true;
-            currentQuote = quote;
-            quoted.append(chStr); // opening quote
-            idx++;
-            while (idx < unicodeLine.length()) {
-              String inner = unicodeLine.getStringAt(idx);
-              quoted.append(inner);
-              if (inner.charAt(0) == quote) {
-                // closing quote reached
-                inString = false;
-                currentQuote = 0;
-                break;
+        for (int idx = 0; idx < ul.length(); idx++) {
+          String cpStr = ul.getStringAt(idx);
+          char ch = cpStr.charAt(0);
+
+          // Quote-Start?
+          if (inQuotes) {
+            if (ch == quoteChar) {
+              tokens.add(cpStr); // schließende Quote
+              inQuotes = false;
+              quoteChar = 0;
+            } else {
+              if (Character.isWhitespace(ch) && !PRESERVE_WS_IN_QUOTES) {
+                // -> behandle wie außerhalb Quotes
+                if (!IGNORE_WHITESPACE) {
+                  tokens.add(cpStr); // nur aufnehmen, wenn global gewünscht
+                }
+              } else {
+                // Quote-Inhalt normal aufnehmen
+                tokens.add(cpStr);
               }
-              idx++;
             }
-            tokens.add(quoted.toString());
             continue;
           }
 
+          // Außerhalb Quotes
           if (Character.isWhitespace(ch)) {
-            if (PRESERVE_WS_IN_QUOTES && inString) {
-              // This branch is kept for robustness if unbalanced quotes occur; otherwise
-              // quoted paths are handled above and won't come here while inString == true.
-              tokens.add(chStr);
-            } else if (!IGNORE_WHITESPACE) {
-              tokens.add(chStr);
-            }
-            continue;
+            if (!IGNORE_WHITESPACE) tokens.add(cpStr);
+          } else {
+            tokens.add(cpStr);
           }
-
-          tokens.add(chStr);
         }
       }
       return tokens;
     }
 
+    // -------------------------
+    // FALL 2: Keyword-Trie aktiv → Laufzeit-Text: Longest-Match mit smarter WS-Behandlung.
+    // -------------------------
     for (String line : lines) {
       int i = 0;
       while (i < line.length()) {
-        // 1) Skip leading whitespace of the next token if configured to ignore it
+        // (a) Leading WS zwischen Tokens ggf. überspringen
         if (IGNORE_WHITESPACE) {
-          while (i < line.length() && Character.isWhitespace(line.charAt(i))) {
-            i++;
-          }
+          while (i < line.length() && Character.isWhitespace(line.charAt(i))) i++;
           if (i >= line.length()) break;
         }
 
-        // 2) If preserve-in-quotes is enabled and the next char starts a quoted block,
-        //    consume the entire quoted string and emit it as ONE token (including quotes)
-        if (PRESERVE_WS_IN_QUOTES && (line.charAt(i) == '"' || line.charAt(i) == '\'')) {
-          char quote = line.charAt(i);
-          int start = i;
-          i++; // consume opening quote
-          boolean closed = false;
-          while (i < line.length()) {
-            char c = line.charAt(i);
-            if (c == quote) {
-              i++; // consume closing quote
-              closed = true;
-              break;
-            }
-            i++;
-          }
-          if (closed) {
-            String grouped = line.substring(start, i);
-            String inner = grouped.substring(1, grouped.length() - 1);
-            boolean hasAlnum = inner.chars().anyMatch(Character::isLetterOrDigit);
-            if (hasAlnum) {
-              tokens.add(grouped);
-            } else {
-              // Fallback: don't group pseudo-strings like "\" , \""
-              tokens.add(Character.toString(quote));
-              // Reprocess the remainder starting right after opening quote
-              i = start + 1;
-            }
-          } else {
-            // Unterminated quote -> emit only the opening quote
-            tokens.add(Character.toString(quote));
-          }
-          continue;
-        }
-
-        // 3) Normal longest-match via trie
         int longestMatchLength = 0;
         String longestMatch = null;
-        DownRightNode currentNode = rootNode;
+
+        DownRightNode depthHead = rootNode; // Kopf der Sibling-Liste auf aktueller Trie-Tiefe
         int j = i;
-        int c;
         StringBuilder currentMatch = new StringBuilder();
 
         while (j < line.length()) {
-          c = line.charAt(j);
-          if (Character.isWhitespace(c) && IGNORE_WHITESPACE) {
-            if (j == i) {
-              // safeguard: should rarely happen due to step 1, but keep behavior consistent
-              i++;
+          int c = line.charAt(j);
+
+          // (b) WS innerhalb des Matches:
+          //     - Wenn IGNORE_WHITESPACE und aktuelles Eingabezeichen WS ist:
+          //         * gibt es KEIN Sibling, der WS akzeptiert -> Eingabe-WS SKIPPEN (j++)
+          //         * gibt es EINEN -> WS ist Teil des Keywords -> normal matchen
+          if (IGNORE_WHITESPACE && Character.isWhitespace(c)) {
+            if (!hasSiblingMatchingChar(depthHead, c)) {
+              j++; // skip dieses Eingabe-Whitespace
+              continue;
             }
-            j++;
-            continue;
+            // sonst: normal weiter, WS gehört zum Keyword
           }
-          while (currentNode != null && !matchTester.apply(currentNode, c)) {
-            currentNode = currentNode.getFirstSibling();
+
+          // (c) passenden Sibling in dieser Tiefe suchen
+          DownRightNode probe = depthHead;
+          while (probe != null && !matchTester.apply(probe, c)) {
+            probe = probe.getFirstSibling();
           }
-          if (currentNode == null) break;
+          if (probe == null) break; // kein Übergang: Match beendet
 
           currentMatch.append((char) c);
-          if (currentNode.hasStopMark()) {
+          if (probe.hasStopMark()) {
             longestMatchLength = j - i + 1;
             longestMatch = currentMatch.toString();
           }
-          currentNode = currentNode.getFirstChild();
+
+          // (d) eine Tiefe tiefer
+          depthHead = probe.getFirstChild();
           j++;
         }
 
@@ -263,12 +227,23 @@ public class Lexer {
           tokens.add(longestMatch);
           i += longestMatchLength;
         } else {
+          // Fallback: unbekanntes Einzelzeichen als Token
           tokens.add(Character.toString(line.charAt(i)));
           i++;
         }
       }
     }
     return tokens;
+  }
+
+  /** Prüft, ob in der aktuellen Trie-Tiefe ein Sibling den gegebenen char 'c' akzeptiert. */
+  private boolean hasSiblingMatchingChar(DownRightNode depthHead, int c) {
+    DownRightNode n = depthHead;
+    while (n != null) {
+      if (matchTester.apply(n, c)) return true;
+      n = n.getFirstSibling();
+    }
+    return false;
   }
 
   private boolean matchChar(DownRightNode node, char c) {
@@ -297,26 +272,22 @@ public class Lexer {
   }
 
   private void printGraphFrom(DownRightNode node, int line, int column, String prefix, List<String> outputGraph) {
-
     if (outputGraph.size() == 0) {
       insertNewLine(outputGraph);
       insertNode(column, line, prefix, node, outputGraph);
     } else {
       insertNode(column, line, prefix, node, outputGraph);
     }
-
     if (node.hasSibling()) {
       if (!hasLinesBelowCurrentLine(line, outputGraph)) {
         insertPipeInNewLine(column, outputGraph);
         insertNewLine(outputGraph);
         printGraphFrom(node.getFirstSibling(), line+2, column, "   ", outputGraph);
       } else {
-
         duplicateLineWithPipes(line+1, outputGraph);
-        addPipeToLineWithPipes( line+1, column, outputGraph);
+        addPipeToLineWithPipes(line+1, column, outputGraph);
         printGraphFrom(node.getFirstSibling(), line+2, column, "    ", outputGraph);
       }
-
     }
     if (node.hasChildren()) {
       printGraphFrom(node.getFirstChild(), line, column+1,"-> ", outputGraph);
@@ -324,31 +295,20 @@ public class Lexer {
   }
 
   Predicate<String> hasAnotherPipeInLine = s -> getPositionOfPipe(s) > -1;
-  boolean hasLinesBelowCurrentLine(int line, List<String> outputGraph) {
-    return outputGraph.size()-1 > line;
-  }
-  int getPositionOfPipe(String outputLine) {
-    return outputLine.indexOf('|');
-  }
+  boolean hasLinesBelowCurrentLine(int line, List<String> outputGraph) { return outputGraph.size()-1 > line; }
+  int getPositionOfPipe(String outputLine) { return outputLine.indexOf('|'); }
   void insertPipeInNewLine(int column, List<String> outputGraph) {
     String outputline="";
-    for (int i=0; i < column-1; i++) {
-      outputline+="     ";
-    }
+    for (int i=0; i < column-1; i++) { outputline+="     "; }
     outputline+="   |";
     outputGraph.add(outputline);
   }
-
   void addPipeToLineWithPipes(int line, int column, List<String> outputGraph) {
-    //add padding if there is something in line already
     String outputLine = outputGraph.get(line);
     int lastOccupiedColumn = ceilDiv(outputLine.length(), 5);
-    for (int i = lastOccupiedColumn; i < column-1; i++) {
-      outputLine+="     ";
-    }
+    for (int i = lastOccupiedColumn; i < column-1; i++) { outputLine+="     "; }
     outputGraph.set(line, outputLine+="    |");
   }
-
   void duplicateLineWithPipes(int line, List<String> outputGraph) {
     if (hasAnotherPipeInLine.test(outputGraph.get(line))) {
       outputGraph.add(line, outputGraph.get(line));
@@ -359,9 +319,7 @@ public class Lexer {
       while (true) {
         index = inputLine.indexOf("|", index);
         if (index==-1) break;
-        for (int i = 0; i < index; i++) {
-          outputLine.append(" ");
-        }
+        for (int i = 0; i < index; i++) { outputLine.append(" "); }
         outputLine.append("|");
         index++;
       }
@@ -369,101 +327,45 @@ public class Lexer {
       outputGraph.add(line, outputLine.toString());
     }
   }
-  void insertNewLine(List<String> outputGraph) {
-    outputGraph.add("");
-  }
-
+  void insertNewLine(List<String> outputGraph) { outputGraph.add(""); }
   void insertNode (int column, int line, String prefix, DownRightNode node, List<String> outputGraph) {
-    //add padding if there is something in line already
     String outputLine = outputGraph.get(line);
     int lastOccupiedColumn = ceilDiv(outputLine.length(), 5);
-    for (int i = lastOccupiedColumn; i < column-1; i++) {
-      outputLine+="     ";
-    }
+    for (int i = lastOccupiedColumn; i < column-1; i++) { outputLine+="     "; }
     outputGraph.set(line, outputLine+=(prefix+node));
   }
 
-  public static int ceilDiv(int x, int y) {
-    if (x == 0) return 0;
-    return (x + y - 1) / y;
-  }
+  public static int ceilDiv(int x, int y) { if (x == 0) return 0; return (x + y - 1) / y; }
 
   public static class DownRightNode {
     private DownRightNode firstSibling, firstChild;
     private char[] codePoints;
     private boolean stopMark;
 
-    public DownRightNode(char[] codePoints) {
-      this.codePoints = codePoints;
-    }
-
-    public DownRightNode getFirstSibling() {
-      return firstSibling;
-    }
-
-    public void setFirstSibling(DownRightNode firstSibling) {
-      this.firstSibling = firstSibling;
-    }
-
-    public DownRightNode getFirstChild() {
-      return firstChild;
-    }
-
-    public void setFirstChild(DownRightNode firstChild) {
-      this.firstChild = firstChild;
-    }
-
-    public char[] getcodePoints() {
-      return codePoints;
-    }
-
-    public boolean hasSibling() {
-      return firstSibling != null;
-    }
-
-    public boolean hasChildren() {
-      return firstChild != null;
-    }
-
-    public boolean hasStopMark() {
-      return stopMark;
-    }
-
-    public void setStopMark(boolean stopMark) {
-      this.stopMark = stopMark;
-    }
-
-    @Override
-    public String toString() {
-      return codePoints == null ? "" : String.valueOf(codePoints) + (stopMark ? "*" : " ");
-    }
+    public DownRightNode(char[] codePoints) { this.codePoints = codePoints; }
+    public DownRightNode getFirstSibling() { return firstSibling; }
+    public void setFirstSibling(DownRightNode firstSibling) { this.firstSibling = firstSibling; }
+    public DownRightNode getFirstChild() { return firstChild; }
+    public void setFirstChild(DownRightNode firstChild) { this.firstChild = firstChild; }
+    public char[] getcodePoints() { return codePoints; }
+    public boolean hasSibling() { return firstSibling != null; }
+    public boolean hasChildren() { return firstChild != null; }
+    public boolean hasStopMark() { return stopMark; }
+    public void setStopMark(boolean stopMark) { this.stopMark = stopMark; }
+    @Override public String toString() { return codePoints == null ? "" : String.valueOf(codePoints) + (stopMark ? "*" : " "); }
   }
 
   public static class Builder {
     Set<String> keywords = null;
     boolean ignoreWhitespace = true;
-    boolean ignoreCase = false;
+    boolean ignoreCase = false; // Beibehaltung der vorhandenen Semantik
     boolean preserveWhitespaceInQuotes = false;
 
-    public Builder tokens(Set<String> tokens){
-      this.keywords = tokens;
-      return this;
-    }
-    public Builder ignoreWhitespace(boolean ignoreWhitespace){
-      this.ignoreWhitespace = ignoreWhitespace;
-      return this;
-    }
-    public Builder ignoreCase(boolean ignoreCase){
-      this.ignoreCase = ignoreCase;
-      return this;
-    }
-    // Neuer Builder-Schalter
-    public Builder preserveWhitespaceInQuotes(boolean preserve){
-      this.preserveWhitespaceInQuotes = preserve;
-      return this;
-    }
-    public Lexer build(){
-      return new Lexer(keywords, ignoreCase, ignoreWhitespace, preserveWhitespaceInQuotes);
-    }
+    public Builder tokens(Set<String> tokens){ this.keywords = tokens; return this; }
+    public Builder keywords(Set<String> tokens){ this.keywords = tokens; return this; } // Alias
+    public Builder ignoreWhitespace(boolean ignoreWhitespace){ this.ignoreWhitespace = ignoreWhitespace; return this; }
+    public Builder ignoreCase(boolean ignoreCase){ this.ignoreCase = ignoreCase; return this; }
+    public Builder preserveWhitespaceInQuotes(boolean preserve){ this.preserveWhitespaceInQuotes = preserve; return this; }
+    public Lexer build(){ return new Lexer(keywords, ignoreCase, ignoreWhitespace, preserveWhitespaceInQuotes); }
   }
 }

@@ -31,6 +31,9 @@ public class EbnfParserGenerator extends Parser {
     startNode = EbnfParseTree.getStartNode();
   }
 
+  public Parser getShemaParser() {
+    return this;
+  }
   public Parser getParser(Path shemaLocation) throws IOException {
     return getParser(shemaLocation, true);
   }

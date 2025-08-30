@@ -87,6 +87,9 @@ public class Parser {
 	public TokenQueue getTokenQueue(){
 		return new TokenQueue(q);
 	}
+  public Lexer getLexer() {
+    return lexer;
+  }
 
 	public void assignParserToEachNode(ParseNode startNode){
 		ParseNodeParserFactory.assign(startNode, this);
