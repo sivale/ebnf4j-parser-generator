@@ -185,11 +185,16 @@ public class Lexer {
 
         while (j < line.length()) {
           int c = line.charAt(j);
+
           if (IGNORE_WHITESPACE && Character.isWhitespace(c)) {
+            // nur skippen, wenn es an dieser Trie-Tiefe KEIN Whitespace-Kind gibt
             if (!hasSiblingMatchingChar(depthHead, c)) {
-              j++;
+              j++;            // Eingabe-Whitespace überspringen
+              continue;       // <<< WICHTIG: neue Iteration, neues 'c' holen
             }
+            // sonst: Whitespace ist Teil des Keywords -> normal weiter matchen
           }
+
           DownRightNode probe = depthHead;
           while (probe != null && !matchTester.apply(probe, c)) {
             probe = probe.getFirstSibling();
