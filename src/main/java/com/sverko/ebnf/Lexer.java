@@ -126,10 +126,6 @@ public class Lexer {
   public List<String> lexText(List<String> lines) {
     List<String> tokens = new ArrayList<>();
 
-    // -------------------------
-    // FALL 1: Kein Keyword-Trie → Schema/Metasprache: zeichenweise tokenisieren.
-    // Quotes separat; in Quotes: WS erhalten (wenn PRESERVE_WS_IN_QUOTES).
-    // -------------------------
     if (rootNode == null) {
       for (String line : lines) {
         UnicodeString ul = new UnicodeString(line);
@@ -141,26 +137,28 @@ public class Lexer {
           char ch = cpStr.charAt(0);
 
           // Quote-Start?
+          if (!inQuotes && (ch == '"' || ch == '\'')) {
+            tokens.add(cpStr);
+            inQuotes = true;
+            quoteChar = ch;
+            continue;
+          }
+
+          // Innerhalb Quotes
           if (inQuotes) {
             if (ch == quoteChar) {
-              tokens.add(cpStr); // schließende Quote
+              tokens.add(cpStr);
               inQuotes = false;
               quoteChar = 0;
             } else {
               if (Character.isWhitespace(ch) && !PRESERVE_WS_IN_QUOTES) {
-                // -> behandle wie außerhalb Quotes
-                if (!IGNORE_WHITESPACE) {
-                  tokens.add(cpStr); // nur aufnehmen, wenn global gewünscht
-                }
+                if (!IGNORE_WHITESPACE) tokens.add(cpStr);
               } else {
-                // Quote-Inhalt normal aufnehmen
                 tokens.add(cpStr);
               }
             }
             continue;
           }
-
-          // Außerhalb Quotes
           if (Character.isWhitespace(ch)) {
             if (!IGNORE_WHITESPACE) tokens.add(cpStr);
           } else {
@@ -170,14 +168,9 @@ public class Lexer {
       }
       return tokens;
     }
-
-    // -------------------------
-    // FALL 2: Keyword-Trie aktiv → Laufzeit-Text: Longest-Match mit smarter WS-Behandlung.
-    // -------------------------
     for (String line : lines) {
       int i = 0;
       while (i < line.length()) {
-        // (a) Leading WS zwischen Tokens ggf. überspringen
         if (IGNORE_WHITESPACE) {
           while (i < line.length() && Character.isWhitespace(line.charAt(i))) i++;
           if (i >= line.length()) break;
@@ -186,39 +179,28 @@ public class Lexer {
         int longestMatchLength = 0;
         String longestMatch = null;
 
-        DownRightNode depthHead = rootNode; // Kopf der Sibling-Liste auf aktueller Trie-Tiefe
+        DownRightNode depthHead = rootNode;
         int j = i;
         StringBuilder currentMatch = new StringBuilder();
 
         while (j < line.length()) {
           int c = line.charAt(j);
-
-          // (b) WS innerhalb des Matches:
-          //     - Wenn IGNORE_WHITESPACE und aktuelles Eingabezeichen WS ist:
-          //         * gibt es KEIN Sibling, der WS akzeptiert -> Eingabe-WS SKIPPEN (j++)
-          //         * gibt es EINEN -> WS ist Teil des Keywords -> normal matchen
           if (IGNORE_WHITESPACE && Character.isWhitespace(c)) {
             if (!hasSiblingMatchingChar(depthHead, c)) {
-              j++; // skip dieses Eingabe-Whitespace
-              continue;
+              j++;
             }
-            // sonst: normal weiter, WS gehört zum Keyword
           }
-
-          // (c) passenden Sibling in dieser Tiefe suchen
           DownRightNode probe = depthHead;
           while (probe != null && !matchTester.apply(probe, c)) {
             probe = probe.getFirstSibling();
           }
-          if (probe == null) break; // kein Übergang: Match beendet
+          if (probe == null) break;
 
           currentMatch.append((char) c);
           if (probe.hasStopMark()) {
             longestMatchLength = j - i + 1;
             longestMatch = currentMatch.toString();
           }
-
-          // (d) eine Tiefe tiefer
           depthHead = probe.getFirstChild();
           j++;
         }
@@ -227,7 +209,6 @@ public class Lexer {
           tokens.add(longestMatch);
           i += longestMatchLength;
         } else {
-          // Fallback: unbekanntes Einzelzeichen als Token
           tokens.add(Character.toString(line.charAt(i)));
           i++;
         }
