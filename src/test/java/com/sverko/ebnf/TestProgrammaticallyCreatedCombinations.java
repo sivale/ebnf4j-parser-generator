@@ -9,7 +9,7 @@ import com.sverko.ebnf.tools.StringLineToStringArrayListConvertor;
 import java.util.List;
 import java.util.Collections;
 
-public class TestProgramaticallyCreatedCombinations {
+public class TestProgrammaticallyCreatedCombinations {
   @ParameterizedTest
   @MethodSource("provideCombinations")
   public void testParserWithCombinations(String input, String ebnfDefinition) throws IOException {
@@ -18,7 +18,7 @@ public class TestProgramaticallyCreatedCombinations {
     List<String> defTokens = StringLineToStringArrayListConvertor.convert(ebnfDefinition); // Tokenize EBNF definition
 
     // Step 2: Lex the tokens of the EBNF definition
-    defTokens = new Lexer(Collections.emptySet()).lexText(defTokens);
+    defTokens = new Lexer().lexText(defTokens);
 
     // Step 3: Generate the parser using the EBNF schema
     EbnfParserGenerator generator = new EbnfParserGenerator();

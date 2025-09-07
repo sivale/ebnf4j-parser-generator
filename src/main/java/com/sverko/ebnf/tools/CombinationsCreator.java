@@ -333,6 +333,28 @@ public class CombinationsCreator {
     combos.addAll(createSingleExceptionElementCombinations());
     return combos;
   }
+
+  public static <T> List<List<T>> getPermutations(List<T> list) {
+    List<List<T>> result = new ArrayList<>();
+    if (list.isEmpty()) {
+      result.add(new ArrayList<>());
+      return result;
+    }
+    for (int i = 0; i < list.size(); i++) {
+      T current = list.get(i);
+      List<T> remaining = new ArrayList<>(list);
+      remaining.remove(i);
+      List<List<T>> subPermutations = getPermutations(remaining);
+      for (List<T> subPerm : subPermutations) {
+        List<T> newPermutation = new ArrayList<>();
+        newPermutation.add(current);
+        newPermutation.addAll(subPerm);
+        result.add(newPermutation);
+      }
+    }
+    return result;
+  }
+
   public static void main(String[] args) {
     createSingleElementCombinations();
     createSingleExceptionElementCombinations();
@@ -342,6 +364,4 @@ public class CombinationsCreator {
     createOneElementBeforeTwoEmbracedElementsCombinations();
     createOneElementAfterTwoEmbracedElementsCombinations();
   }
-
-
 }

@@ -6,7 +6,7 @@
 
     <groupId>com.sverko.ebnf</groupId>
     <artifactId>ebnf-parser-generator</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.2</version>
     <packaging>jar</packaging>
     <build>
     <plugins>
