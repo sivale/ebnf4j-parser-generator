@@ -12,11 +12,8 @@ public class TestBiggerShemas implements ParseNodeEventListener{
     Predicate<Integer> allowedSigns = (i) -> Character.UnicodeBlock.of(i) == UnicodeBlock.BASIC_LATIN && Character.isUpperCase(i) ||  "ÜÄÖ".contains(String.valueOf(Character.toChars(i)));
     generator.addSpecialSequence("?GERMAN_CAPITALS?",allowedSigns);
     Parser kennzeichenParser = generator.getParser(Path.of("src/main/resources/kennzeichen.ebnf"));
-    SvgPrinter printer = new SvgPrinter(kennzeichenParser.startNode);
-    printer.printParseTreeToFile("/tmp/kennzeichen.svg");
     kennzeichenParser.assignNodeEventListener("KENNZEICHEN",this);
-    //kennzeichenParser.assignNodeEventListener("LASTNAME",this);
-    kennzeichenParser.parse("src/main/resources/kennzeichen.txt");
+    kennzeichenParser.parse(Path.of("src/main/resources/kennzeichen.txt"));
   }
   @Test
   public void testAddresbookParser() throws IOException {
@@ -25,7 +22,7 @@ public class TestBiggerShemas implements ParseNodeEventListener{
     //SvgPrinter printer = new SvgPrinter(kennzeichenParser.startNode);
     addressBookParser.assignNodeEventListener("PHONE",this);
     //kennzeichenParser.assignNodeEventListener("LASTNAME",this);
-    addressBookParser.parse("src/main/resources/addressbook.txt");
+    addressBookParser.parse(Path.of("src/main/resources/addressbook.txt"));
   }
   @Test
   public void testBasicIdentationShema() throws IOException {
@@ -35,7 +32,7 @@ public class TestBiggerShemas implements ParseNodeEventListener{
     //printer.printParseTreeToFile("/tmp/indent-tree.svg");
     identParser.assignNodeEventListener("ELEMENT",this);
     identParser.assignNodeEventListener("SUBELEMENT",this);
-    identParser.parse("src/main/resources/indented-syntax.txt");
+    identParser.parse(Path.of("src/main/resources/indented-syntax.txt"));
   }
 
   @Override
