@@ -21,6 +21,14 @@
         <encoding>UTF-8</encoding>
     </properties>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/sivale/ebnf4j-parser-generator</url>
+        </repository>
+    </distributionManagement>
+
     <build>
         <plugins>
             <!-- Compiler liest .java als UTF-8 -->
