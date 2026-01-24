@@ -14,11 +14,11 @@ public class TestProgrammaticallyCreatedCombinations {
   @MethodSource("provideCombinations")
   public void testParserWithCombinations(String input, String ebnfDefinition) throws IOException {
     // Step 1: Tokenize the input and EBNF definition using the existing logic
-    List<String> sampleTokens = StringLineToStringArrayListConvertor.convert(input); // Tokenize input
-    List<String> defTokens = StringLineToStringArrayListConvertor.convert(ebnfDefinition); // Tokenize EBNF definition
+    TokenQueue sampleTokens = StringLineToStringArrayListConvertor.convert(input); // Tokenize input
+    TokenQueue defTokens = StringLineToStringArrayListConvertor.convert(ebnfDefinition); // Tokenize EBNF definition
 
     // Step 2: Lex the tokens of the EBNF definition
-    defTokens = new Lexer().lexText(defTokens);
+    defTokens = new Lexer().lexText(defTokens.getTokens());
 
     // Step 3: Generate the parser using the EBNF schema
     EbnfParserGenerator generator = new EbnfParserGenerator();

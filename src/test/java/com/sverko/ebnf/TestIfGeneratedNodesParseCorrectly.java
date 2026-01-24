@@ -45,11 +45,11 @@ public class TestIfGeneratedNodesParseCorrectly {
           }
       } else {
 
-        List<String> sampleTokens = StringLineToStringArrayListConvertor.convert(sample);
-        List<String> defTokens;
+        TokenQueue sampleTokens = StringLineToStringArrayListConvertor.convert(sample);
+        TokenQueue defTokens;
         defTokens = StringLineToStringArrayListConvertor.convert(parserDefinition.toString());
         parserDefinition.setLength(0);
-        defTokens = new Lexer(Collections.EMPTY_SET).lexText(defTokens);
+        defTokens = new Lexer(Collections.EMPTY_SET).lexText(defTokens.getTokens());
         EbnfParserGenerator generator = new EbnfParserGenerator();
         generator.startNode = EbnfParseTree.getStartNode();
         generator.loadEbnfSchema(defTokens);

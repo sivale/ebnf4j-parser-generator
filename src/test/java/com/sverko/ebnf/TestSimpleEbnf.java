@@ -10,6 +10,7 @@ public class TestSimpleEbnf {
    public void testSimpleEbnf() throws IOException {
      EbnfParserGenerator generator = new EbnfParserGenerator();
      Parser parser = generator.getParser(Path.of("src/main/resources/simple.ebnf"));
-     int i = parser.parse(List.of("A + B * 2"), parser.startNode);
+     Lexer lexer = Lexer.builder().build();
+     int i = parser.parse(lexer.lexText("A + B * 2"), parser.startNode);
    }
 }
