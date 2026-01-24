@@ -26,4 +26,14 @@ public class TestTokenProcessing {
     assertEquals(ParseNode.NOT_FOUND, result);
     assertEquals(TokenType.TRIVIA, q.getTokenObject(0).getType());
   }
+
+  @Test
+  void matchExpectedWhitespaceMarksPayload() {
+    TokenQueue q = new TokenQueue(List.of(new Token(" ", TokenType.UNKNOWN)));
+    TerminalNode node = TerminalNodeFactory.createSimpleTerminalNode(" ");
+    node.tokens = q; // falls ParseNode.tokens protected/package-private ist
+    int result = node.callReceived(0);
+    assertEquals(1, result);
+    assertEquals(TokenType.PAYLOAD, q.getTokenObject(0).getType());
+  }
 }
