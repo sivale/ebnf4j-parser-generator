@@ -26,11 +26,40 @@ public class TokenQueue {
         return index > -1 && index < tokens.size();
     }
 
+    public List<String> getTokens(){
+      return tokens;
+    }
+
     public String getToken(int index){
         return tokens.get(index);
     }
 
     public String getSubstring (int from, int to){
         return String.join("", tokens.subList(from, to));
+    }
+
+    public int size(){
+      return tokens.size();
+    }
+
+    public String get(int index) {
+      return tokens.get(index);
+    }
+
+    public boolean contains(String token){
+        return tokens.contains(token);
+    }
+
+    public static TokenQueue ofList(List<String> tokens){
+        return new TokenQueue(tokens);
+    }
+
+    public static TokenQueue ofList(String... tokens){
+        return new TokenQueue(List.of(tokens));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      return tokens.equals(((TokenQueue)obj).tokens);
     }
 }

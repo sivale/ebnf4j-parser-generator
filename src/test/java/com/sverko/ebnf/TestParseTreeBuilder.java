@@ -14,7 +14,7 @@ public class TestParseTreeBuilder {
     // A = "a";
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A","=",QT,"a",QT,";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A","=",QT,"a",QT,";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode();
         ntn.returnDownNode(new PositionNode()).setDownNode(cstn("a")); //cstn() = TerminalNodeFactory.createSimpleTerminalNode()
@@ -27,7 +27,7 @@ public class TestParseTreeBuilder {
     // A = B , "a";
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A","=","B",",",QT,"b",QT,";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A","=","B",",",QT,"b",QT,";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new PositionNode()
@@ -42,7 +42,7 @@ public class TestParseTreeBuilder {
     // A = "a", B;
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A","=",QT,"a",QT,",","B",";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A","=",QT,"a",QT,",","B",";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new PositionNode()
@@ -59,7 +59,7 @@ public class TestParseTreeBuilder {
     // A = "a" | B;
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A","=",QT,"a",QT,"|","B",";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A","=",QT,"a",QT,"|","B",";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new OrNode().setDownNode(new PositionNode().setDownNode(cstn("a")))
@@ -73,7 +73,7 @@ public class TestParseTreeBuilder {
     // A = { B } ;
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", "{", "B", "}",";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", "{", "B", "}",";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new LoopNode().setDownNode(new NonTerminalNode("B")));
@@ -85,7 +85,7 @@ public class TestParseTreeBuilder {
     // A = [ B ] ;
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", "[", "B", "]", ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", "[", "B", "]", ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new LoopNode(1).setDownNode(new NonTerminalNode("B")));
@@ -97,7 +97,7 @@ public class TestParseTreeBuilder {
     // A = 3* B ;
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", "3", "*", "B", ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", "3", "*", "B", ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new LoopNode(3,3).setDownNode(new NonTerminalNode("B")));
@@ -109,7 +109,7 @@ public class TestParseTreeBuilder {
     // A = "a","b";
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A","=",QT,"a",QT,",",QT,"b",QT,";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A","=",QT,"a",QT,",",QT,"b",QT,";"));
     generator.processEbnfSchema();
     ParseNode pn = new NonTerminalNode("top node");
     pn.returnDownNode(new PositionNode()).setDownNode(cstn("a")).setRightNode(new PositionNode().setDownNode(cstn("b")));
@@ -121,7 +121,7 @@ public class TestParseTreeBuilder {
     // A = "a","b","c";
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A","=",QT,"a",QT,",",QT,"b",QT,",",QT,"c",QT,";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A","=",QT,"a",QT,",",QT,"b",QT,",",QT,"c",QT,";"));
     generator.processEbnfSchema();
     ParseNode prn = new NonTerminalNode("top node");
     PositionNode pn = new PositionNode();
@@ -135,7 +135,7 @@ public class TestParseTreeBuilder {
     // A = "a"|"b";
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A","=",QT,"a",QT,"|",QT,"b",QT,";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A","=",QT,"a",QT,"|",QT,"b",QT,";"));
     generator.processEbnfSchema();
     ParseNode pn = new NonTerminalNode("top node");
     ParseNode or1 = new OrNode().setDownNode(new PositionNode().setDownNode(cstn("a")));
@@ -150,7 +150,7 @@ public class TestParseTreeBuilder {
     // A = "a"|"b"|"c";
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", QT, "a", QT, "|", QT, "b", QT,"|", QT, "c", QT, ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", QT, "a", QT, "|", QT, "b", QT,"|", QT, "c", QT, ";"));
     generator.processEbnfSchema();
     ParseNode pn = new NonTerminalNode("top node");
     ParseNode or1 = new OrNode().setDownNode(new PositionNode().setDownNode(cstn("a")));
@@ -166,7 +166,7 @@ public class TestParseTreeBuilder {
     // A = "a","b"|"c";
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A","=",QT,"a",QT,",",QT,"b",QT,"|",QT,"c",QT,";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A","=",QT,"a",QT,",",QT,"b",QT,"|",QT,"c",QT,";"));
     generator.processEbnfSchema();
     ParseNode pn = new NonTerminalNode("top node");
     OrNode or = new OrNode();
@@ -186,7 +186,7 @@ public class TestParseTreeBuilder {
     // A = "a"|"b","c";
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A","=",QT,"a",QT,"|",QT,"b",QT,",",QT,"c",QT,";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A","=",QT,"a",QT,"|",QT,"b",QT,",",QT,"c",QT,";"));
     generator.processEbnfSchema();
     ParseNode pn = new NonTerminalNode("top node");
     OrNode leftOr = new OrNode();
@@ -205,7 +205,7 @@ public class TestParseTreeBuilder {
     // A = "a","b"|"c","d";
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A","=",QT,"a",QT,",",QT,"b",QT,"|",QT,"c",QT,",",QT,"d",QT,";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A","=",QT,"a",QT,",",QT,"b",QT,"|",QT,"c",QT,",",QT,"d",QT,";"));
     generator.processEbnfSchema();
     ParseNode pn = new NonTerminalNode("top node");
     OrNode leftOr = new OrNode();
@@ -226,7 +226,7 @@ public class TestParseTreeBuilder {
     // A = "a"|"b","c"|"d";
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A","=",QT,"a",QT,"|",QT,"b",QT,",",QT,"c",QT,"|",QT,"d",QT,";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A","=",QT,"a",QT,"|",QT,"b",QT,",",QT,"c",QT,"|",QT,"d",QT,";"));
     generator.processEbnfSchema();
     ParseNode pn = new NonTerminalNode("top node");
     ParseNode or1 = new OrNode();
@@ -246,7 +246,7 @@ public class TestParseTreeBuilder {
     // A = "a","b"|"c"|"d"|"e"|"f","g";
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A","=",QT,"a",QT,",",QT,"b",QT,"|",QT,"c",QT,"|",QT,"d",QT,"|",QT,"e",QT,"|",QT,"f",QT,",",QT,"g",QT,";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A","=",QT,"a",QT,",",QT,"b",QT,"|",QT,"c",QT,"|",QT,"d",QT,"|",QT,"e",QT,"|",QT,"f",QT,",",QT,"g",QT,";"));
     generator.processEbnfSchema();
     ParseNode pn = new NonTerminalNode("top node");
     ParseNode or1 = new OrNode();
@@ -278,7 +278,7 @@ public class TestParseTreeBuilder {
     // A = "a",("b"|"c"),"d";
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A","=",QT,"a",QT,",","(",QT,"b",QT,"|",QT,"c",QT,")",",",QT,"d",QT,";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A","=",QT,"a",QT,",","(",QT,"b",QT,"|",QT,"c",QT,")",",",QT,"d",QT,";"));
     generator.processEbnfSchema();
     ParseNode pn = new NonTerminalNode("top node");
     ParseNode pn1 = new PositionNode();
@@ -298,7 +298,7 @@ public class TestParseTreeBuilder {
     // A = "a",("b","c"),"d";
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A","=",QT,"a",QT,",","(",QT,"b",QT,",",QT,"c",QT,")",",",QT,"d",QT,";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A","=",QT,"a",QT,",","(",QT,"b",QT,",",QT,"c",QT,")",",",QT,"d",QT,";"));
     generator.processEbnfSchema();
     ParseNode pn = new NonTerminalNode("top node");
     ParseNode pn1 = new PositionNode();
@@ -315,7 +315,7 @@ public class TestParseTreeBuilder {
     // A = ("B","c");
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A","=", "(" ,"B" ,",", QT,"c", QT, ")", ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A","=", "(" ,"B" ,",", QT,"c", QT, ")", ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new PositionNode().setDownNode(new NonTerminalNode("B"))
@@ -329,7 +329,7 @@ public class TestParseTreeBuilder {
     // A = ("a","b")|"c";
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A","=", "(", QT, "a", QT, ",", QT, "b", QT, ")", "|", QT, "c", QT, ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A","=", "(", QT, "a", QT, ",", QT, "b", QT, ")", "|", QT, "c", QT, ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new OrNode().setDownNode(new PositionNode().setDownNode(cstn("a"))
@@ -345,7 +345,7 @@ public class TestParseTreeBuilder {
     // A = ({ "a" , "b" } , "c" );
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", "(", "{", QT, "a", QT, ",", QT, "b", QT, "}", ",", QT, "c", QT, ")", ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", "(", "{", QT, "a", QT, ",", QT, "b", QT, "}", ",", QT, "c", QT, ")", ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new PositionNode()
@@ -367,7 +367,7 @@ public class TestParseTreeBuilder {
 
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", "B", ",", QT, "c", QT, ";", "B", "=", QT, "d", QT, ",", QT, "e", QT, ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", "B", ",", QT, "c", QT, ";", "B", "=", QT, "d", QT, ",", QT, "e", QT, ";"));
     generator.processEbnfSchema();
     ParseNode pn = new NonTerminalNode("top node");
     ParseNode stn = new NonTerminalNode("second ntn node");
@@ -384,7 +384,7 @@ public class TestParseTreeBuilder {
     // B = "d" | "e";
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", "B", "|", QT, "c", QT, ";", "B", "=", QT, "d", QT, "|", QT, "e", QT, ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", "B", "|", QT, "c", QT, ";", "B", "=", QT, "d", QT, "|", QT, "e", QT, ";"));
     generator.processEbnfSchema();
     ParseNode pn = new NonTerminalNode("top node");
     ParseNode or = new OrNode();
@@ -402,7 +402,7 @@ public class TestParseTreeBuilder {
     // B = "d" | "e";
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", "B", ",", QT, "c", QT, ";", "B", "=", QT, "d", QT, "|", QT, "e", QT, ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", "B", ",", QT, "c", QT, ";", "B", "=", QT, "d", QT, "|", QT, "e", QT, ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.returnDownNode(new PositionNode().setRightNode(new PositionNode().setDownNode(cstn("c"))))
@@ -420,7 +420,7 @@ public class TestParseTreeBuilder {
     // B = "d" , "e";
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", "B", "|", QT, "c", QT, ";", "B", "=", QT, "d", QT, ",", QT, "e", QT, ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", "B", "|", QT, "c", QT, ";", "B", "=", QT, "d", QT, ",", QT, "e", QT, ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.returnDownNode(new OrNode().setRightNode(new OrNode().setDownNode(new PositionNode().setDownNode(cstn("c")))))
@@ -435,7 +435,7 @@ public class TestParseTreeBuilder {
     // A = { "b" };
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", "{", QT, "b", QT, "}", ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", "{", QT, "b", QT, "}", ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.returnDownNode(new LoopNode().setDownNode( new PositionNode().setDownNode(cstn("b"))));
@@ -447,7 +447,7 @@ public class TestParseTreeBuilder {
     // A = { "a" } , "b";
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", "{", QT, "a", QT, "}", "," , QT, "b", QT, ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", "{", QT, "a", QT, "}", "," , QT, "b", QT, ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.returnDownNode(new PositionNode().setRightNode(new PositionNode().setDownNode(cstn("c")))
@@ -461,7 +461,7 @@ public class TestParseTreeBuilder {
     // A = [ "a" ] , "b";
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", "[", QT, "a", QT, "]", "," , QT, "b", QT, ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", "[", QT, "a", QT, "]", "," , QT, "b", QT, ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.returnDownNode(new PositionNode().setRightNode(new PositionNode().setDownNode(cstn("c")))
@@ -475,7 +475,7 @@ public class TestParseTreeBuilder {
     // A = "a" , { "b" } ;
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", QT, "a", QT, ",", "{", QT, "b", QT, "}", ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", QT, "a", QT, ",", "{", QT, "b", QT, "}", ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new PositionNode().setDownNode(cstn("a"))
@@ -492,7 +492,7 @@ public class TestParseTreeBuilder {
     // A = "a" | { "b" } ;
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", QT, "a", QT, "|", "{", QT, "b", QT, "}", ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", QT, "a", QT, "|", "{", QT, "b", QT, "}", ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode( new OrNode().setDownNode(new PositionNode().setDownNode(cstn("a")))
@@ -514,7 +514,7 @@ public class TestParseTreeBuilder {
     // A = { "a" } | "b" ;
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", "{", QT, "a", QT, "}", "|" , QT, "b", QT, ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", "{", QT, "a", QT, "}", "|" , QT, "b", QT, ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode( new OrNode().setDownNode(new LoopNode().setDownNode(new PositionNode().setDownNode(cstn("a"))))
@@ -527,7 +527,7 @@ public class TestParseTreeBuilder {
     // A = { "a" , "b" } ;
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", "{", QT, "a", QT, ",", QT, "b", QT, "}", ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", "{", QT, "a", QT, ",", QT, "b", QT, "}", ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(
@@ -546,7 +546,7 @@ public class TestParseTreeBuilder {
     // A = { "B" , "a" } ;
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", "{", "B", ",", QT, "b", QT, "}", ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", "{", "B", ",", QT, "b", QT, "}", ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(
@@ -565,7 +565,7 @@ public class TestParseTreeBuilder {
     // A = { "a" , "B" } ;
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", "{", QT, "b", QT, ",", "B", "}", ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", "{", QT, "b", QT, ",", "B", "}", ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new LoopNode()
@@ -584,7 +584,7 @@ public class TestParseTreeBuilder {
     // A = { "a" , { "b" , "c" }} ;
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", "{", QT, "a", QT, ",", "{", QT, "b", QT, ",", QT, "c", QT, "}", "}", ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", "{", QT, "a", QT, ",", "{", QT, "b", QT, ",", QT, "c", QT, "}", "}", ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(
@@ -610,7 +610,7 @@ public class TestParseTreeBuilder {
     // A = {{ "a", "b" }, "c" };
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", "{", "{", QT, "a", QT, ",", QT, "b", QT, "}", ",", QT, "c", QT, "}", ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", "{", "{", QT, "a", QT, ",", QT, "b", QT, "}", ",", QT, "c", QT, "}", ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new LoopNode()
@@ -632,7 +632,7 @@ public class TestParseTreeBuilder {
     // A = [{ "a", "b" }, "c" ];
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", "[", "{", QT, "a", QT, ",", QT, "b", QT, "}", ",", QT, "c", QT, "]", ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", "[", "{", QT, "a", QT, ",", QT, "b", QT, "}", ",", QT, "c", QT, "]", ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new LoopNode(1)
@@ -654,7 +654,7 @@ public class TestParseTreeBuilder {
     // A = {[ "a", "b" ], c };
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", "{", "[", QT, "a", QT, ",", QT, "b", QT, "]", ",", QT, "c", QT, "}", ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", "{", "[", QT, "a", QT, ",", QT, "b", QT, "]", ",", QT, "c", QT, "}", ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new LoopNode()
@@ -676,7 +676,7 @@ public class TestParseTreeBuilder {
     // A = { "a" | B };
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", "{", QT, "a", QT, "|", "B", "}", ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", "{", QT, "a", QT, "|", "B", "}", ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new LoopNode()
@@ -695,7 +695,7 @@ public class TestParseTreeBuilder {
     // A = [ "a" ],"b" ;
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", "[", QT, "a", QT, "]",",", QT, "b", QT,";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", "[", QT, "a", QT, "]",",", QT, "b", QT,";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new PositionNode()
@@ -711,7 +711,7 @@ public class TestParseTreeBuilder {
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
     generator.loadEbnfSchema(
-        List.of("A", "=", "3", "*", QT, "a", QT, ";"));
+        TokenQueue.ofList("A", "=", "3", "*", QT, "a", QT, ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new LoopNode(3,3)
@@ -728,7 +728,7 @@ public class TestParseTreeBuilder {
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
     generator.loadEbnfSchema(
-        List.of("A", "=", "B", "-", QT, "a", QT, ";"));
+        TokenQueue.ofList("A", "=", "B", "-", QT, "a", QT, ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new AntiNode()
@@ -746,7 +746,7 @@ public class TestParseTreeBuilder {
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
     generator.loadEbnfSchema(
-        List.of("A", "=", "?", "WHITESPACE", "?", ";"));
+        TokenQueue.ofList("A", "=", "?", "WHITESPACE", "?", ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new PositionNode()
@@ -761,7 +761,7 @@ public class TestParseTreeBuilder {
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
     generator.loadEbnfSchema(
-        List.of("A", "=", QT, "a", QT, ",", "?", "WHITESPACE", "?", QT, "b", QT, ";"));
+        TokenQueue.ofList("A", "=", QT, "a", QT, ",", "?", "WHITESPACE", "?", QT, "b", QT, ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new PositionNode().setDownNode(cstn("a"))
@@ -780,7 +780,7 @@ public class TestParseTreeBuilder {
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
     generator.loadEbnfSchema(
-        List.of("A", "=", "{", "?", "WHITESPACE", "?", "}", ";"));
+        TokenQueue.ofList("A", "=", "{", "?", "WHITESPACE", "?", "}", ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new LoopNode().setDownNode(new PositionNode().setDownNode(createCharacterRangeBasedTerminalNode(Character::isWhitespace,"WHITESPACE?"))));
@@ -792,7 +792,7 @@ public class TestParseTreeBuilder {
     // A = 😀 | ?BMP? ;
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", QT, "\uD83D\uDE00", QT, "|", "?", "BMP", "?", ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", QT, "\uD83D\uDE00", QT, "|", "?", "BMP", "?", ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new OrNode().setDownNode(new PositionNode().setDownNode(cstn("\uD83D\uDE00")))
@@ -806,7 +806,7 @@ public class TestParseTreeBuilder {
     // A = ( 😀 | ?BMP? ) , "b" ;
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", "(", QT, "\uD83D\uDE00", QT, "|", "?", "BMP", "?", ")", ",", QT, "a", QT, ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", "(", QT, "\uD83D\uDE00", QT, "|", "?", "BMP", "?", ")", ",", QT, "a", QT, ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new PositionNode()
@@ -827,7 +827,7 @@ public class TestParseTreeBuilder {
     // A = 3* ?BMP? ;
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(List.of("A", "=", "3", "*", "?", "BMP", "?", ";"));
+    generator.loadEbnfSchema(TokenQueue.ofList("A", "=", "3", "*", "?", "BMP", "?", ";"));
     generator.processEbnfSchema();
     ParseNode ntn = new NonTerminalNode("top node");
     ntn.setDownNode(new LoopNode(3,3)

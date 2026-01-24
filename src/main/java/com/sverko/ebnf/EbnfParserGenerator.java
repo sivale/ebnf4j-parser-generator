@@ -1,6 +1,5 @@
 package com.sverko.ebnf;
 
-
 import com.sverko.ebnf.tools.ParseNodeParserFactory;
 import com.sverko.ebnf.tools.UTF8FileToStringArrayList;
 import java.io.IOException;
@@ -45,15 +44,15 @@ public class EbnfParserGenerator extends Parser {
         ignoreWhitespace);
   }
 
-  public Parser getParser(List<String> shema, boolean ignoreWhitespace) {
+  public Parser getParser(TokenQueue shema, boolean ignoreWhitespace) {
     loadEbnfSchema(shema);
     processEbnfSchema();
     return new Parser(getFirstNode(), parserBuilder.getNamedNodes(), parserBuilder.getLexerTokens(),
         ignoreWhitespace);
   }
 
-  public void loadEbnfSchema(List<String> tokenQueue) {
-    q = tokenQueue;
+  public void loadEbnfSchema(TokenQueue tokenQueue) {
+    this.tokenQueue = tokenQueue;
     ParseNodeParserFactory.assign(startNode, this);
   }
 
@@ -61,13 +60,13 @@ public class EbnfParserGenerator extends Parser {
     addDefaultSpecialSequences();
     assignParseNodeEventListeners();
     int tokensFound = startNode.callReceived(getNextToken(false));
-    if (tokensFound == q.size()) {
+    if (tokensFound == tokenQueue.getTokens().size()) {
       NonTerminalNode endNode = new NonTerminalNode("end of parsing");
       endNode.addEventListener(parserBuilder);
       endNode.fireParseNodeEvent("end of parsing");
     } else {
       System.out.println(
-          "WARNING only " + tokensFound + " of " + q.size() + " tokens have been processed");
+          "WARNING only " + tokensFound + " of " + tokenQueue.getTokens().size() + " tokens have been processed");
     }
   }
 

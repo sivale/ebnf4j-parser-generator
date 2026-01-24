@@ -13,19 +13,19 @@ public class LexerTokenTest {
   @Test
   public void lexerShouldHandleUnicodeText() {
     Lexer lexer = new Lexer();
-    List<String> input = List.of("😀q😀q😀q");
-    List<String> result = lexer.lexText(input);
-    List<String> expected = List.of("😀", "q", "😀", "q", "😀", "q");
+    String input = "😀q😀q😀q";
+    TokenQueue result = lexer.lexText(input);
+    TokenQueue expected = TokenQueue.ofList("😀", "q", "😀", "q", "😀", "q");
     assertEquals(expected, result, "lexer should handle surrogate pairs in text");
   }
 
   @Test
   public void lexerShouldAlsoTokenizeUnicodeTextWhenKeywordsAreGiven() {
     Set<String> tokens = new HashSet<>(Arrays.asList("😀q😀q", "😀q"));
-    List<String> input = List.of("😀q😀q😀q");
+    String input = "😀q😀q😀q";
     Lexer lexer = new Lexer(tokens);
-    List<String> result = lexer.lexText(input);
-    List<String> expected = List.of("😀q😀q", "😀q");
+    TokenQueue result = lexer.lexText(input);
+    TokenQueue expected = TokenQueue.ofList("😀q😀q", "😀q");
     assertEquals(expected, result, "lexer should convert surrogate pairs in tokens");
   }
 
@@ -34,7 +34,7 @@ public class LexerTokenTest {
     // Emoji selbst ist ein Keyword
     Set<String> keywords = new HashSet<>(Arrays.asList("😊"));
     Lexer lexer = new Lexer(keywords);
-    List<String> tokens = lexer.lexText(new UnicodeString("😊"));
+    TokenQueue tokens = lexer.lexText("😊");
     assertEquals(1, tokens.size());
     assertEquals("😊", tokens.get(0));
   }
@@ -43,7 +43,7 @@ public class LexerTokenTest {
   public void testEmojiBetweenKeywords() {
     Set<String> keywords = new HashSet<>(Arrays.asList("A", "B"));
     Lexer lexer = new Lexer(keywords);
-    List<String> tokens = lexer.lexText(new UnicodeString("A😊B"));
+    TokenQueue tokens = lexer.lexText("A😊B");
     assertTrue(tokens.contains("A"));
     assertTrue(tokens.contains("B"));
     assertTrue(tokens.contains("😊"));
@@ -52,27 +52,27 @@ public class LexerTokenTest {
 
   @Test
   public void lexerShouldHonourIgnoreWhitespace() {
-    List<String> input = List.of("a b");
+    String input = "a b";
     Lexer lexer = Lexer.builder().ignoreWhitespace(true).build();
-    List<String> result = lexer.lexText(input);
-    List<String> expected = List.of("a", "b");
+    TokenQueue result = lexer.lexText(input);
+    TokenQueue expected = TokenQueue.ofList("a", "b");
     assertEquals(expected, result, "lexer should ignore whitespace");
   }
 
   @Test
   public void lexerShouldIgnorePureWhitespaceLinesWithoutError() {
-    Set<String> tokens = Set.of("a", "b");
-    List<String> input = List.of("   ", "a", "b  ", "  ");
+    List<String> input = Arrays.asList("   ", "a", "b  ", "  ");
     Lexer lexer = Lexer.builder().ignoreWhitespace(true).build();
-    List<String> result = lexer.lexText(input);
-    List<String> expected = List.of("a", "b");
+    TokenQueue result = lexer.lexText(input);
+    TokenQueue expected = TokenQueue.ofList("a", "b");
     assertEquals(expected, result, "lexer should ignore pure whitespace lines");
   }
+
   @Test
   public void testLexerAcceptKeywords() {
     Set<String> keywords = new HashSet<>(Arrays.asList("si", "no"));
     Lexer lexer = new Lexer(keywords);
-    List<String> tokens = lexer.lexText(new UnicodeString("abc\nsi\nef"));
+    TokenQueue tokens = lexer.lexText("abc\nsi\nef");
     assert (tokens.contains("si"));
   }
 
@@ -80,7 +80,7 @@ public class LexerTokenTest {
   public void testLexerOverflow_Re_Lexing() {
     Set<String> keywords = new HashSet<>(Arrays.asList("Haus", "meister"));
     Lexer lexer = new Lexer(keywords);
-    List<String> tokens = lexer.lexText(new UnicodeString("Hausmeister"));
+    TokenQueue tokens = lexer.lexText("Hausmeister");
     assertTrue(tokens.contains("Haus"));
     assertTrue(tokens.contains("meister"));
     assertFalse(tokens.contains("m"));
@@ -89,9 +89,9 @@ public class LexerTokenTest {
 
   @Test
   public void testLexerRemainingCharacter() {
-    Set<String> keywords = new HashSet<>(Arrays.asList("Haus"));
+    Set<String> keywords = Set.of("Haus");
     Lexer lexer = new Lexer(keywords);
-    List<String> tokens = lexer.lexText(new UnicodeString("HausX"));
+    TokenQueue tokens = lexer.lexText("HausX");
     assertTrue(tokens.contains("Haus"));
     assertTrue(tokens.contains("X"));
   }
@@ -99,10 +99,10 @@ public class LexerTokenTest {
   @Test
   public void lexerShouldHonourIgnoreWhitespace2() {
     Set<String> keywords = Set.of("ab");
-    List<String> input = List.of("a b");
+    String input = "a b";
     Lexer lexer = Lexer.builder().keywords(keywords).ignoreWhitespace(true).preserveWhitespaceInQuotes(false).build();
-    List<String> result = lexer.lexText(input);
-    List<String> expected = List.of("ab");
+    TokenQueue result = lexer.lexText(input);
+    TokenQueue expected = TokenQueue.ofList("ab");
     assertEquals(expected, result, "lexer should ignore whitespace");
   }
 
@@ -110,9 +110,9 @@ public class LexerTokenTest {
   public void lexerShouldMatchFullTokens() throws IOException {
     Set<String> tokens = new HashSet<>(Arrays.asList("if", "else", "i", "f"));
     Lexer lexer = new Lexer(tokens);
-    List<String> input = Arrays.asList("ifelse");
-    List<String> result = lexer.lexText(input);
-    List<String> expected = List.of("if", "else");
+    String input = "ifelse";
+    TokenQueue result = lexer.lexText(input);
+    TokenQueue expected = TokenQueue.ofList("if", "else");
     assertEquals(expected, result, "lexer should match full tokens");
   }
 
@@ -120,18 +120,18 @@ public class LexerTokenTest {
   public void lexerShouldPreferLongestMatch() throws IOException {
     Set<String> tokens = new HashSet<>(Arrays.asList("i", "n", "in", "int", "integer"));
     Lexer lexer = new Lexer(tokens);
-    List<String> input = Arrays.asList("integer");
-    List<String> result = lexer.lexText(input);
-    List<String> expected = List.of("integer");
+    String input = "integer";
+    TokenQueue result = lexer.lexText(input);
+    TokenQueue expected = TokenQueue.ofList("integer");
     assertEquals(expected, result, "lexer should prefer longest match");
   }
 
   @Test
   public void lexerShouldFallbackToSingleCharactersWhenNoTokensProvided() throws IOException {
     Lexer lexer = new Lexer(); // No Token-Set
-    List<String> input = List.of("ifelse");
-    List<String> result = lexer.lexText(input);
-    List<String> expected = Arrays.asList("i", "f", "e", "l", "s", "e");
+    String input = "ifelse";
+    TokenQueue result = lexer.lexText(input);
+    TokenQueue expected = TokenQueue.ofList("i", "f", "e", "l", "s", "e");
     assertEquals(expected, result,
         "lexer should fallback to single characters when no tokens provided");
   }
@@ -140,9 +140,9 @@ public class LexerTokenTest {
   public void lexerShouldFindTokenEmbeddedInText() throws IOException {
     Set<String> tokens = Set.of("abc");
     Lexer lexer = new Lexer(tokens);
-    List<String> input = List.of("xabcy");
-    List<String> result = lexer.lexText(input);
-    List<String> expected = List.of("x", "abc", "y");
+    String input = "xabcy";
+    TokenQueue result = lexer.lexText(input);
+    TokenQueue expected = TokenQueue.ofList("x", "abc", "y");
     assertEquals(expected, result,
         "lexer should find token embedded in other text");
   }
@@ -211,7 +211,7 @@ public class LexerTokenTest {
     String input = "MYDEF = \"one two three\" , \"four\", \"five\";";
     EbnfParserGenerator shemaParser = new EbnfParserGenerator();
     shemaParser.lexer = Lexer.builder().preserveWhitespaceInQuotes(true).build();
-    List<String> singleCodepointList = shemaParser.lexer.lexText(new UnicodeString(input));
+    TokenQueue singleCodepointList = shemaParser.lexer.lexText(new UnicodeString(input));
     Parser textParser = shemaParser.getParser(singleCodepointList, true);
     int foundTokens = textParser.parse("one two three four five");
     assert (foundTokens == 3);
@@ -219,10 +219,10 @@ public class LexerTokenTest {
 
   @Test
   public void lexerShouldNotPreserveWhitespaceInTerminalStringsIfNotToldSo() {
-    List<String> input = List.of("'a b'");
+    String input = "'a b'";
     Lexer lexer = Lexer.builder().ignoreWhitespace(true).preserveWhitespaceInQuotes(false).build();
-    List<String> result = lexer.lexText(input);
-    List<String> expected = List.of("'", "a", "b", "'");
+    TokenQueue result = lexer.lexText(input);
+    TokenQueue expected = TokenQueue.ofList("'", "a", "b", "'");
     assertEquals(expected, result, "lexer should ignore whitespace");
   }
 
@@ -349,5 +349,4 @@ public class LexerTokenTest {
         "Output should not contain 'null', but got: '" + output + "'");
   }
 }
-
 

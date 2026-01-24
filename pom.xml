@@ -6,18 +6,14 @@
 
     <groupId>com.sverko.ebnf</groupId>
     <artifactId>ebnf-parser-generator</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
     <packaging>jar</packaging>
 
-    <!-- WICHTIG: Einheitliche Encodings -->
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-
-        <!-- Compile-/Report-Encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <!-- nur falls du site/reporting nutzt -->
         <encoding>UTF-8</encoding>
     </properties>
 
@@ -31,7 +27,6 @@
 
     <build>
         <plugins>
-            <!-- Compiler liest .java als UTF-8 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -42,14 +37,12 @@
                 </configuration>
             </plugin>
 
-            <!-- Ressourcen (auch src/test/resources) als UTF-8 behandeln -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.3.1</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
-                    <!-- falls du keine Platzhalterersetzung in Tests willst -->
                     <nonFilteredFileExtensions>
                         <nonFilteredFileExtension>ebnf</nonFilteredFileExtension>
                         <nonFilteredFileExtension>txt</nonFilteredFileExtension>
@@ -57,7 +50,6 @@
                 </configuration>
             </plugin>
 
-            <!-- Tests mit file.encoding=UTF-8 starten -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -66,8 +58,6 @@
                     <systemPropertyVariables>
                         <file.encoding>UTF-8</file.encoding>
                     </systemPropertyVariables>
-                    <!-- JUnit 5 ok; optional: -->
-                    <!-- <useModulePath>false</useModulePath> -->
                 </configuration>
             </plugin>
 

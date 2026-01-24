@@ -180,15 +180,11 @@ public class Lexer {
     buildLexerTrie(tokens);
   }
 
-  public List<String> lexText(String text) {
+  public TokenQueue lexText(String text) {
     return lexText(new UnicodeString(text));
   }
 
-  private static boolean isQuote(String ch) {
-    return "\"".equals(ch) || "'".equals(ch);
-  }
-
-  public List<String> lexText(UnicodeString text) {
+  public TokenQueue lexText(UnicodeString text) {
     List<String> tokens = new ArrayList<>();
     StringBuilder keywordLine = new StringBuilder();
     StringBuilder completeLine = new StringBuilder();
@@ -336,7 +332,7 @@ public class Lexer {
         tokens.add(completeLine.toString());
         String overflow = keywordLine.substring(completeLine.length());
         if (!overflow.isEmpty()) {
-          tokens.addAll(this.lexText(new UnicodeString(overflow)));
+          tokens.addAll(this.lexText(new UnicodeString(overflow)).getTokens());
         }
       } else {
         int firstEnd = keywordLine.offsetByCodePoints(0, 1);
@@ -344,12 +340,12 @@ public class Lexer {
         tokens.add(first);
         String rest = keywordLine.substring(firstEnd);
         if (!rest.isEmpty()) {
-          tokens.addAll(this.lexText(new UnicodeString(rest)));
+          tokens.addAll(this.lexText(new UnicodeString(rest)).getTokens());
         }
       }
     }
 
-    return tokens;
+    return new TokenQueue(tokens);
   }
 
 
@@ -370,7 +366,7 @@ public class Lexer {
     return null;
   }
 
-  public List<String> lexText(List<String> lines) {
+  public TokenQueue lexText(List<String> lines) {
     ArrayList<String> tokens = new ArrayList<>();
     UnicodeString text = new UnicodeString(String.join("\n", lines));
     return lexText(text);

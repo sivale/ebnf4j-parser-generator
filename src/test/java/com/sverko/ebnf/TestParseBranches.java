@@ -20,7 +20,7 @@ public class TestParseBranches {
            in the TerminalNode
          */
         NonTerminalNode startNode = new NonTerminalNode("A");
-        startNode.tokens = new TokenQueue(Arrays.asList("a"));
+        startNode.tokens = TokenQueue.ofList(Arrays.asList("a"));
         startNode.returnDownNode(new PositionNode())
                  .setDownNode(TerminalNodeFactory.createSimpleTerminalNode("a"));
         assertEquals(startNode.callReceived(startNode.tokens.getFirstToken()), 1);
@@ -34,7 +34,7 @@ public class TestParseBranches {
          is in the first position
         */
         NonTerminalNode startNode = new NonTerminalNode("Start");
-        startNode.tokens = new TokenQueue(Arrays.asList("abcd","efgh","ijkl"));
+        startNode.tokens = TokenQueue.ofList(Arrays.asList("abcd","efgh","ijkl"));
         startNode.returnDownNode(new PositionNode())
                 .setDownNode(TerminalNodeFactory.createSimpleTerminalNode("abcd"));
         assertEquals(startNode.callReceived(startNode.tokens.getFirstToken()), 1);
