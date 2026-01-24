@@ -185,23 +185,19 @@ public class Lexer {
   }
 
   public TokenQueue lexText(UnicodeString text) {
-    List<String> tokens = new ArrayList<>();
+    List<Token> tokens = new ArrayList<>();
     StringBuilder keywordLine = new StringBuilder();
     StringBuilder completeLine = new StringBuilder();
 
-    // Sentinel-Startknoten: erste echte Spalte hängt rechts an rootNode
     LexerNode startNode = new LexerNode(null);
     startNode.rightNode = rootNode;
     LexerNode currentNode = startNode;
 
     for (int i = 0; i < text.length(); i++) {
-      String character = text.getStringAt(i); // EIN vollständiger Codepoint als String
+      String character = text.getStringAt(i);
 
-      // ===== TERMINAL-STRINGS (nur wenn Flag aktiv) ===============================
       if (PRESERVE_WS_IN_QUOTES && ("\"".equals(character) || "'".equals(character))) {
-
-        // Lookahead: gibt es ein passendes schließendes Quote gleichen Typs?
-        String quote = character; // "'" oder "\""
+        String quote = character;
         int j = i + 1;
         boolean closed = false;
         while (j < text.length()) {
@@ -211,21 +207,20 @@ public class Lexer {
         }
 
         if (closed) {
-          // Laufendes Keyword sauber an Token-Grenze beenden (wie Mismatch)
           if (keywordLine.length() > 0) {
             if (completeLine.length() > 0) {
-              tokens.add(completeLine.toString());
+              tokens.add(new Token(completeLine.toString()));
               String overflow = keywordLine.substring(completeLine.length());
               int overflowCp = overflow.codePointCount(0, overflow.length());
               keywordLine.setLength(0);
               completeLine.setLength(0);
               currentNode = startNode;
-              i -= overflowCp + 1; // for++ kompensiert +1 -> Quote bleibt „dran“
+              i -= overflowCp + 1;
               continue;
             } else {
               int firstEnd = keywordLine.offsetByCodePoints(0, 1);
               String first = keywordLine.substring(0, firstEnd);
-              tokens.add(first);
+              tokens.add(new Token(first));
               String rest = keywordLine.substring(firstEnd);
               int restCp = rest.codePointCount(0, rest.length());
               keywordLine.setLength(0);
@@ -236,29 +231,21 @@ public class Lexer {
             }
           }
 
-          // Quotes + Inhalt emittieren:
-          // - öffnendes Quote
-          tokens.add(quote);
-          // - Inhalt als Einzeltokens (inkl. Spaces)
+          tokens.add(new Token(quote));
           for (int k = i + 1; k < j - 1; k++) {
-            tokens.add(text.getStringAt(k));
+            tokens.add(new Token(text.getStringAt(k)));
           }
-          // - schließendes Quote
-          tokens.add(quote);
+          tokens.add(new Token(quote));
 
-          // Reset & hinter das schließende Quote springen
           keywordLine.setLength(0);
           completeLine.setLength(0);
           currentNode = startNode;
-          i = j - 1; // for++ danach
+          i = j - 1;
           continue;
         }
-        // !closed: KEINE Sonderbehandlung → normaler Flow (inkl. evtl. Whitespace-Skip)
       }
 
-      // ===== KONTEXTSENSITIVER WHITESPACE-SKIP ====================================
       if (IGNORE_WHITESPACE && Character.isWhitespace(character.codePointAt(0))) {
-        // Skippe NUR wenn der Trie hier KEINEN Whitespace als nächstes Zeichen vorsieht.
         boolean whitespaceIsExpectedHere = false;
         if (currentNode != null && currentNode.hasRightNode()) {
           LexerNode col = currentNode.rightNode;
@@ -271,13 +258,10 @@ public class Lexer {
           }
         }
         if (!whitespaceIsExpectedHere) {
-          // Whitespace wird ignoriert, laufendes Match bleibt intakt
           continue;
         }
-        // sonst: Whitespace ist Teil eines Keywords → NICHT skippen, normal matchen
       }
 
-      // ===== NORMALER TRIE-FLOW ====================================================
       currentNode = characterMatchesNodeInTrie(character, currentNode);
 
       if (currentNode != null) {
@@ -289,10 +273,8 @@ public class Lexer {
       } else {
         if (keywordLine.length() > 0) {
           if (completeLine.length() > 0) {
-            // Längstes gültiges Match emittieren
-            tokens.add(completeLine.toString());
+            tokens.add(new Token(completeLine.toString()));
 
-            // Overflow zurückspulen & re-lexen
             String overflow = keywordLine.substring(completeLine.length());
             int overflowCp = overflow.codePointCount(0, overflow.length());
 
@@ -300,13 +282,12 @@ public class Lexer {
             completeLine.setLength(0);
             currentNode = startNode;
 
-            i -= overflowCp + 1; // for++ kompensiert
+            i -= overflowCp + 1;
             continue;
           } else {
-            // Kein StopMark: erstes Codepoint sicher abtrennen (codepoint-sicher)
             int firstEnd = keywordLine.offsetByCodePoints(0, 1);
             String first = keywordLine.substring(0, firstEnd);
-            tokens.add(first);
+            tokens.add(new Token(first));
 
             String rest = keywordLine.substring(firstEnd);
             int restCp = rest.codePointCount(0, rest.length());
@@ -319,34 +300,33 @@ public class Lexer {
             continue;
           }
         } else {
-          // Kein aktives Keyword – Einzelzeichen-Token
-          tokens.add(character);
+          tokens.add(new Token(character));
           currentNode = startNode;
         }
       }
     }
 
-    // ===== EOF-FLUSH ===============================================================
+    // EOF flush
     if (keywordLine.length() > 0) {
       if (completeLine.length() > 0) {
-        tokens.add(completeLine.toString());
+        tokens.add(new Token(completeLine.toString()));
         String overflow = keywordLine.substring(completeLine.length());
         if (!overflow.isEmpty()) {
-          tokens.addAll(this.lexText(new UnicodeString(overflow)).getTokens());
+          tokens.addAll(this.lexText(new UnicodeString(overflow)).getTokenObjects());
         }
       } else {
         int firstEnd = keywordLine.offsetByCodePoints(0, 1);
         String first = keywordLine.substring(0, firstEnd);
-        tokens.add(first);
+        tokens.add(new Token(first));
         String rest = keywordLine.substring(firstEnd);
         if (!rest.isEmpty()) {
-          tokens.addAll(this.lexText(new UnicodeString(rest)).getTokens());
+          tokens.addAll(this.lexText(new UnicodeString(rest)).getTokenObjects());
         }
       }
     }
-
     return new TokenQueue(tokens);
   }
+
 
 
 
