@@ -72,6 +72,10 @@ public class TokenQueue {
     return tokens;
   }
 
+  public void setTokenType(int index, TokenType type) {
+    tokens.get(index).setType(type);
+  }
+
   public static TokenQueue ofList(List<String> tokens) {
     // behält Signatur wie vorher, leitet intern weiter
     return ofStrings(tokens);
