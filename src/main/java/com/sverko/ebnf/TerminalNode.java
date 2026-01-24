@@ -22,14 +22,18 @@ public class TerminalNode extends ParseNode {
 		return "<terminal>";
 	}
 
-	@Override
-	public int callReceived(int curPtr) {
-		if (tokens.checkIndex(curPtr)) {
-			if (compareFunction.apply(tokens.getToken(curPtr))) {
-				return curPtr + 1;
-			}
-			return NOT_FOUND;
-		}
-		return END_OF_QUEUE;
-	}
+  @Override
+  public int callReceived(int curPtr) {
+    if (tokens.checkIndex(curPtr)) {
+      if (compareFunction.apply(tokens.getToken(curPtr))) {
+        Token token = tokens.getTokenObject(curPtr);
+        if (token != null && token.getType() == TokenType.UNKNOWN) {
+          token.setType(TokenType.PAYLOAD);
+        }
+        return curPtr + 1;
+      }
+      return NOT_FOUND;
+    }
+    return END_OF_QUEUE;
+  }
 }
