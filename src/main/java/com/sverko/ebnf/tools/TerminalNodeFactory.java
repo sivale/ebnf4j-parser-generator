@@ -18,8 +18,8 @@ public class TerminalNodeFactory {
   public static TerminalNode createArrayBasedTerminalNode(String[] allowed){
     String tag = "in " + prettySet(allowed);
     return new TerminalNode((s) -> {
-      for(String allowedToken:allowed){
-        if (s != null && s.length() == 1) {
+      for(String allowedToken : allowed){
+        if (s != null && !s.isEmpty()) {
           if (s.equals(allowedToken)) return true;
         }
       }

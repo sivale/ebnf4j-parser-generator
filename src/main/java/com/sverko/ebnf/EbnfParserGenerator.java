@@ -1,12 +1,12 @@
 package com.sverko.ebnf;
 
 import com.sverko.ebnf.tools.ParseNodeParserFactory;
-import com.sverko.ebnf.tools.UTF8FileToStringArrayList;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public class EbnfParserGenerator extends Parser {
 
@@ -25,7 +25,6 @@ public class EbnfParserGenerator extends Parser {
     }
   }
 
-
   public EbnfParserGenerator() {
     startNode = EbnfParseTree.getStartNode();
   }
@@ -37,21 +36,20 @@ public class EbnfParserGenerator extends Parser {
     return getParser(shemaLocation, true);
   }
 
-  public Parser getParser(Path shemaLocation, boolean ignoreWhitespace) throws IOException {
-    Lexer shemaLexer = new Lexer();
-    return getParser(
-        shemaLexer.lexText(UTF8FileToStringArrayList.loadFileIntoStringList(shemaLocation)),
-        ignoreWhitespace);
+  public Parser getParser(Path shemaLocation, boolean strictWhitespaceHandling) throws IOException {
+    Lexer shemaLexer = new Lexer(Set.of("\\n","\\t","\\s"));
+    TokenQueue ebnfSchema = shemaLexer.lexText(shemaLocation);
+    return getParser(ebnfSchema, strictWhitespaceHandling);
   }
 
   public Parser getParser(TokenQueue shema, boolean ignoreWhitespace) {
-    loadEbnfSchema(shema);
+    propagateTokenQueueToAllNodes(shema);
     processEbnfSchema();
     return new Parser(getFirstNode(), parserBuilder.getNamedNodes(), parserBuilder.getLexerTokens(),
         ignoreWhitespace);
   }
 
-  public void loadEbnfSchema(TokenQueue tokenQueue) {
+  public void propagateTokenQueueToAllNodes(TokenQueue tokenQueue) {
     this.tokenQueue = tokenQueue;
     ParseNodeParserFactory.assign(startNode, this);
   }
@@ -59,19 +57,23 @@ public class EbnfParserGenerator extends Parser {
   public void processEbnfSchema() {
     addDefaultSpecialSequences();
     assignParseNodeEventListeners();
-    int tokensFound = startNode.callReceived(getNextToken(false));
-    if (tokensFound == tokenQueue.getTokens().size()) {
+    int tokensFound = startNode.callReceived(tokenQueue.getFirstToken());
+    if (tokensFound == tokenQueue.rawSize()) {
       NonTerminalNode endNode = new NonTerminalNode("end of parsing");
       endNode.addEventListener(parserBuilder);
-      endNode.fireParseNodeEvent("end of parsing");
+      endNode.fireParseNodeEvent(" end of parsing ","end of parsing",0,0,0,0);
     } else {
       System.out.println(
-          "WARNING only " + tokensFound + " of " + tokenQueue.getTokens().size() + " tokens have been processed");
+          "WARNING only " + tokensFound + " of " + tokenQueue.rawSize() + " tokens have been processed");
     }
   }
 
   public ParseNode getFirstNode() {
     return parserBuilder.getStartNode();
+  }
+
+  public List<String> getPredefinedNodeNames() {
+    return new ArrayList<>(parserBuilder.getNamedNodes().keySet());
   }
 
   public void assignParseNodeEventListeners() {

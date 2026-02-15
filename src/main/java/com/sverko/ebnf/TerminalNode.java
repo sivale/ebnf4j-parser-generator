@@ -29,23 +29,15 @@ public class TerminalNode extends ParseNode {
     if (!tokens.checkIndex(curPtr)) {
       return END_OF_QUEUE;
     }
-    String cur = tokens.getToken(curPtr);
-
+    String cur = tokens.get(curPtr);
+    // normal match if compareFunction says "yes" then consume exactly 1 token
     if (compareFunction.apply(cur)) {
-      Token tok = tokens.getTokenObject(curPtr);
-      if (tok != null && tok.getType() == TokenType.UNKNOWN) {
-        tok.setType(TokenType.PAYLOAD);
+      // if token was "unhandled whitespace" then it is now "handled"
+      // can be rolled back by calling tokens.rollback()
+      if (tokens.isUnhandledWhitespace(curPtr)) {
+        tokens.handleWhitespace(curPtr);
       }
       return curPtr + 1;
-    }
-    if (cur != null && !cur.isEmpty()) {
-      int cp = cur.codePointAt(0);
-      if (Character.isWhitespace(cp)) {
-        Token tok = tokens.getTokenObject(curPtr);
-        if (tok != null && tok.getType() == TokenType.UNKNOWN) {
-          tok.setType(TokenType.TRIVIA);
-        }
-      }
     }
     return NOT_FOUND;
   }

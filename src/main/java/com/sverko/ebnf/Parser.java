@@ -29,7 +29,7 @@ public class Parser {
       boolean ignoreWhitespace) {
     this.startNode = startNode;
     this.nodeMap = namedNodes;
-    this.lexer = new Lexer(lexerTokens, ignoreWhitespace);
+    this.lexer = new Lexer(lexerTokens);
   }
 
   public int parse(TokenQueue q, ParseNode startNode) {
@@ -48,22 +48,7 @@ public class Parser {
 
   private int parse(ParseNode startNode) {
     assignParserToEachNode(startNode);
-    return startNode.callReceived(getNextToken(startNode.acceptsWhitespace));
-  }
-
-  public int getNextToken(boolean acceptsWhitespace) {
-    curPtr++;
-    if (curPtr < tokenQueue.getTokens().size()) {
-      if (!acceptsWhitespace) {
-        int character = tokenQueue.getTokens().get(curPtr).codePointAt(0);
-        if (Character.isWhitespace(character)) {
-          curPtr = getNextToken(false);
-        }
-      }
-      return curPtr;
-    }
-    curPtr = -1;
-    return -1;
+    return (startNode.callReceived(tokenQueue.getFirstToken()));
   }
 
   public TokenQueue getTokenQueue() {
