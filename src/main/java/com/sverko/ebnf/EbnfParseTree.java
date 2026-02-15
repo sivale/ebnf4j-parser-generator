@@ -20,16 +20,26 @@ public class EbnfParseTree {
         .returnDownNode(new PositionNode())
         .returnDownNode(createNonTerminalNode("meta identifier"))
         .returnDownNode(new PositionNode())
+        .returnDownNode(new OrNode())
+        .returnRightNode(new OrNode())
+        .returnDownNode(new PositionNode())
+        .returnDownNode(new NonTerminalNode("whitespace symbol"))
+        .returnDownNode(new PositionNode())
+        .returnDownNode(TerminalNodeFactory.createArrayBasedTerminalNode(new String[]{
+            "\\n","\\t","\\s"
+        }));
+        nodeMap.get("meta identifier").getDownNode().getDownNode()
+        .returnDownNode(new PositionNode())
         .returnDownNode(createNonTerminalNode("letter"))
         .returnDownNode(new PositionNode())
         .returnDownNode(TerminalNodeFactory.createArrayBasedTerminalNode(new String[]{
-            " ", "_",
+            "_",
             "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
             "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
             "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
             "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
         }));
-        nodeMap.get("meta identifier").getDownNode()
+        nodeMap.get("meta identifier").getDownNode().getDownNode().getDownNode()
         .returnRightNode(new PositionNode())
         .returnDownNode(createNonTerminalNode("meta identifying character"))
         .returnDownNode(new LoopNode())
@@ -192,7 +202,7 @@ public class EbnfParseTree {
         .linkDownNode(nodeMap.get("syntactic primary"));
         nodeMap.get("syntactic term").parent
         .returnRightNode(new PositionNode())
-        .returnDownNode(new LoopNode())
+        .returnDownNode(new LoopNode().setName("concat-loop"))
         .returnDownNode(new PositionNode())
         .returnDownNode(createNonTerminalNode("concatenate symbol"))
         .returnDownNode(new PositionNode())

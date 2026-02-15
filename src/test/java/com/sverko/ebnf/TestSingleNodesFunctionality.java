@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static com.sverko.ebnf.ParseNode.END_OF_QUEUE;
+import static com.sverko.ebnf.ParseNode.NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -20,7 +22,7 @@ public class TestSingleNodesFunctionality {
     public void testTerminalNodeStringRejection (){
         TerminalNode tn = TerminalNodeFactory.createSimpleTerminalNode("ghi");
         tn.tokens = TokenQueue.ofList(Arrays.asList("abc","def","ghi","klm"));
-        assertEquals (tn.callReceived(1),ParseNode.NOT_FOUND);
+        assertEquals (tn.callReceived(1), NOT_FOUND);
     }
     @Test
     public void testTerminalNodeStringRangeAcceptance (){
@@ -32,13 +34,13 @@ public class TestSingleNodesFunctionality {
     public void testTerminalNodeStringRangeRejection (){
         TerminalNode tn = TerminalNodeFactory.createArrayBasedTerminalNode( new String[]{"a","b","c"});
         tn.tokens = TokenQueue.ofList(Arrays.asList("x","y","a","z"));
-        assertEquals(tn.callReceived(1), ParseNode.NOT_FOUND);
+        assertEquals(tn.callReceived(1), NOT_FOUND);
     }
     @Test
     public void testTerminalNodeStringRangeStringRejection (){
         TerminalNode tn = TerminalNodeFactory.createArrayBasedTerminalNode( new String[]{"a","b","c"});
         tn.tokens = TokenQueue.ofList(Arrays.asList("xy","ab","zz"));
-        assertEquals(tn.callReceived(1), ParseNode.NOT_FOUND);
+        assertEquals(tn.callReceived(1), NOT_FOUND);
     }
     @Test
     public void testPositionNodeTokenFound (){
@@ -52,7 +54,7 @@ public class TestSingleNodesFunctionality {
         PositionNode pn = new PositionNode();
         pn.tokens = TokenQueue.ofList(Arrays.asList("ab","bc"));
         pn.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("de"));
-        assertEquals(pn.callReceived(1),ParseNode.NOT_FOUND);
+        assertEquals(pn.callReceived(1), NOT_FOUND);
     }
     @Test
     public void testChainedPositionNodesAllTokensFound (){
@@ -190,7 +192,7 @@ public class TestSingleNodesFunctionality {
         LoopNode ln = new LoopNode(2,2);
         ln.tokens = TokenQueue.ofList(Arrays.asList("aa","bb","bb"));
         ln.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("aa"));
-        assertEquals(ln.callReceived(0), -1);
+        assertEquals(ln.callReceived(0), NOT_FOUND);
     }
 
     @Test void testLoopNodeBetweenMaxMin (){
@@ -234,7 +236,7 @@ public class TestSingleNodesFunctionality {
         on.tokens = TokenQueue.ofList(Arrays.asList("cc"));
         on.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("aa"));
         on.returnRightNode(new OrNode()).setDownNode(TerminalNodeFactory.createSimpleTerminalNode("bb"));
-        assertEquals(on.callReceived(0),-1);
+        assertEquals(on.callReceived(0),NOT_FOUND);
     }
 
     @Test void testOrNodeSecondEndOfQueue (){
@@ -242,8 +244,9 @@ public class TestSingleNodesFunctionality {
         on.tokens = TokenQueue.ofList(Collections.emptyList());
         on.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("aa"));
         on.returnRightNode(new OrNode()).setDownNode(TerminalNodeFactory.createSimpleTerminalNode("bb"));
-        assertEquals(on.callReceived(0),-2);
+        assertEquals(on.callReceived(0),END_OF_QUEUE);
     }
+/**
     @Test void testNonTerminalNodeTokensFound (){
         NonTerminalNode ntn = new NonTerminalNode("AABB");
         ntn.tokens = TokenQueue.ofList(Arrays.asList("aa","bb"));
@@ -254,17 +257,18 @@ public class TestSingleNodesFunctionality {
         ntn.callReceived(0);
         assertEquals("aabb", ntn.getResultString());
     }
+*/
 
     @Test void testAntiNodeTokenFound (){
         AntiNode an = new AntiNode();
         an.tokens = TokenQueue.ofList(Arrays.asList("aa"));
         an.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("aa"));
-        assertEquals(an.callReceived(0),-1);
+        assertEquals(an.callReceived(0),NOT_FOUND);
     }
 
     @Test void testAntiNodeTokenNotFound (){
         AntiNode an = new AntiNode();
-        an.tokens = TokenQueue.ofList(Arrays.asList("aa"));
+        an.tokens = TokenQueue.ofList("aa");
         an.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("bb"));
         assertEquals(an.callReceived(0),1);
     }

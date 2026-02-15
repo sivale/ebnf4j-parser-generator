@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class TestIfGeneratedNodesParseCorrectly {
@@ -46,13 +45,12 @@ public class TestIfGeneratedNodesParseCorrectly {
       } else {
 
         TokenQueue sampleTokens = StringLineToStringArrayListConvertor.convert(sample);
-        TokenQueue defTokens;
-        defTokens = StringLineToStringArrayListConvertor.convert(parserDefinition.toString());
+        TokenQueue defTokens = StringLineToStringArrayListConvertor.convert(parserDefinition.toString());
         parserDefinition.setLength(0);
-        defTokens = new Lexer(Collections.EMPTY_SET).lexText(defTokens.getTokens());
+        //defTokens = new Lexer(Collections.EMPTY_SET).lexText(defTokens.getTokens());
         EbnfParserGenerator generator = new EbnfParserGenerator();
         generator.startNode = EbnfParseTree.getStartNode();
-        generator.loadEbnfSchema(defTokens);
+        generator.propagateTokenQueueToAllNodes(defTokens);
         generator.processEbnfSchema();
         Parser parser = new Parser();
         int foundTokens = parser.parse(sampleTokens, generator.getFirstNode());

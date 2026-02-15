@@ -1,11 +1,7 @@
 package com.sverko.ebnf.tools;
 
-import com.sverko.ebnf.EbnfParseTree;
-import com.sverko.ebnf.NonTerminalNode;
 import com.sverko.ebnf.ParseNode;
 import com.sverko.ebnf.ParseNodeEventListener;
-import java.util.ArrayList;
-import java.util.List;
 
 public class NodeListeners {
   public static void assign(String nodeName, ParseNode currentNode, ParseNodeEventListener listener){

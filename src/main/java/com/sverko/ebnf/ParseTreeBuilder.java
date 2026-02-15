@@ -18,8 +18,9 @@ public class ParseTreeBuilder implements ParseNodeEventListener {
 
   public ParseTreeBuilder(Parser ebnfParserGenerator) {
     generator = ebnfParserGenerator;
-    definedNtnNodes.put("LF", new NonTerminalNode("LF").setDownNode(new PositionNode().setDownNode(TerminalNodeFactory.cstn("\n"))));     // LineFeed
-    definedNtnNodes.put("HT", new NonTerminalNode("HT").setDownNode(new PositionNode().setDownNode(TerminalNodeFactory.cstn("\u0009")))); // Horizontal Tab
+    definedNtnNodes.put("\\n", new NonTerminalNode("line feed").setDownNode(new PositionNode().setDownNode(TerminalNodeFactory.cstn("\n"))));
+    definedNtnNodes.put("\\t", new NonTerminalNode("tab").setDownNode(new PositionNode().setDownNode(TerminalNodeFactory.cstn("\u0009"))));
+    definedNtnNodes.put("\\s", new NonTerminalNode("space").setDownNode(new PositionNode().setDownNode(TerminalNodeFactory.cstn("\u0020"))));
   }
 
   /**
@@ -31,10 +32,10 @@ public class ParseTreeBuilder implements ParseNodeEventListener {
    */
   @Override
   public void parseNodeEventOccurred(ParseNodeEvent e) {
-    switch (e.parseNode.name) {
+    switch (e.getNode().name) {
 
       case "meta identifier":
-        nonTerminalNode = new NonTerminalNode(e.resultString);
+        nonTerminalNode = new NonTerminalNode(e.getTrimmed());
         if (firstNonTerminalNode == null) {
           firstNonTerminalNode = nonTerminalNode;
         }
@@ -57,7 +58,7 @@ public class ParseTreeBuilder implements ParseNodeEventListener {
         break;
 
       case "terminal string":
-        String allowed = StringUtils.stripQuotes(e.resultString);
+        String allowed = StringUtils.stripQuotes(e.getTrimmed());
         terminalStrings.add(allowed);
         if (tail instanceof NonTerminalNode) {
           tail = tail.returnDownNode(new PositionNode().setDownNode(TerminalNodeFactory.cstn(allowed)));
@@ -179,7 +180,7 @@ public class ParseTreeBuilder implements ParseNodeEventListener {
         break;
 
       case "integer":
-        tail = tail.returnDownNode(new LoopNode(Integer.parseInt(e.resultString), Integer.parseInt(e.resultString)));
+        tail = tail.returnDownNode(new LoopNode(Integer.parseInt(e.getTrimmed()), Integer.parseInt(e.getTrimmed())));
         break;
 
       case "start repeat symbol":
@@ -196,10 +197,10 @@ public class ParseTreeBuilder implements ParseNodeEventListener {
       case "special sequence":
         if (tail instanceof PositionNode) {
           tail.setDownNode(TerminalNodeFactory.createCharacterRangeBasedTerminalNode(
-              generator.getSpecialSequence(e.resultString), e.resultString));
+              generator.getSpecialSequence(e.getTrimmed()), e.getTrimmed()));
         } else {
           tail = tail.returnDownNode(new PositionNode().setDownNode(TerminalNodeFactory.createCharacterRangeBasedTerminalNode(
-                  generator.getSpecialSequence(e.resultString),e.resultString)));
+                  generator.getSpecialSequence(e.getTrimmed()),e.getTrimmed())));
         }
         break;
 

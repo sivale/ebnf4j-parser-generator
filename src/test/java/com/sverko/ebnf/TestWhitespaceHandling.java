@@ -1,0 +1,239 @@
+package com.sverko.ebnf;
+
+import static com.sverko.ebnf.ParseNode.NOT_FOUND;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Set;
+import org.junit.jupiter.api.Test;
+
+public class TestWhitespaceHandling implements ParseNodeEventListener {
+
+  @Test
+  public void testUnhandledWhitespaceRecognitionPositive(){
+    Lexer lexer = new Lexer();
+    TokenQueue shema = lexer.lexText("A=' ';");
+    EbnfParserGenerator generator = new EbnfParserGenerator();
+    Parser parser = generator.getParser(shema,true);
+    int tokensFound = parser.parse(" ");
+    assert(tokensFound == 1);
+  }
+
+  @Test
+  public void testUnhandledWhitespaceRecognitionNegative(){
+    Lexer lexer = new Lexer();
+    TokenQueue shema = lexer.lexText(" A= 'a';");
+    EbnfParserGenerator generator = new EbnfParserGenerator();
+    Parser parser = generator.getParser(shema,true);
+    int tokensFound = parser.parse(" ");
+    assert(tokensFound == NOT_FOUND);
+  }
+
+  @Test
+  public void testUnhandledWhitespaceJumpOver(){
+    Lexer lexer = new Lexer();
+    TokenQueue shema = lexer.lexText("A='a';");
+    EbnfParserGenerator generator = new EbnfParserGenerator();
+    Parser parser = generator.getParser(shema,true);
+    int tokensFound = parser.parse(" a");
+    assert(tokensFound == 2);
+  }
+
+  @Test
+  public void testUnhandledWhitespaceInBetween(){
+    Lexer lexer = new Lexer();
+    TokenQueue shema = lexer.lexText("A='a','b';");
+    EbnfParserGenerator generator = new EbnfParserGenerator();
+    Parser parser = generator.getParser(shema,true);
+    int tokensFound = parser.parse("a b");
+    assert(tokensFound == 3);
+  }
+
+  @Test
+  void testUnhandledWhitespaceBeforeAndAfter(){
+    Lexer lexer = new Lexer();
+    TokenQueue shema = lexer.lexText("A='a'");
+    EbnfParserGenerator generator = new EbnfParserGenerator();
+    Parser parser = generator.getParser(shema,true);
+    int tokensFound = parser.parse(" a ");
+    assert(tokensFound == 2); // the tokens beyond the end of findable tokens are not counted
+  }
+
+  @Test
+  void testUnhandledWhitespaceInBetweenAndAfter(){
+    Lexer lexer = new Lexer();
+    TokenQueue shema = lexer.lexText("A='a','b'");
+    EbnfParserGenerator generator = new EbnfParserGenerator();
+    Parser parser = generator.getParser(shema,true);
+    int tokensFound = parser.parse("a b ");
+    assert(tokensFound == 3);
+  }
+
+  @Test
+  void testUnhandledWhitespaceInBetweenAndBefore(){
+    Lexer lexer = new Lexer();
+    TokenQueue shema = lexer.lexText("A='a','b'");
+    EbnfParserGenerator generator = new EbnfParserGenerator();
+    Parser parser = generator.getParser(shema,true);
+    int tokensFound = parser.parse(" a b");
+    assert(tokensFound == 4);
+  }
+
+  @Test
+  void testUnhandledWhitespaceInBetweenAndBeforeAndAfter(){
+    Lexer lexer = new Lexer();
+    TokenQueue shema = lexer.lexText("A='a','b'");
+    EbnfParserGenerator generator = new EbnfParserGenerator();
+    Parser parser = generator.getParser(shema,true);
+    int tokensFound = parser.parse(" a b ");
+    assert(tokensFound == 4);
+  }
+
+  @Test
+  void testSequenceWhereWhitespaceIsExpectedAsSecondInput(){
+    Lexer lexer = new Lexer();
+    TokenQueue shema = lexer.lexText("A='a',' ';");
+    Parser parser = new EbnfParserGenerator().getParser(shema,true);
+    int tokensFound = parser.parse("a ");
+    assert(tokensFound == 2);
+  }
+
+  @Test
+  void testMultipleUnhandledWhitespaceJumpOver(){
+    Lexer lexer = new Lexer();
+    TokenQueue shema = lexer.lexText("A='a';");
+    Parser parser = new EbnfParserGenerator().getParser(shema,true);
+    int tokensFound = parser.parse("   a");  // multiple WS
+    assert(tokensFound == 4);
+  }
+
+  @Test
+  void testHandledWhitespaceCountsAsPayload(){
+    Lexer lexer = new Lexer();
+    TokenQueue shema = lexer.lexText("A=' ','a';");
+    Parser parser = new EbnfParserGenerator().getParser(shema,true);
+    int tokensFound = parser.parse(" a");
+    assert(tokensFound == 2); // ' ' (handled) + 'a'
+  }
+
+  @Test
+  void testOrRollbackRestoresUnhandledWhitespace(){
+    Lexer lexer = new Lexer();
+    // example: A = (' ', 'x') | 'a';
+    TokenQueue shema = lexer.lexText("A=(' ','x')|'a';");
+    Parser parser = new EbnfParserGenerator().getParser(shema,true);
+    int tokensFound = parser.parse(" a");
+    assert(tokensFound == 2); //only 'a' is counted, leading WS is unhandled
+  }
+
+  @Test
+  void testAntiNodeAllowsWsPrefixedAllowedToken(){
+    Lexer lexer = new Lexer();
+    TokenQueue shema = lexer.lexText("A=ANY-B,'b';B='b';ANY=?LETTER?;");
+    Parser parser = new EbnfParserGenerator().getParser(shema,true);
+    int tokensFound = parser.parse(" ab"); // UW before 'b'
+    assert(tokensFound == 3);
+  }
+
+  @Test
+  void testAntiNodeForbidsWsPrefixedForbiddenToken(){
+    Lexer lexer = new Lexer();
+    TokenQueue shema = lexer.lexText("A=ANY-B,'b';B='b';ANY=?LETTER?;");
+    Parser parser = new EbnfParserGenerator().getParser(shema,true);
+    int tokensFound = parser.parse(" bb"); // UW before 'b'
+    assert(tokensFound == NOT_FOUND);
+  }
+
+  @Test
+  void testWhitespaceOnlyFails(){
+    Lexer lexer = new Lexer();
+    TokenQueue shema = lexer.lexText("A='a';");
+    Parser parser = new EbnfParserGenerator().getParser(shema,true);
+    int tokensFound = parser.parse("   ");
+    assert(tokensFound == NOT_FOUND);
+  }
+  @Test
+  void testBreakingOfSimilarTokensByWhitespace(){
+    Lexer lexer = new Lexer();
+    TokenQueue shema = lexer.lexText("A=FIRST,' ',SECOND;FIRST={?LETTER?};SECOND={?LETTER?};");
+    EbnfParserGenerator generator = new EbnfParserGenerator();
+    Parser parser = generator.getParser(shema,true);
+    parser.assignNodeEventListeners(this);
+    int tokensFound = parser.parse("first second");
+    assert(tokensFound == 12);
+  }
+
+  @Test
+  void testCombiningSimilarTokensWithWhitespace(){
+    Lexer lexer = new Lexer();
+    TokenQueue shema = lexer.lexText("A=FIRST,SECOND;FIRST={?LETTER?};SECOND={?LETTER?};");
+    EbnfParserGenerator generator = new EbnfParserGenerator();
+    Parser parser = generator.getParser(shema,true);
+    parser.assignNodeEventListeners(this);
+    int tokensFound = parser.parse("first second");
+    assert(tokensFound == 12);
+  }
+  @Test
+  void testCompositionWithParentAndChild(){
+    Lexer lexer = new Lexer();
+    TokenQueue shema = lexer.lexText("SENTENCE = {WORD};WORD = {?LETTER?};");
+    EbnfParserGenerator generator = new EbnfParserGenerator();
+    Parser parser = generator.getParser(shema,true);
+    int tokensFound = parser.parse("abc def");
+    assert(tokensFound == 7);
+  }
+
+  @Test
+  void testTerminalStringsWithWsRecognition(){
+    Lexer lexer = new Lexer();
+    TokenQueue shema = lexer.lexText("SL = 'hello world';");
+    EbnfParserGenerator generator = new EbnfParserGenerator();
+    Parser parser = generator.getParser(shema,true);
+    int tokensFound = parser.parse("hello world");
+    assert(tokensFound == 1);
+  }
+
+  @Test
+  void testLineSeparationLiterals(){
+    Lexer lexer = new Lexer();
+    TokenQueue shema = lexer.lexText("LINES = LINE1, '\n', LINE2; LINE1 = {?LETTER?}; LINE2 = {?LETTER?};");
+    EbnfParserGenerator generator = new EbnfParserGenerator();
+    Parser parser = generator.getParser(shema,true);
+    int tokensFound = parser.parse("first\nsecond");
+    assertEquals(12, tokensFound);
+  }
+
+  @Test
+  void testNewLineTerminalStringExtension(){
+    Lexer lexer = new Lexer(Set.of("\\n"));
+    TokenQueue shema = lexer.lexText("LINES = LINE1, \\n, LINE2; LINE1 = {?LETTER?}; LINE2 = {?LETTER?};");
+    EbnfParserGenerator generator = new EbnfParserGenerator();
+    Parser parser = generator.getParser(shema,true);
+    int tokensFound = parser.parse("first\nsecond");
+    assertEquals(12, tokensFound);
+  }
+
+  @Test
+  void testProblem(){
+    Lexer lexer = new Lexer(Set.of("\\n"));
+    TokenQueue shema = lexer.lexText("EXPRESSION=TERM,{'+',TERM};TERM=FACTOR,{'*',FACTOR};FACTOR=INTEGER|'(',EXPRESSION,')';INTEGER=DIGIT,{DIGIT};DIGIT=?DIGIT?;");
+    EbnfParserGenerator generator = new EbnfParserGenerator();
+    Parser parser = generator.getParser(shema,true);
+    int tokensFound = parser.parse("1 + 2");
+    assertEquals(5, tokensFound);
+  }
+
+  @Test
+  void analyseProblem(){
+    Lexer lexer = new Lexer(Set.of("\\n"));
+    TokenQueue shema = lexer.lexText("INTEGER=DIGIT,{DIGIT};DIGIT=?DIGIT?;");
+    EbnfParserGenerator generator = new EbnfParserGenerator();
+    Parser parser = generator.getParser(shema,true);
+    int tokensFound = parser.parse("12");
+    assertEquals(2, tokensFound);
+  }
+
+  @Override
+  public void parseNodeEventOccurred(ParseNodeEvent e) {
+    System.out.println(e.getNode().name + " " + e.getTrimmed());
+  }
+}

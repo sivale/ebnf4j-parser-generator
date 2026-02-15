@@ -5,25 +5,21 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.api.Assertions;
 import com.sverko.ebnf.tools.CombinationsCreator;
-import com.sverko.ebnf.tools.StringLineToStringArrayListConvertor;
 import java.util.List;
-import java.util.Collections;
 
 public class TestProgrammaticallyCreatedCombinations {
   @ParameterizedTest
   @MethodSource("provideCombinations")
   public void testParserWithCombinations(String input, String ebnfDefinition) throws IOException {
     // Step 1: Tokenize the input and EBNF definition using the existing logic
-    TokenQueue sampleTokens = StringLineToStringArrayListConvertor.convert(input); // Tokenize input
-    TokenQueue defTokens = StringLineToStringArrayListConvertor.convert(ebnfDefinition); // Tokenize EBNF definition
+    Lexer lexer = new Lexer();
+    TokenQueue sampleTokens = lexer.lexText(input);
+    TokenQueue defTokens = lexer.lexText(ebnfDefinition);
 
-    // Step 2: Lex the tokens of the EBNF definition
-    defTokens = new Lexer().lexText(defTokens.getTokens());
-
-    // Step 3: Generate the parser using the EBNF schema
+    // Step 2: Generate the parser using the EBNF schema
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.loadEbnfSchema(defTokens);
+    generator.propagateTokenQueueToAllNodes(defTokens);
     generator.processEbnfSchema();
 
     // Create the parser from the generated schema

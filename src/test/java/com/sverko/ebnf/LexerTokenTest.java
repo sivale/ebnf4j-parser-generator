@@ -35,7 +35,7 @@ public class LexerTokenTest {
     Set<String> keywords = new HashSet<>(Arrays.asList("😊"));
     Lexer lexer = new Lexer(keywords);
     TokenQueue tokens = lexer.lexText("😊");
-    assertEquals(1, tokens.size());
+    assertEquals(1, tokens.rawSize());
     assertEquals("😊", tokens.get(0));
   }
 
@@ -48,24 +48,6 @@ public class LexerTokenTest {
     assertTrue(tokens.contains("B"));
     assertTrue(tokens.contains("😊"));
     assertFalse(tokens.contains("�"));
-  }
-
-  @Test
-  public void lexerShouldHonourIgnoreWhitespace() {
-    String input = "a b";
-    Lexer lexer = Lexer.builder().ignoreWhitespace(true).build();
-    TokenQueue result = lexer.lexText(input);
-    TokenQueue expected = TokenQueue.ofList("a", "b");
-    assertEquals(expected, result, "lexer should ignore whitespace");
-  }
-
-  @Test
-  public void lexerShouldIgnorePureWhitespaceLinesWithoutError() {
-    List<String> input = Arrays.asList("   ", "a", "b  ", "  ");
-    Lexer lexer = Lexer.builder().ignoreWhitespace(true).build();
-    TokenQueue result = lexer.lexText(input);
-    TokenQueue expected = TokenQueue.ofList("a", "b");
-    assertEquals(expected, result, "lexer should ignore pure whitespace lines");
   }
 
   @Test
@@ -94,16 +76,6 @@ public class LexerTokenTest {
     TokenQueue tokens = lexer.lexText("HausX");
     assertTrue(tokens.contains("Haus"));
     assertTrue(tokens.contains("X"));
-  }
-
-  @Test
-  public void lexerShouldHonourIgnoreWhitespace2() {
-    Set<String> keywords = Set.of("ab");
-    String input = "a b";
-    Lexer lexer = Lexer.builder().keywords(keywords).ignoreWhitespace(true).preserveWhitespaceInQuotes(false).build();
-    TokenQueue result = lexer.lexText(input);
-    TokenQueue expected = TokenQueue.ofList("ab");
-    assertEquals(expected, result, "lexer should ignore whitespace");
   }
 
   @Test
@@ -204,26 +176,6 @@ public class LexerTokenTest {
        |    w -> m -> u*
        t -> r -> g -> f*""";
     assertEquals(expected, lexer.getOutputGraph());
-  }
-
-  @Test
-  public void lexerShouldPreserveWhitespaceInTerminalStringsIfToldSo() throws IOException {
-    String input = "MYDEF = \"one two three\" , \"four\", \"five\";";
-    EbnfParserGenerator shemaParser = new EbnfParserGenerator();
-    shemaParser.lexer = Lexer.builder().preserveWhitespaceInQuotes(true).build();
-    TokenQueue singleCodepointList = shemaParser.lexer.lexText(new UnicodeString(input));
-    Parser textParser = shemaParser.getParser(singleCodepointList, true);
-    int foundTokens = textParser.parse("one two three four five");
-    assert (foundTokens == 3);
-  }
-
-  @Test
-  public void lexerShouldNotPreserveWhitespaceInTerminalStringsIfNotToldSo() {
-    String input = "'a b'";
-    Lexer lexer = Lexer.builder().ignoreWhitespace(true).preserveWhitespaceInQuotes(false).build();
-    TokenQueue result = lexer.lexText(input);
-    TokenQueue expected = TokenQueue.ofList("'", "a", "b", "'");
-    assertEquals(expected, result, "lexer should ignore whitespace");
   }
 
   @Test

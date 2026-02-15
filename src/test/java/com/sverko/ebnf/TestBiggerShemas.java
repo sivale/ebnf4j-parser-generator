@@ -6,6 +6,7 @@ import java.util.function.Predicate;
 import org.junit.jupiter.api.Test;
 
 public class TestBiggerShemas implements ParseNodeEventListener{
+
   @Test
   public void testNumberPlateRecognition() throws IOException {
     EbnfParserGenerator generator = new EbnfParserGenerator();
@@ -13,17 +14,20 @@ public class TestBiggerShemas implements ParseNodeEventListener{
     generator.addSpecialSequence("?GERMAN_CAPITALS?",allowedSigns);
     Parser kennzeichenParser = generator.getParser(Path.of("src/main/resources/kennzeichen.ebnf"));
     kennzeichenParser.assignNodeEventListener("KENNZEICHEN",this);
+    SvgPrinter printer = new SvgPrinter(kennzeichenParser.startNode);
+    printer.printParseTreeToFile("/tmp/parse-tree.svg");
     kennzeichenParser.parse(Path.of("src/main/resources/kennzeichen.txt"));
   }
+
   @Test
   public void testAddresbookParser() throws IOException {
     EbnfParserGenerator generator = new EbnfParserGenerator();
+    generator.addSchemaListener(this);
     Parser addressBookParser = generator.getParser(Path.of("src/main/resources/addressbook.ebnf"));
-    //SvgPrinter printer = new SvgPrinter(kennzeichenParser.startNode);
     addressBookParser.assignNodeEventListener("PHONE",this);
-    //kennzeichenParser.assignNodeEventListener("LASTNAME",this);
     addressBookParser.parse(Path.of("src/main/resources/addressbook.txt"));
   }
+
   @Test
   public void testBasicIdentationShema() throws IOException {
     EbnfParserGenerator generator = new EbnfParserGenerator();
@@ -35,9 +39,9 @@ public class TestBiggerShemas implements ParseNodeEventListener{
     identParser.parse(Path.of("src/main/resources/indented-syntax.txt"));
   }
 
+
   @Override
   public void parseNodeEventOccurred(ParseNodeEvent e) {
-    System.out.println(e.parseNode.name);
-    System.out.println(e.resultString);
+    System.out.println(e.getNode().name + ": " + e.getTrimmed());
   }
 }

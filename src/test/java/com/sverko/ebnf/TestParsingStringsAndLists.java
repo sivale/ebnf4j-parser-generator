@@ -9,7 +9,7 @@ public class TestParsingStringsAndLists {
   @Test
   public void testParsingStrings() throws IOException {
     EbnfParserGenerator generator = new EbnfParserGenerator();
-    Lexer lexer = Lexer.builder().preserveWhitespaceInQuotes(false).build();
+    Lexer lexer = new Lexer();
     TokenQueue shema = lexer.lexText("A = 'abc' | 'def';");
     Parser parser = generator.getParser(shema,true);
     parser.parse("abc");
