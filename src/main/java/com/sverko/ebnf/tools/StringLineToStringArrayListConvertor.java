@@ -1,8 +1,6 @@
 package com.sverko.ebnf.tools;
 
-import com.sverko.ebnf.Token;
 import com.sverko.ebnf.TokenQueue;
-import com.sverko.ebnf.TokenType;
 import java.util.ArrayList;
 import java.util.List;
 

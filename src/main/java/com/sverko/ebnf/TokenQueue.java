@@ -30,6 +30,7 @@ public class TokenQueue {
   // --- Token flags moved into TokenQueue: anRequest + loopProbe ---
   private final BitSet anRequest = new BitSet();
   private final BitSet loopProbe = new BitSet();
+  private int lastTokenFound = 0;
 
   private void initWhitespaceBitsets() {
     for (int i = 0; i < tokens.size(); i++) {
@@ -178,6 +179,14 @@ public class TokenQueue {
       if (isPayloadIndex(i)) count++;
     }
     return count;
+  }
+
+  public int getLastTokenFound() {
+    return lastTokenFound;
+  }
+
+  public void setLastTokenFound(int lastTokenFound) {
+    this.lastTokenFound = lastTokenFound;
   }
 
   public static TokenQueue ofList(List<String> tokens) {

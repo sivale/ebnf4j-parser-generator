@@ -58,6 +58,9 @@ public class EbnfParserGenerator extends Parser {
     addDefaultSpecialSequences();
     assignParseNodeEventListeners();
     int tokensFound = startNode.callReceived(tokenQueue.getFirstToken());
+    while (tokensFound < tokenQueue.rawSize() && tokenQueue.isUnhandledWhitespace(tokensFound)) {
+      tokensFound++;
+    }
     if (tokensFound == tokenQueue.rawSize()) {
       NonTerminalNode endNode = new NonTerminalNode("end of parsing");
       endNode.addEventListener(parserBuilder);
