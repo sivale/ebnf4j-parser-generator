@@ -59,6 +59,7 @@ public class ParseTreeBuilder implements ParseNodeEventListener {
 
       case "terminal string":
         String allowed = StringUtils.stripQuotes(e.getTrimmed());
+        allowed = performWsMapping(allowed);
         terminalStrings.add(allowed);
         if (tail instanceof NonTerminalNode) {
           tail = tail.returnDownNode(new PositionNode().setDownNode(TerminalNodeFactory.cstn(allowed)));
@@ -212,6 +213,42 @@ public class ParseTreeBuilder implements ParseNodeEventListener {
         stitchNonTerminalNodes(firstNonTerminalNode);
         break;
     }
+  }
+
+  private String performWsMapping(String allowed) {
+    if (allowed == null || allowed.isEmpty()) {
+      return allowed;
+    }
+
+    StringBuilder out = new StringBuilder(allowed.length());
+    for (int i = 0; i < allowed.length(); i++) {
+      char ch = allowed.charAt(i);
+      if (ch == '\\' && i + 1 < allowed.length()) {
+        char next = allowed.charAt(i + 1);
+        switch (next) {
+          case 'n':
+            out.append('\n');
+            i++; // consume 'n'
+            continue;
+          case 't':
+            out.append('\t');
+            i++; // consume 't'
+            continue;
+          case 's':
+            out.append(' ');
+            i++; // consume 's'
+            continue;
+          default:
+            // Not a supported WS escape -> keep as literal backslash
+            // and continue normally (next char will be processed next loop)
+            out.append('\\');
+            continue;
+        }
+      }
+
+      out.append(ch);
+    }
+    return out.toString();
   }
 
   private ParseNode getNextLoopNodeParent(ParseNode tail) {

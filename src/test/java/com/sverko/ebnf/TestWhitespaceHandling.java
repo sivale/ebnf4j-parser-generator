@@ -213,23 +213,13 @@ public class TestWhitespaceHandling implements ParseNodeEventListener {
   }
 
   @Test
-  void testProblem(){
-    Lexer lexer = new Lexer(Set.of("\\n"));
-    TokenQueue shema = lexer.lexText("EXPRESSION=TERM,{'+',TERM};TERM=FACTOR,{'*',FACTOR};FACTOR=INTEGER|'(',EXPRESSION,')';INTEGER=DIGIT,{DIGIT};DIGIT=?DIGIT?;");
+  void testNewLineTerminalStringConversion(){
+    Lexer lexer = new Lexer();
+    TokenQueue shema = lexer.lexText("LINES = LINE1, '\\n', LINE2; LINE1 = {?LETTER?}; LINE2 = {?LETTER?};");
     EbnfParserGenerator generator = new EbnfParserGenerator();
     Parser parser = generator.getParser(shema,true);
-    int tokensFound = parser.parse("1 + 2");
-    assertEquals(5, tokensFound);
-  }
-
-  @Test
-  void analyseProblem(){
-    Lexer lexer = new Lexer(Set.of("\\n"));
-    TokenQueue shema = lexer.lexText("INTEGER=DIGIT,{DIGIT};DIGIT=?DIGIT?;");
-    EbnfParserGenerator generator = new EbnfParserGenerator();
-    Parser parser = generator.getParser(shema,true);
-    int tokensFound = parser.parse("12");
-    assertEquals(2, tokensFound);
+    int tokensFound = parser.parse("first\nsecond");
+    assertEquals(12, tokensFound);
   }
 
   @Override

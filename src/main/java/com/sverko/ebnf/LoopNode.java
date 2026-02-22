@@ -117,7 +117,7 @@ public class LoopNode extends ParseNode {
         // Your heuristic:
         // - lastTokensFound == 1 => collector-like => STOP (leave UW for upper nodes)
         // - lastTokensFound  > 1 => structural-like => SKIP UW and continue with next iteration
-        if (lastTokensFound == 1) {
+        if (lastTokensFound == 1 && tokens.get(furthestMatch).length() == 1) {
           if (hasMin && matchedIterations < min) return NOT_FOUND;
           return furthestMatch;
         }
@@ -153,7 +153,7 @@ public class LoopNode extends ParseNode {
       }
 
       // progress: record heuristic + counters
-      lastTokensFound = curResult - sent;
+      lastTokensFound = Math.max((curResult - sent),tokens.get(sent).length());
       matchedIterations++;
 
       // mark that we matched real payload (using your original “start token isn’t UW” heuristic)

@@ -36,6 +36,7 @@ public class NonTerminalNode extends ParseNode {
         fireParseNodeEvent(raw, trimmed, token, receivedResult, trimmedFrom, trimmedTo);
       }
     }
+    tokens.setLastTokenFound(receivedResult);
     return receivedResult;
   }
 
