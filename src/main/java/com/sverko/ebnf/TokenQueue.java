@@ -30,7 +30,7 @@ public class TokenQueue {
   // --- Token flags moved into TokenQueue: anRequest + loopProbe ---
   private final BitSet anRequest = new BitSet();
   private final BitSet loopProbe = new BitSet();
-  private int lastTokenFound = 0;
+  private int lastTokenFound = -1;
 
   private void initWhitespaceBitsets() {
     for (int i = 0; i < tokens.size(); i++) {
