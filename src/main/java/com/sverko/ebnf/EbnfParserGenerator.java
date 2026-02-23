@@ -1,6 +1,7 @@
 package com.sverko.ebnf;
 
 import com.sverko.ebnf.tools.ParseNodeParserFactory;
+import com.sverko.ebnf.tools.UnicodeString;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class EbnfParserGenerator extends Parser {
   }
 
   public Parser getParser(Path shemaLocation, boolean strictWhitespaceHandling) throws IOException {
-    Lexer shemaLexer = new Lexer(Set.of("\\n","\\t","\\s"));
+    Lexer shemaLexer = new Lexer(Set.of("\\n","\\t","\\s","{:"));
     TokenQueue ebnfSchema = shemaLexer.lexText(shemaLocation);
     return getParser(ebnfSchema, strictWhitespaceHandling);
   }
@@ -47,6 +48,12 @@ public class EbnfParserGenerator extends Parser {
     processEbnfSchema();
     return new Parser(getFirstNode(), parserBuilder.getNamedNodes(), parserBuilder.getLexerTokens(),
         ignoreWhitespace);
+  }
+
+  public Parser getParser(String shema) {
+    Lexer shemaLexer = new Lexer(Set.of("\\n","\\t","\\s","{:"));
+    TokenQueue ebnfSchema = shemaLexer.lexText(new UnicodeString(shema));
+    return getParser(ebnfSchema, true);
   }
 
   public void propagateTokenQueueToAllNodes(TokenQueue tokenQueue) {
@@ -95,6 +102,7 @@ public class EbnfParserGenerator extends Parser {
     namedNodes.add("end group symbol");
     namedNodes.add("start repeat symbol");
     namedNodes.add("end repeat symbol");
+    namedNodes.add("start collect symbol");
     namedNodes.add("terminator symbol");
     namedNodes.add("special sequence");
     namedNodes.add("except symbol");

@@ -153,10 +153,8 @@ public class TestWhitespaceHandling implements ParseNodeEventListener {
   }
   @Test
   void testBreakingOfSimilarTokensByWhitespace(){
-    Lexer lexer = new Lexer();
-    TokenQueue shema = lexer.lexText("A=FIRST,' ',SECOND;FIRST={?LETTER?};SECOND={?LETTER?};");
     EbnfParserGenerator generator = new EbnfParserGenerator();
-    Parser parser = generator.getParser(shema,true);
+    Parser parser = generator.getParser("A=FIRST,' ',SECOND;FIRST={:?LETTER?};SECOND={?LETTER?};");
     parser.assignNodeEventListeners(this);
     int tokensFound = parser.parse("first second");
     assert(tokensFound == 12);
@@ -194,20 +192,16 @@ public class TestWhitespaceHandling implements ParseNodeEventListener {
 
   @Test
   void testLineSeparationLiterals(){
-    Lexer lexer = new Lexer();
-    TokenQueue shema = lexer.lexText("LINES = LINE1, '\n', LINE2; LINE1 = {?LETTER?}; LINE2 = {?LETTER?};");
     EbnfParserGenerator generator = new EbnfParserGenerator();
-    Parser parser = generator.getParser(shema,true);
+    Parser parser = generator.getParser("LINES = LINE1, '\n', LINE2; LINE1 = {:?LETTER?}; LINE2 = {:?LETTER?};");
     int tokensFound = parser.parse("first\nsecond");
     assertEquals(12, tokensFound);
   }
 
   @Test
   void testNewLineTerminalStringExtension(){
-    Lexer lexer = new Lexer(Set.of("\\n"));
-    TokenQueue shema = lexer.lexText("LINES = LINE1, \\n, LINE2; LINE1 = {?LETTER?}; LINE2 = {?LETTER?};");
     EbnfParserGenerator generator = new EbnfParserGenerator();
-    Parser parser = generator.getParser(shema,true);
+    Parser parser = generator.getParser("LINES = LINE1, \\n, LINE2; LINE1 = {:?LETTER?}; LINE2 = {:?LETTER?};");
     int tokensFound = parser.parse("first\nsecond");
     assertEquals(12, tokensFound);
   }
@@ -215,9 +209,8 @@ public class TestWhitespaceHandling implements ParseNodeEventListener {
   @Test
   void testNewLineTerminalStringConversion(){
     Lexer lexer = new Lexer();
-    TokenQueue shema = lexer.lexText("LINES = LINE1, '\\n', LINE2; LINE1 = {?LETTER?}; LINE2 = {?LETTER?};");
     EbnfParserGenerator generator = new EbnfParserGenerator();
-    Parser parser = generator.getParser(shema,true);
+    Parser parser = generator.getParser("LINES = LINE1, '\\n', LINE2; LINE1 = {:?LETTER?}; LINE2 = {:?LETTER?};");
     int tokensFound = parser.parse("first\nsecond");
     assertEquals(12, tokensFound);
   }

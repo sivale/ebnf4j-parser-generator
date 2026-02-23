@@ -168,6 +168,17 @@ public class EbnfParseTree {
         .returnDownNode(createNonTerminalNode("end repeat symbol"))
         .returnDownNode(TerminalNodeFactory.cstn("}"));
         nodeMap.get("repeated sequence").parent
+            .returnRightNode(new OrNode())
+            .returnDownNode(createNonTerminalNode("collector sequence"))
+            .returnDownNode(new PositionNode())
+            .returnDownNode(createNonTerminalNode("start collect symbol"))
+            .returnDownNode(TerminalNodeFactory.cstn("{:"));
+        nodeMap.get("collector sequence").getDownNode()
+            .returnRightNode(new PositionNode().linkDownNode(nodeMap.get("definitions list")))
+            .returnRightNode(new PositionNode())
+            .returnDownNode(createNonTerminalNode("end collect symbol"))
+            .returnDownNode(TerminalNodeFactory.cstn("}"));
+        nodeMap.get("collector sequence").parent
         .returnRightNode(new OrNode())
         .returnDownNode(createNonTerminalNode("grouped sequence"))
         .returnDownNode(new PositionNode())
