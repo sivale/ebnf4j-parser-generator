@@ -188,6 +188,9 @@ public class ParseTreeBuilder implements ParseNodeEventListener {
         tail = tail.returnDownNode(new LoopNode());
         break;
 
+      case "start collect symbol":
+        tail = tail.returnDownNode(new LoopNode(0, 0));
+
       case "end option symbol":
       case "end repeat symbol":
         if (!(tail instanceof LoopNode)) {

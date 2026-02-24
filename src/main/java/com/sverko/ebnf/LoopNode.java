@@ -1,17 +1,20 @@
 package com.sverko.ebnf;
 
 public class LoopNode extends ParseNode {
-
+  public enum LoopType { COLLECTOR, STRUCTURAL }
+  LoopType loopType = LoopType.STRUCTURAL;
   int min = 0, max = 0;
 
   public LoopNode(int min, int max) {
     this.min = min;
     this.max = max;
+    loopType = LoopType.COLLECTOR;
   }
 
   public LoopNode(int max) {
     this.min = 0;
     this.max = max;
+    loopType = LoopType.COLLECTOR;
   }
 
   public LoopNode() { }
@@ -60,9 +63,6 @@ public class LoopNode extends ParseNode {
 
     // Last successful end-index
     int furthestMatch = token;
-
-    // For your heuristic: how many tokens did the *last successful* iteration consume?
-    int lastTokensFound = 0;
 
     // For min>0: how many iterations have matched
     int matchedIterations = 0;
@@ -113,11 +113,7 @@ public class LoopNode extends ParseNode {
           continue;
         }
 
-        // 2) Probe failed => whitespace is NOT data here => it's a separator candidate.
-        // Your heuristic:
-        // - lastTokensFound == 1 => collector-like => STOP (leave UW for upper nodes)
-        // - lastTokensFound  > 1 => structural-like => SKIP UW and continue with next iteration
-        if (lastTokensFound == 1 && tokens.get(furthestMatch).length() == 1) {
+        if (loopType == LoopType.COLLECTOR) {
           if (hasMin && matchedIterations < min) return NOT_FOUND;
           return furthestMatch;
         }
@@ -152,8 +148,6 @@ public class LoopNode extends ParseNode {
         return Math.max(furthestMatch, token);
       }
 
-      // progress: record heuristic + counters
-      lastTokensFound = Math.max((curResult - sent),tokens.get(sent).length());
       matchedIterations++;
 
       // mark that we matched real payload (using your original “start token isn’t UW” heuristic)
@@ -180,7 +174,9 @@ public class LoopNode extends ParseNode {
   @Override
   public boolean equals(Object o) {
     if (!(o instanceof LoopNode)) return false;
-    LoopNode otherNode = (LoopNode) o;
-    return this.max == otherNode.max && this.min == otherNode.min;
+    LoopNode other = (LoopNode) o;
+    return this.max == other.max
+        && this.min == other.min
+        && this.loopType == other.loopType;
   }
 }
