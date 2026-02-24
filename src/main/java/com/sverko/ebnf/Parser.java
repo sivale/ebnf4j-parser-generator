@@ -102,6 +102,7 @@ public class Parser {
   protected void addDefaultSpecialSequences() {
     addSpecialSequence("?WHITESPACE?", Character::isWhitespace);
     addSpecialSequence("?BMP?", Character::isBmpCodePoint);
+    addSpecialSequence("?BMP_WITHOUT_NL?", (i) -> Character.isBmpCodePoint(i) && i != '\n');
     addSpecialSequence("?DIGIT?", Character::isDigit);
     addSpecialSequence("?LETTER?", Character::isLetter);
     addSpecialSequence("?LOWERCASE?", Character::isLowerCase);
