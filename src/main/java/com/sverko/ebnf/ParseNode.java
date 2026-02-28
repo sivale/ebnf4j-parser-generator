@@ -13,6 +13,7 @@ public abstract class ParseNode implements CalledNode {
 
   public String name;
   public ParseNode parent;
+  public Parser parser;
   public TokenQueue tokens;
   int frmPtr, toPtr;
 

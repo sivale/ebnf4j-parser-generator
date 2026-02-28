@@ -103,6 +103,7 @@ public class EbnfParserGenerator extends Parser {
     namedNodes.add("start repeat symbol");
     namedNodes.add("end repeat symbol");
     namedNodes.add("start collect symbol");
+    namedNodes.add("end collect symbol");
     namedNodes.add("terminator symbol");
     namedNodes.add("special sequence");
     namedNodes.add("except symbol");

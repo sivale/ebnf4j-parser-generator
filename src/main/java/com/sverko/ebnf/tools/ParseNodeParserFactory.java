@@ -5,6 +5,7 @@ import com.sverko.ebnf.Parser;
 
 public class ParseNodeParserFactory {
     public static void assign(ParseNode currentNode, Parser parser){
+        currentNode.parser = parser;
         currentNode.tokens = parser.getTokenQueue();
 
         if (currentNode.hasDownNode() && !currentNode.isAncestor(currentNode.downNode)){

@@ -10,8 +10,7 @@ public class EbnfParseTree {
 
   public static ParseNode getStartNode() {
 
-    ParseNode startNode = new PositionNode();
-
+    ParseNode startNode = new PositionNode("ebnf-tree");
     startNode.returnDownNode(createNonTerminalNode("syntax"))
         .returnDownNode(new LoopNode())
         .returnDownNode(new PositionNode())
