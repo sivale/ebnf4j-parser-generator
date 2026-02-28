@@ -17,7 +17,7 @@ public class Parser {
   TokenQueue tokenQueue;
   Lexer lexer;
   int curPtr = -1; //before the first element in queue
-  ParseNode startNode;
+  public ParseNode startNode;
   Map<String, ParseNode> nodeMap;
   Map<String, Predicate<Integer>> specialSequences = new HashMap<>();
   List<String> eventNodeNames = new ArrayList<>();

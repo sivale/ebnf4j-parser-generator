@@ -1,6 +1,11 @@
 package com.sverko.ebnf;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class NonTerminalNode extends ParseNode {
+
+  private static final Logger log = LoggerFactory.getLogger(NonTerminalNode.class);
   String resultString;
 
   public NonTerminalNode(String name) { super(name); }
@@ -8,6 +13,10 @@ public class NonTerminalNode extends ParseNode {
 
   @Override
   public int callReceived(int token) {
+  if(!Character.isWhitespace(tokens.get(token).charAt(0))) {
+    log.debug("{} entered with {}", name,tokens.get(token));
+  }
+
     this.frmPtr = token;
     int receivedResult = this.downNode.callReceived(token);
 
@@ -36,6 +45,10 @@ public class NonTerminalNode extends ParseNode {
         fireParseNodeEvent(raw, trimmed, token, receivedResult, trimmedFrom, trimmedTo);
       }
       tokens.setLastTokenFound(receivedResult);
+    } else {
+      if (!Character.isWhitespace(tokens.get(token).charAt(0))) {
+        log.debug("{} did not receive: {}",name, tokens.get(token));
+      }
     }
     return receivedResult;
   }

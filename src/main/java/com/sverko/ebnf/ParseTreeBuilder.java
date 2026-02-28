@@ -193,6 +193,7 @@ public class ParseTreeBuilder implements ParseNodeEventListener {
 
       case "end option symbol":
       case "end repeat symbol":
+      case "end collect symbol":
         if (!(tail instanceof LoopNode)) {
           tail = getNextLoopNodeParent(tail);
         }
