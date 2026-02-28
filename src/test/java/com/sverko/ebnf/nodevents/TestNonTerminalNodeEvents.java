@@ -232,7 +232,7 @@ public class TestNonTerminalNodeEvents{
   public void testReceiveEmptySequenceEvent() {
     ParseNode startNode = EbnfParseTree.getStartNode();
     NodeListeners.assign("empty sequence", startNode, e -> nodeName = e.getNode().name);
-    parser.parse(TokenQueue.ofList("N", "T", "N", "=", "",",","'","a","'",",","\"","b","\"", ";"), startNode);
+    parser.parse(TokenQueue.ofList("N", "T", "N", "=","",",","'","a","'",",","\"","b","\"", ";"), startNode);
     assertEquals("empty sequence", nodeName);
   }
 

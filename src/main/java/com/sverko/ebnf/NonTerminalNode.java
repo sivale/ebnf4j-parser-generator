@@ -13,7 +13,7 @@ public class NonTerminalNode extends ParseNode {
 
   @Override
   public int callReceived(int token) {
-  if(!Character.isWhitespace(tokens.get(token).charAt(0))) {
+  if(!tokens.get(token).isEmpty() && !Character.isWhitespace(tokens.get(token).charAt(0))) {
     log.debug("{} entered with {}", name,tokens.get(token));
   }
 
@@ -46,7 +46,7 @@ public class NonTerminalNode extends ParseNode {
       }
       tokens.setLastTokenFound(receivedResult);
     } else {
-      if (!Character.isWhitespace(tokens.get(token).charAt(0))) {
+      if (!tokens.get(token).isEmpty() && !Character.isWhitespace(tokens.get(token).charAt(0))) {
         log.debug("{} did not receive: {}",name, tokens.get(token));
       }
     }
