@@ -1,5 +1,5 @@
 package com.sverko.ebnf;
 
 public interface CalledNode {
-  int callReceived (int curPtr);
+  int callReceived (int token);
 }

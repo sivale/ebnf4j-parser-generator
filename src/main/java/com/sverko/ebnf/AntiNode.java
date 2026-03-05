@@ -26,7 +26,7 @@ public class AntiNode extends ParseNode {
 
       int result = tokens.withAnRequest(sentFinal, () -> {
         // 1) Anti-check
-        int downNodeResult = downNode.callReceived(sentFinal);
+        int downNodeResult = callDown(sentFinal);
         if (downNodeResult >= sentFinal) {
           return NOT_FOUND;
         }
@@ -34,7 +34,7 @@ public class AntiNode extends ParseNode {
         // 2) Continue right (PN must not pump due to anRequest)
         int rightResult;
         if (hasRightNode()) {
-          rightResult = rightNode.callReceived(sentFinal);
+          rightResult = callRight(sentFinal);
         } else {
           rightResult = sentFinal + 1;
         }

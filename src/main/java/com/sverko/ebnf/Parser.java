@@ -1,7 +1,9 @@
 package com.sverko.ebnf;
 
 import com.sverko.ebnf.tools.ParseNodeParserFactory;
-import com.sverko.ebnf.tools.UTF8FileToStringArrayList;
+import com.sverko.ebnf.tools.UnicodeString;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.io.IOException;
 import java.lang.Character.UnicodeBlock;
 import java.nio.file.Path;
@@ -16,7 +18,7 @@ public class Parser {
 
   TokenQueue tokenQueue;
   Lexer lexer;
-  int curPtr = -1; //before the first element in queue
+  int token = -1; //before the first element in queue
   public ParseNode startNode;
   Map<String, ParseNode> nodeMap;
   Map<String, Predicate<Integer>> specialSequences = new HashMap<>();
@@ -26,7 +28,7 @@ public class Parser {
   }
 
   public Parser(ParseNode startNode, Map<String, ParseNode> namedNodes, Set<String> lexerTokens,
-      boolean ignoreWhitespace) {
+      boolean strictWhitespaceHandling) {
     this.startNode = startNode;
     this.nodeMap = namedNodes;
     this.lexer = new Lexer(lexerTokens);
@@ -42,8 +44,12 @@ public class Parser {
     return parse(lexer.lexText(text), startNode);
   }
 
+  public int parse(UnicodeString text) {
+    return parse(lexer.lexText(text), startNode);
+  }
+
   public int parse(Path textLocation) throws IOException {
-    return parse(lexer.lexText(UTF8FileToStringArrayList.loadFileIntoStringList(textLocation)), startNode);
+    return parse(lexer.lexText(Files.readString(textLocation, StandardCharsets.UTF_8)), startNode);
   }
 
   private int parse(ParseNode startNode) {

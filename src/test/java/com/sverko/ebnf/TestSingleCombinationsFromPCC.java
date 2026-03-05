@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class TestSingleCombinationsFromPCC implements ParseNodeEventListener {
+public class TestSingleCombinationsFromPCC {
 
   private boolean parse(String input, String ebnfDefinition) throws IOException {
     Lexer lexer = new Lexer();
@@ -14,7 +14,6 @@ public class TestSingleCombinationsFromPCC implements ParseNodeEventListener {
 
     EbnfParserGenerator generator = new EbnfParserGenerator();
     generator.startNode = EbnfParseTree.getStartNode();
-    generator.addSchemaListener(this);
     generator.propagateTokenQueueToAllNodes(defTokens);
     generator.processEbnfSchema();
     Parser parser = new Parser();
@@ -55,9 +54,4 @@ public class TestSingleCombinationsFromPCC implements ParseNodeEventListener {
         "Parsing failed for input: " + input + " with definition: " + ebnfDefinition
     );
   }
-  @Override
-  public void parseNodeEventOccurred(ParseNodeEvent e) {
-    System.out.println(e.getNode().name + " " + e.getTrimmed());
-  }
-
 }

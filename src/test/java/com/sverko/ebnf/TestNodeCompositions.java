@@ -19,7 +19,7 @@ public class TestNodeCompositions {
             Search String: "bbcc"
          */
         NonTerminalNode ntn = new NonTerminalNode("A");
-        ntn.tokens = TokenQueue.ofList(Arrays.asList("bb","cc"));
+        ntn.tokens = TokenQueue.ofList(List.of("bb","cc"));
         ParseNode pn1 = ntn.returnDownNode(new PositionNode());
         pn1.returnDownNode(new NonTerminalNode("B"))
                 .setDownNode(TerminalNodeFactory.createSimpleTerminalNode("bb"));

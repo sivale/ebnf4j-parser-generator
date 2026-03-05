@@ -30,30 +30,42 @@ public class EbnfParserGenerator extends Parser {
     startNode = EbnfParseTree.getStartNode();
   }
 
-  public Parser getShemaParser() {
+  public Parser getSchemaParser() {
     return this;
   }
-  public Parser getParser(Path shemaLocation) throws IOException {
-    return getParser(shemaLocation, true);
+  public Parser getParser(Path schemaLocation) throws IOException {
+    return getParser(schemaLocation, true);
   }
 
-  public Parser getParser(Path shemaLocation, boolean strictWhitespaceHandling) throws IOException {
-    Lexer shemaLexer = new Lexer(Set.of("\\n","\\t","\\s","{:"));
-    TokenQueue ebnfSchema = shemaLexer.lexText(shemaLocation);
+  public Parser getParser(Path schemaLocation, boolean strictWhitespaceHandling) throws IOException {
+    Lexer schemaLexer = new Lexer(Set.of("\\n","\\t","\\s","{:"));
+    TokenQueue ebnfSchema = schemaLexer.lexText(schemaLocation);
     return getParser(ebnfSchema, strictWhitespaceHandling);
   }
 
-  public Parser getParser(TokenQueue shema, boolean ignoreWhitespace) {
-    propagateTokenQueueToAllNodes(shema);
+  public Parser getParser(TokenQueue schema, boolean strictWhitespaceHandling) {
+    propagateTokenQueueToAllNodes(schema);
     processEbnfSchema();
     return new Parser(getFirstNode(), parserBuilder.getNamedNodes(), parserBuilder.getLexerTokens(),
-        ignoreWhitespace);
+        strictWhitespaceHandling);
   }
 
-  public Parser getParser(String shema) {
-    Lexer shemaLexer = new Lexer(Set.of("\\n","\\t","\\s","{:"));
-    TokenQueue ebnfSchema = shemaLexer.lexText(new UnicodeString(shema));
-    return getParser(ebnfSchema, true);
+  public Parser getParser(String schema) {
+    return getParser(new UnicodeString(schema), true);
+  }
+
+  public Parser getParser(String schema, boolean strictWhitespaceHandling) {
+    return getParser(new UnicodeString(schema), strictWhitespaceHandling);
+  }
+
+  public Parser getParser(UnicodeString schema) {
+    return getParser(schema, true);
+  }
+
+  public Parser getParser(UnicodeString schema, boolean strictWhitespaceHandling) {
+    Lexer schemaLexer = new Lexer(Set.of("\\n","\\t","\\s","{:"));
+    TokenQueue ebnfSchema = schemaLexer.lexText(schema);
+    return getParser(ebnfSchema, strictWhitespaceHandling);
   }
 
   public void propagateTokenQueueToAllNodes(TokenQueue tokenQueue) {
@@ -86,11 +98,26 @@ public class EbnfParserGenerator extends Parser {
     return new ArrayList<>(parserBuilder.getNamedNodes().keySet());
   }
 
-  public void assignParseNodeEventListeners() {
+  public int parse(String schema, String input, boolean strictWhitespaceHandling) {
+    Parser parser = getParser(schema, strictWhitespaceHandling);
+    return parser.parse(input);
+  }
 
-    nodeMap = EbnfParseTree.getNodeMap();
+  public int parse(String schema, String input) {
+    return parse(schema, input, true);
+  }
+
+  public int parse(UnicodeString schema, UnicodeString input, boolean strictWhitespaceHandling) {
+    Parser parser = getParser(schema, strictWhitespaceHandling);
+    return parser.parse(input);
+  }
+
+  public int parse(UnicodeString schema, UnicodeString input) {
+    return parse(schema, input, true);
+  }
+
+  public List<String> getDefaultEventEmittingNodes() {
     List<String> namedNodes = new ArrayList<>();
-
     namedNodes.add("meta identifier");
     namedNodes.add("defining symbol");
     namedNodes.add("concatenate symbol");
@@ -109,7 +136,12 @@ public class EbnfParserGenerator extends Parser {
     namedNodes.add("except symbol");
     namedNodes.add("integer");
     namedNodes.add("repetition symbol");
+    return namedNodes;
+  }
+  public void assignParseNodeEventListeners() {
 
+    nodeMap = EbnfParseTree.getNodeMap();
+    List<String> namedNodes = getDefaultEventEmittingNodes();
     for (String node : namedNodes) {
       ParseNode n = (ParseNode) this.nodeMap.get(node);
       n.addEventListener(this.parserBuilder);

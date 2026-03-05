@@ -10,8 +10,8 @@ public class TestParsingStringsAndLists {
   public void testParsingStrings() throws IOException {
     EbnfParserGenerator generator = new EbnfParserGenerator();
     Lexer lexer = new Lexer();
-    TokenQueue shema = lexer.lexText("A = 'abc' | 'def';");
-    Parser parser = generator.getParser(shema,true);
+    TokenQueue schema = lexer.lexText("A = 'abc' | 'def';");
+    Parser parser = generator.getParser(schema,true);
     parser.parse("abc");
   }
 }

@@ -2,11 +2,8 @@ package com.sverko.ebnf.tools;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.Spliterator;
-import java.util.function.Consumer;
 
 public class UnicodeString implements CharSequence {
 
@@ -27,19 +24,21 @@ public class UnicodeString implements CharSequence {
 
   @Override
   public CharSequence subSequence(int start, int end) {
-    return null;
+    int startOffset = internalString.offsetByCodePoints(0, start);
+    int endOffset = internalString.offsetByCodePoints(0, end);
+    return internalString.substring(startOffset, endOffset);
   }
 
   public String getStringAt(int index) {
     final int length = internalString.length();
-    int idx = 0;
+    int token = 0;
     for (int offset = 0; offset < length; ) {
       final int codepoint = internalString.codePointAt(offset);
-      if (idx == index) {
+      if (token == index) {
         return String.valueOf(Character.toChars(codepoint));
       }
       offset += Character.charCount(codepoint);
-      idx++;
+      token++;
     }
     return "";
   }
@@ -61,10 +60,9 @@ public class UnicodeString implements CharSequence {
   }
 
   public int codePointAt(int index){
-    return internalString.codePointAt(index);
+    int offset = internalString.offsetByCodePoints(0, index);
+    return internalString.codePointAt(offset);
   }
-
-
 
   @Override
   public String toString() {

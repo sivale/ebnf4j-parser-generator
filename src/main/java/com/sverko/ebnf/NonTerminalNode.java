@@ -18,7 +18,7 @@ public class NonTerminalNode extends ParseNode {
   }
 
     this.frmPtr = token;
-    int receivedResult = this.downNode.callReceived(token);
+    int receivedResult = this.callDown(token);
 
     if (receivedResult >= 0 && receivedResult > token) {
       this.toPtr = receivedResult;

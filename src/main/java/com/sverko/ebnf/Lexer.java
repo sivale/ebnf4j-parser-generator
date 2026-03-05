@@ -1,6 +1,7 @@
 package com.sverko.ebnf;
 
-import com.sverko.ebnf.tools.UTF8FileToStringArrayList;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import com.sverko.ebnf.tools.UnicodeString;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -129,6 +130,7 @@ public class Lexer {
 
   void assignKeyword(LexerNode node, String keyword, boolean stopMark) {
     node.content = keyword;
+    node.codePoint = keyword.codePointAt(0);
     node.stopMark = stopMark;
   }
 
@@ -138,6 +140,7 @@ public class Lexer {
     LexerNode downNode;
     LexerNode rightNode;
     String content;
+    int codePoint;
     private boolean stopMark;
 
     LexerNode(LexerNode parent) {
@@ -170,7 +173,7 @@ public class Lexer {
   }
 
   public TokenQueue lexText(Path location) throws IOException {
-    return lexText(UTF8FileToStringArrayList.loadFileIntoStringList(location));
+    return lexText(Files.readString(location, StandardCharsets.UTF_8));
   }
 
   public TokenQueue lexText(String text) {
@@ -186,20 +189,24 @@ public class Lexer {
     startNode.rightNode = rootNode;
     LexerNode currentNode = startNode;
 
-    for (int i = 0; i < text.length(); i++) {
-      String character = text.getStringAt(i);
+    String input = text.toString();
+    int offset = 0;
+    while (offset < input.length()) {
+      int codePoint = input.codePointAt(offset);
+      int charCount = Character.charCount(codePoint);
 
       // 1) Always try trie matching first (including whitespace)
-      LexerNode nextNode = characterMatchesNodeInTrie(character, currentNode);
+      LexerNode nextNode = characterMatchesNodeInTrie(codePoint, currentNode);
 
       if (nextNode != null) {
         currentNode = nextNode;
-        keywordLine.append(character);
+        keywordLine.appendCodePoint(codePoint);
 
         if (currentNode.hasStopMark()) {
           completeLine.setLength(0);
           completeLine.append(keywordLine);
         }
+        offset += charCount;
         continue;
       }
 
@@ -216,7 +223,7 @@ public class Lexer {
           completeLine.setLength(0);
           currentNode = startNode;
 
-          i -= overflowCp + 1;
+          offset = input.offsetByCodePoints(offset, -overflowCp);
           continue;
         } else {
           int firstEnd = keywordLine.offsetByCodePoints(0, 1);
@@ -230,14 +237,15 @@ public class Lexer {
           completeLine.setLength(0);
           currentNode = startNode;
 
-          i -= restCp + 1;
+          offset = input.offsetByCodePoints(offset, -restCp);
           continue;
         }
       }
 
       // 3) No ongoing match: emit single character as token
-      tokens.add(character);
+      tokens.add(new String(Character.toChars(codePoint)));
       currentNode = startNode;
+      offset += charCount;
     }
 
     // 4) Flush end
@@ -269,17 +277,17 @@ public class Lexer {
     return new TokenQueue(tokens);
   }
 
-  LexerNode characterMatchesNodeInTrie (String character, LexerNode currentNode) {
+  LexerNode characterMatchesNodeInTrie(int codePoint, LexerNode currentNode) {
     if (currentNode == null) { return null;}
-        if (currentNode.hasRightNode()) {
-        currentNode = currentNode.rightNode;
-        while (currentNode != null) {
-          if (Objects.equals(currentNode.content, character)) {
-            return currentNode;
-          }
-          currentNode = currentNode.downNode; // weiter nach unten
+    if (currentNode.hasRightNode()) {
+      currentNode = currentNode.rightNode;
+      while (currentNode != null) {
+        if (currentNode.content != null && currentNode.codePoint == codePoint) {
+          return currentNode;
         }
+        currentNode = currentNode.downNode; // weiter nach unten
       }
+    }
     return null;
   }
 
@@ -401,7 +409,7 @@ public class Lexer {
     return (x + y - 1) / y;
   }
 
-  // DOWNRIGHTNODE CLASS (für Kompatibilität)
+  // DOWNRIGHTNODE CLASS (for compatibility)
   public static class DownRightNode {
     private DownRightNode firstSibling, firstChild;
     private char[] codePoints;
