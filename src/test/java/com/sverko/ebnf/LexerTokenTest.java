@@ -21,7 +21,7 @@ public class LexerTokenTest {
 
   @Test
   public void lexerShouldAlsoTokenizeUnicodeTextWhenKeywordsAreGiven() {
-    Set<String> tokens = new HashSet<>(Arrays.asList("😀q😀q", "😀q"));
+    Set<String> tokens = new HashSet<>(Set.of("😀q😀q", "😀q"));
     String input = "😀q😀q😀q";
     Lexer lexer = new Lexer(tokens);
     TokenQueue result = lexer.lexText(input);
@@ -32,7 +32,7 @@ public class LexerTokenTest {
   @Test
   public void testEmojiAsToken() {
     // Emoji selbst ist ein Keyword
-    Set<String> keywords = new HashSet<>(Arrays.asList("😊"));
+    Set<String> keywords = new HashSet<>(List.of("😊"));
     Lexer lexer = new Lexer(keywords);
     TokenQueue tokens = lexer.lexText("😊");
     assertEquals(1, tokens.rawSize());
@@ -41,7 +41,7 @@ public class LexerTokenTest {
 
   @Test
   public void testEmojiBetweenKeywords() {
-    Set<String> keywords = new HashSet<>(Arrays.asList("A", "B"));
+    Set<String> keywords = new HashSet<>(Set.of("A", "B"));
     Lexer lexer = new Lexer(keywords);
     TokenQueue tokens = lexer.lexText("A😊B");
     assertTrue(tokens.contains("A"));
@@ -52,7 +52,7 @@ public class LexerTokenTest {
 
   @Test
   public void testLexerAcceptKeywords() {
-    Set<String> keywords = new HashSet<>(Arrays.asList("si", "no"));
+    Set<String> keywords = new HashSet<>(Set.of("si", "no"));
     Lexer lexer = new Lexer(keywords);
     TokenQueue tokens = lexer.lexText("abc\nsi\nef");
     assert (tokens.contains("si"));
@@ -60,7 +60,7 @@ public class LexerTokenTest {
 
   @Test
   public void testLexerOverflow_Re_Lexing() {
-    Set<String> keywords = new HashSet<>(Arrays.asList("Haus", "meister"));
+    Set<String> keywords = new HashSet<>(Set.of("Haus", "meister"));
     Lexer lexer = new Lexer(keywords);
     TokenQueue tokens = lexer.lexText("Hausmeister");
     assertTrue(tokens.contains("Haus"));
@@ -80,7 +80,7 @@ public class LexerTokenTest {
 
   @Test
   public void lexerShouldMatchFullTokens() throws IOException {
-    Set<String> tokens = new HashSet<>(Arrays.asList("if", "else", "i", "f"));
+    Set<String> tokens = new HashSet<>(Set.of("if", "else", "i", "f"));
     Lexer lexer = new Lexer(tokens);
     String input = "ifelse";
     TokenQueue result = lexer.lexText(input);
@@ -90,7 +90,7 @@ public class LexerTokenTest {
 
   @Test
   public void lexerShouldPreferLongestMatch() throws IOException {
-    Set<String> tokens = new HashSet<>(Arrays.asList("i", "n", "in", "int", "integer"));
+    Set<String> tokens = new HashSet<>(Set.of("i", "n", "in", "int", "integer"));
     Lexer lexer = new Lexer(tokens);
     String input = "integer";
     TokenQueue result = lexer.lexText(input);
@@ -121,7 +121,7 @@ public class LexerTokenTest {
 
   @Test
   public void testPrintoutOfLexerTrieNo1() {
-    Set<String> tokens = new HashSet<>(Arrays.asList("abcd"));
+    Set<String> tokens = new HashSet<>(List.of("abcd"));
     Lexer lexer = new Lexer(tokens);
     lexer.buildLexerTree(tokens);
     assertEquals("-> a -> b -> c -> d*", lexer.getOutputGraph());
@@ -129,7 +129,7 @@ public class LexerTokenTest {
 
   @Test
   public void testPrintoutOfLexerTrieNo2() {
-    Set<String> tokens = new HashSet<>(Arrays.asList("abcd", "abrg"));
+    Set<String> tokens = new HashSet<>(Set.of("abcd", "abrg"));
     Lexer lexer = new Lexer(tokens);
     lexer.buildLexerTree(tokens);
     String expected = """
@@ -141,7 +141,7 @@ public class LexerTokenTest {
 
   @Test
   public void testPrintoutOfLexerTrieNo3() {
-    Set<String> tokens = new HashSet<>(Arrays.asList("abc", "def"));
+    Set<String> tokens = new HashSet<>(Set.of("abc", "def"));
     Lexer lexer = new Lexer(tokens);
     lexer.buildLexerTree(tokens);
     String expected = """
@@ -153,7 +153,7 @@ public class LexerTokenTest {
 
   @Test
   public void testPrintoutOfLexerTrieNo4() {
-    Set<String> tokens = new HashSet<>(Arrays.asList("abc", "ank", "trg"));
+    Set<String> tokens = new HashSet<>(Set.of("abc", "ank", "trg"));
     Lexer lexer = new Lexer(tokens);
     lexer.buildLexerTree(tokens);
     String expected = """
@@ -166,7 +166,7 @@ public class LexerTokenTest {
 
   @Test
   public void testPrintoutOfLexerTrieNo5() {
-    Set<String> tokens = new HashSet<>(Arrays.asList("abcd", "awmu", "abdh", "trgf"));
+    Set<String> tokens = new HashSet<>(Set.of("abcd", "awmu", "abdh", "trgf"));
     Lexer lexer = new Lexer(tokens);
     lexer.buildLexerTrie(tokens);
     String expected = """
@@ -180,15 +180,21 @@ public class LexerTokenTest {
 
   @Test
   public void testLexerTrieBuild() {
-    Set<String> keywords = new HashSet<>(Arrays.asList("abcd", "abce", "abde", "acde"));
+    Set<String> keywords = new HashSet<>(Set.of("abcd", "abce", "abde", "acde"));
     Lexer lexer = new Lexer();
     lexer.buildLexerTrie(keywords);
-    lexer.printNodeGraph();
+    String expected = """
+    -> a -> b -> c -> d*
+            |    |    |
+            |    |    e*
+            |    d -> e*
+            c -> d -> e*""";
+    assertEquals(expected, lexer.getOutputGraph());
   }
 
   @Test
   public void testLexerTrieFailure_NullPointerException() {
-    Set<String> keywords = new HashSet<>(Arrays.asList("a", "ab"));
+    Set<String> keywords = new HashSet<>(Set.of("a", "ab"));
     Lexer lexer = new Lexer();
     assertDoesNotThrow(() -> {
       lexer.buildLexerTrie(keywords);
@@ -197,7 +203,7 @@ public class LexerTokenTest {
 
   @Test
   public void testLexerTrie_ComplexPrefixes() {
-    Set<String> keywords = new HashSet<>(Arrays.asList("abc", "abd", "acd", "bcd"));
+    Set<String> keywords = new HashSet<>(Set.of("abc", "abd", "acd", "bcd"));
     Lexer lexer = new Lexer();
     lexer.buildLexerTrie(keywords);
     String result = lexer.getOutputGraph();
@@ -207,12 +213,11 @@ public class LexerTokenTest {
            |    |    d*
            |    c -> d*
            b -> c -> d*""";
-    lexer.printNodeGraph();
     assertEquals(expected, result, "Complex prefixes are not handled correctly");
   }
   @Test
   public void testLexerTrieParentReferencesIntact() {
-    Set<String> keywords = new HashSet<>(Arrays.asList("aa", "aaa", "aaaa"));
+    Set<String> keywords = new HashSet<>(Set.of("aa", "aaa", "aaaa"));
     Lexer lexer = new Lexer();
     lexer.buildLexerTrie(keywords);
     assertDoesNotThrow(() -> {
@@ -244,7 +249,7 @@ public class LexerTokenTest {
 
   @Test
   public void testLexerTrieSuccess_NoCyclicReferences() {
-    Set<String> keywords = new HashSet<>(Arrays.asList("abab", "baba"));
+    Set<String> keywords = new HashSet<>(Set.of("abab", "baba"));
     Lexer lexer = new Lexer();
     lexer.buildLexerTrie(keywords);
     Set<LexerNode> visitedNodes = new HashSet<>();
@@ -256,11 +261,10 @@ public class LexerTokenTest {
 
   @Test
   public void testLexerTrieFailure_LostStopMarks() {
-    Set<String> keywords = new HashSet<>(Arrays.asList("a", "aa", "aaa"));
+    Set<String> keywords = new HashSet<>(Set.of("a", "aa", "aaa"));
     Lexer lexer = new Lexer();
     lexer.buildLexerTrie(keywords);
     int stopMarkCount = countStopMarks(lexer.rootNode);
-    lexer.printNodeGraph();
     assertEquals(3, stopMarkCount,
       "Expected 3 stop marks, but found " + stopMarkCount + " - marks are preserved incorrectly");
   }
@@ -278,7 +282,7 @@ public class LexerTokenTest {
 
   @Test
   public void testLexerTrieFailure_IncompleteConsolidation() {
-    Set<String> keywords = new HashSet<>(Arrays.asList(
+    Set<String> keywords = new HashSet<>(Set.of(
         "test", "testing", "tester", "tests", "testimony", "testament"
     ));
     Lexer lexer = new Lexer();
@@ -293,7 +297,7 @@ public class LexerTokenTest {
 
   @Test
   public void testLexerTrieNoNullInOutput() {
-    Set<String> keywords = new HashSet<>(Arrays.asList("abc", "def"));
+    Set<String> keywords = new HashSet<>(Set.of("abc", "def"));
     Lexer lexer = new Lexer();
     lexer.buildLexerTrie(keywords);
     String output = lexer.getOutputGraph();

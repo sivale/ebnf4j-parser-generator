@@ -113,6 +113,16 @@ public abstract class ParseNode implements CalledNode {
     return this;
   }
 
+  protected final int callDown(int token) {
+    // Single hop into child node for debugger stepping.
+    return downNode.callReceived(token);
+  }
+
+  protected final int callRight(int token) {
+    // Single hop into sibling node for debugger stepping.
+    return rightNode.callReceived(token);
+  }
+
   ParseNode getRightNode() {
     return rightNode;
   }
@@ -139,5 +149,5 @@ public abstract class ParseNode implements CalledNode {
     return o != null && getClass() == o.getClass();
   }
 
-  public abstract int callReceived(int curPtr);
+  public abstract int callReceived(int token);
 }

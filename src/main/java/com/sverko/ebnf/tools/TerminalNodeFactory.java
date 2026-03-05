@@ -32,7 +32,7 @@ public class TerminalNodeFactory {
   }
 
   private static String quote(String s){
-    // einfache Escapes für unsichtbare Whitespace-Zeichen
+    // simple escapes for invisible whitespace characters
     return "\"" + s
         .replace("\t","\\t")
         .replace("\n","\\n")
@@ -41,7 +41,7 @@ public class TerminalNodeFactory {
         .replace("\b","\\b") + "\"";
   }
   private static String prettySet(String[] items){
-    // Nur 1-Zeichen-Strings werden sinnvoll gruppiert
+    // Only single-character strings are grouped meaningfully
     int[] cps = Arrays.stream(items)
         .filter(s -> s != null && s.length()==1)
         .mapToInt(s -> s.codePointAt(0))
@@ -69,7 +69,7 @@ public class TerminalNodeFactory {
       i++;
     }
 
-    // verbleibende Einträge, die KEIN 1-Zeichen sind, anhängen
+    // append remaining entries that are NOT 1-character
     String[] rest = Arrays.stream(items).filter(s -> s == null || s.length()!=1).toArray(String[]::new);
     for (String r : rest) {
       if (!first) sb.append(", ");
@@ -83,13 +83,13 @@ public class TerminalNodeFactory {
 
   private static String sym(int cp){
     switch (cp) {
-      case 0x20: return "SP"; // Space kurz benennen
+      case 0x20: return "SP"; // label space briefly
       case 0x09: return "\\t";
       case 0x0A: return "\\n";
       case 0x0D: return "\\r";
       default:
         String s = new String(Character.toChars(cp));
-        // Sichtbare ASCII direkt zeigen, sonst als U+XXXX
+        // Show visible ASCII directly, otherwise as U+XXXX
         if (cp >= 0x21 && cp <= 0x7E) return s;
         return String.format("U+%04X", cp);
     }

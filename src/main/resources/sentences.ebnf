@@ -1,0 +1,3 @@
+SENTENCES = {SENTENCE};
+SENTENCE = "^", {WORD|'--'|'-'|','|'...'|"'"|':'|';'}, ['.'|'?'|'!'];
+WORD = {:?LETTER?|?DIGIT?|'Mrs.'};

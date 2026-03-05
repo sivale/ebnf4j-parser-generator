@@ -15,44 +15,44 @@ public class TestSingleNodesFunctionality {
     @Test
     public void testTerminalNodeStringAcceptance (){
         TerminalNode tn = TerminalNodeFactory.createSimpleTerminalNode("ghi");
-        tn.tokens = TokenQueue.ofList(Arrays.asList("abc","def","ghi","klm"));
+        tn.tokens = TokenQueue.ofList("abc","def","ghi","klm");
         assertEquals (tn.callReceived(2),3);
     }
     @Test
     public void testTerminalNodeStringRejection (){
         TerminalNode tn = TerminalNodeFactory.createSimpleTerminalNode("ghi");
-        tn.tokens = TokenQueue.ofList(Arrays.asList("abc","def","ghi","klm"));
+        tn.tokens = TokenQueue.ofList("abc","def","ghi","klm");
         assertEquals (tn.callReceived(1), NOT_FOUND);
     }
     @Test
     public void testTerminalNodeStringRangeAcceptance (){
         TerminalNode tn = TerminalNodeFactory.createArrayBasedTerminalNode( new String[]{"a","b","c"});
-        tn.tokens = TokenQueue.ofList(Arrays.asList("x","y","a","z"));
+        tn.tokens = TokenQueue.ofList("x","y","a","z");
         assertEquals(tn.callReceived(2), 3);
     }
     @Test
     public void testTerminalNodeStringRangeRejection (){
         TerminalNode tn = TerminalNodeFactory.createArrayBasedTerminalNode( new String[]{"a","b","c"});
-        tn.tokens = TokenQueue.ofList(Arrays.asList("x","y","a","z"));
+        tn.tokens = TokenQueue.ofList("x","y","a","z");
         assertEquals(tn.callReceived(1), NOT_FOUND);
     }
     @Test
     public void testTerminalNodeStringRangeStringRejection (){
         TerminalNode tn = TerminalNodeFactory.createArrayBasedTerminalNode( new String[]{"a","b","c"});
-        tn.tokens = TokenQueue.ofList(Arrays.asList("xy","ab","zz"));
+        tn.tokens = TokenQueue.ofList("xy","ab","zz");
         assertEquals(tn.callReceived(1), NOT_FOUND);
     }
     @Test
     public void testPositionNodeTokenFound (){
         PositionNode pn = new PositionNode();
-        pn.tokens = TokenQueue.ofList(Arrays.asList("ab","bc"));
+        pn.tokens = TokenQueue.ofList("ab","bc");
         pn.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("bc"));
         assertEquals(pn.callReceived(1),2);
     }
     @Test
     public void testPositionNodeTokenNotFound (){
         PositionNode pn = new PositionNode();
-        pn.tokens = TokenQueue.ofList(Arrays.asList("ab","bc"));
+        pn.tokens = TokenQueue.ofList("ab","bc");
         pn.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("de"));
         assertEquals(pn.callReceived(1), NOT_FOUND);
     }
@@ -60,7 +60,7 @@ public class TestSingleNodesFunctionality {
     public void testChainedPositionNodesAllTokensFound (){
         // A = "ab","cd";  QUEUE {"abcd"}
         PositionNode pn = new PositionNode();
-        pn.tokens = TokenQueue.ofList(Arrays.asList("ab","cd"));
+        pn.tokens = TokenQueue.ofList("ab","cd");
         pn.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("ab"))
                 .returnRightNode(new PositionNode())
                 .setDownNode(TerminalNodeFactory.createSimpleTerminalNode("cd"));
@@ -70,7 +70,7 @@ public class TestSingleNodesFunctionality {
     public void testChainedPositionNodesNotEnoughTokens (){
         // A = "ab","cd"; QUEUE {"ab"}
         PositionNode pn = new PositionNode();
-        pn.tokens = TokenQueue.ofList(Arrays.asList("ab"));
+        pn.tokens = TokenQueue.ofList("ab");
         pn.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("ab"))
                 .returnRightNode(new PositionNode())
                 .setDownNode(TerminalNodeFactory.createSimpleTerminalNode("cd"));
@@ -80,7 +80,7 @@ public class TestSingleNodesFunctionality {
     public void testEndlessLoopNodeAllTokensFound (){
         // find {"ab"} in "abababc"
         LoopNode ln = new LoopNode();
-        ln.tokens = TokenQueue.ofList(Arrays.asList("ab","ab","ab","c"));
+        ln.tokens = TokenQueue.ofList("ab","ab","ab","c");
         ln.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("ab"));
         assertEquals(ln.callReceived(0),3);
     }
@@ -88,7 +88,7 @@ public class TestSingleNodesFunctionality {
     public void testEndlessLoopNodeNoTokensFound (){
         // find {"c"} in "abababc"
         LoopNode ln = new LoopNode();
-        ln.tokens = TokenQueue.ofList(Arrays.asList("ab","ab","ab","c"));
+        ln.tokens = TokenQueue.ofList("ab","ab","ab","c");
         ln.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("c"));
         assertEquals(ln.callReceived(0),0);
     }
@@ -96,7 +96,7 @@ public class TestSingleNodesFunctionality {
     public void testEndlessLoopNodeEndOfQueue (){
         // find {"ab"} in "ababab"
         LoopNode ln = new LoopNode();
-        ln.tokens = TokenQueue.ofList(Arrays.asList("ab","ab","ab"));
+        ln.tokens = TokenQueue.ofList("ab","ab","ab");
         ln.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("ab"));
         assertEquals(ln.callReceived(0),3);
     }
@@ -107,7 +107,7 @@ public class TestSingleNodesFunctionality {
         ParseNode pn2 = new PositionNode("second PN");
         ParseNode pn3 = new PositionNode("third PN");
         ParseNode ln = new LoopNode();
-        TokenQueue tokens = TokenQueue.ofList(Arrays.asList("bb","ab","ab","cc"));
+        TokenQueue tokens = TokenQueue.ofList("bb","ab","ab","cc");
         pn1.tokens = tokens;
         pn2.tokens = tokens;
         pn3.tokens = tokens;
@@ -127,7 +127,7 @@ public class TestSingleNodesFunctionality {
     public void testOptionalLoopNodeTokenFound (){
         // find "cd",["ab"] in "cdab"
         PositionNode pn1 = new PositionNode();
-        pn1.tokens = TokenQueue.ofList(Arrays.asList("cd","ab"));
+        pn1.tokens = TokenQueue.ofList("cd","ab");
         pn1.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("cd")).
                 returnRightNode(new PositionNode()).
                 returnDownNode( new LoopNode(1)).
@@ -139,7 +139,7 @@ public class TestSingleNodesFunctionality {
     public void testOptionalLoopNodeTokenNotFound (){
         // find "cd",["ab"] in "cdxy"
         PositionNode pn1 = new PositionNode();
-        pn1.tokens = TokenQueue.ofList(Arrays.asList("cd","xy"));
+        pn1.tokens = TokenQueue.ofList("cd","xy");
         pn1.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("cd")).
                 returnRightNode(new PositionNode()).
                 returnDownNode( new LoopNode(1)).
@@ -151,7 +151,7 @@ public class TestSingleNodesFunctionality {
     @Test
     public void testOptionalLoopNodeStopWhenFound (){
         LoopNode ln = new LoopNode(1);
-        ln.tokens = TokenQueue.ofList(Arrays.asList("aa","aa"));
+        ln.tokens = TokenQueue.ofList("aa","aa");
         ln.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("aa"));
         assertEquals(ln.callReceived(0), 1);
     }
@@ -159,14 +159,14 @@ public class TestSingleNodesFunctionality {
     @Test
     public void testOptionalLoopNodeEndOfQueue (){
         LoopNode ln = new LoopNode(1);
-        ln.tokens = TokenQueue.ofList(Arrays.asList("bb"));
+        ln.tokens = TokenQueue.ofList("bb");
         ln.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("aa"));
         assertEquals(ln.callReceived(1), 1);
     }
     @Test
     public void testOptionalLoopNodeFoundLessThanMax (){
         LoopNode ln = new LoopNode(3);
-        ln.tokens = TokenQueue.ofList(Arrays.asList("aa","aa","bb"));
+        ln.tokens = TokenQueue.ofList("aa","aa","bb");
         ln.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("aa"));
         assertEquals(ln.callReceived(0), 2);
     }
@@ -174,7 +174,7 @@ public class TestSingleNodesFunctionality {
     @Test
     public void testIntegerLoopNodeEndOfQueue (){
         LoopNode ln = new LoopNode(2,2);
-        ln.tokens = TokenQueue.ofList(Arrays.asList("aa","aa"));
+        ln.tokens = TokenQueue.ofList("aa","aa");
         ln.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("aa"));
         assertEquals(ln.callReceived(0), 2);
     }
@@ -182,7 +182,7 @@ public class TestSingleNodesFunctionality {
     @Test
     public void testIntegerLoopNodeFoundMax (){
         LoopNode ln = new LoopNode(2,2);
-        ln.tokens = TokenQueue.ofList(Arrays.asList("aa","aa","bb"));
+        ln.tokens = TokenQueue.ofList("aa","aa","bb");
         ln.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("aa"));
         assertEquals(ln.callReceived(0), 2);
     }
@@ -190,42 +190,42 @@ public class TestSingleNodesFunctionality {
     @Test
     public void testIntegerLoopNodeNotEnough (){
         LoopNode ln = new LoopNode(2,2);
-        ln.tokens = TokenQueue.ofList(Arrays.asList("aa","bb","bb"));
+        ln.tokens = TokenQueue.ofList("aa","bb","bb");
         ln.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("aa"));
         assertEquals(ln.callReceived(0), NOT_FOUND);
     }
 
     @Test void testLoopNodeBetweenMaxMin (){
         LoopNode ln = new LoopNode(1,3);
-        ln.tokens = TokenQueue.ofList(Arrays.asList("aa","aa","bb"));
+        ln.tokens = TokenQueue.ofList("aa","aa","bb");
         ln.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("aa"));
         assertEquals(ln.callReceived(0), 2);
     }
 
     @Test void testLoopNodeMaxReached (){
         LoopNode ln = new LoopNode(1,3);
-        ln.tokens = TokenQueue.ofList(Arrays.asList("aa","aa","aa","aa"));
+        ln.tokens = TokenQueue.ofList("aa","aa","aa","aa");
         ln.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("aa"));
         assertEquals(ln.callReceived(0), 3);
     }
 
     @Test void testLoopNodeMaxReachedEndOfQueue (){
         LoopNode ln = new LoopNode(1,3);
-        ln.tokens = TokenQueue.ofList(Arrays.asList("aa","aa","aa"));
+        ln.tokens = TokenQueue.ofList("aa","aa","aa");
         ln.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("aa"));
         assertEquals(ln.callReceived(0), 3);
     }
 
     @Test void testSingleOrNode (){
         OrNode on = new OrNode();
-        on.tokens = TokenQueue.ofList(Arrays.asList("aa","bb"));
+        on.tokens = TokenQueue.ofList("aa","bb");
         on.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("aa"));
         assertEquals(on.callReceived(0),1);
     }
 
     @Test void testOrNodeSecondFound (){
         OrNode on = new OrNode();
-        on.tokens = TokenQueue.ofList(Arrays.asList("bb","cc"));
+        on.tokens = TokenQueue.ofList("bb","cc");
         on.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("aa"));
         on.returnRightNode(new OrNode()).setDownNode(TerminalNodeFactory.createSimpleTerminalNode("bb"));
         assertEquals(on.callReceived(0),1);
@@ -233,7 +233,7 @@ public class TestSingleNodesFunctionality {
 
     @Test void testOrNodeSecondNotFound (){
         OrNode on = new OrNode();
-        on.tokens = TokenQueue.ofList(Arrays.asList("cc"));
+        on.tokens = TokenQueue.ofList("cc");
         on.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("aa"));
         on.returnRightNode(new OrNode()).setDownNode(TerminalNodeFactory.createSimpleTerminalNode("bb"));
         assertEquals(on.callReceived(0),NOT_FOUND);
@@ -246,22 +246,21 @@ public class TestSingleNodesFunctionality {
         on.returnRightNode(new OrNode()).setDownNode(TerminalNodeFactory.createSimpleTerminalNode("bb"));
         assertEquals(on.callReceived(0),END_OF_QUEUE);
     }
-/**
+
     @Test void testNonTerminalNodeTokensFound (){
         NonTerminalNode ntn = new NonTerminalNode("AABB");
-        ntn.tokens = TokenQueue.ofList(Arrays.asList("aa","bb"));
+        ntn.tokens = TokenQueue.ofList("aa","bb");
         ntn.returnDownNode(new PositionNode()).
                 setDownNode(TerminalNodeFactory.createSimpleTerminalNode("aa")).
             returnRightNode(new PositionNode()).
                 setDownNode(TerminalNodeFactory.createSimpleTerminalNode("bb"));
         ntn.callReceived(0);
-        assertEquals("aabb", ntn.getResultString());
+        assertEquals("aabb", ntn.resultString);
     }
-*/
 
     @Test void testAntiNodeTokenFound (){
         AntiNode an = new AntiNode();
-        an.tokens = TokenQueue.ofList(Arrays.asList("aa"));
+        an.tokens = TokenQueue.ofList("aa");
         an.setDownNode(TerminalNodeFactory.createSimpleTerminalNode("aa"));
         assertEquals(an.callReceived(0),NOT_FOUND);
     }

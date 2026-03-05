@@ -13,8 +13,8 @@ public class TokenQueue {
   private final List<String> tokens;
 
   /**
-   * Undo-Log: speichert Indizes, bei denen wir unhandledWhitespace von true -> false gesetzt haben.
-   * Rollback setzt diese Indizes wieder auf true.
+   * Undo log: stores indices where we set unhandledWhitespace from true -> false.
+   * Rollback sets these indices back to true.
    */
   private final ArrayList<Integer> uwUndoLog = new ArrayList<>();
 
@@ -72,15 +72,15 @@ public class TokenQueue {
 
   public void handleWhitespace(int index) {
     if (!checkIndex(index)) return;
-    if (!isWhitespace.get(index)) return;                 // kein WS => nix zu tun
-    if (handledWhitespace.get(index)) return;             // schon handled
+    if (!isWhitespace.get(index)) return;                 // no WS => nothing to do
+    if (handledWhitespace.get(index)) return;             // already handled
 
     handledWhitespace.set(index);
     uwUndoLog.add(index);
   }
 
   public void clearAllUnhandledWhitespace() {
-    // alle WS werden handled
+    // all WS are handled
     handledWhitespace.or(isWhitespace);
     uwUndoLog.clear();
   }
@@ -157,10 +157,10 @@ public class TokenQueue {
 
 
   // =========================
-  // Payload-Logik
+  // Payload logic
   // =========================
 
-  // Payload = alles außer "unhandled whitespace"
+  // Payload = everything except "unhandled whitespace"
   private boolean isPayloadIndex(int i) {
     return !isUnhandledWhitespace(i);
   }

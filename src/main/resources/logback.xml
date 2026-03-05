@@ -1,0 +1,25 @@
+<configuration>
+
+  <!-- HARTES GATE: solange MDC dbg != 1, wird ALLES verworfen -->
+  <turboFilter class="ch.qos.logback.classic.turbo.MDCFilter">
+    <MDCKey>dbg</MDCKey>
+    <!--Value !=1 disables logging -->
+    <Value>0</Value>
+    <!-- Wenn dbg=1: normal weiterverarbeiten -->
+    <OnMatch>NEUTRAL</OnMatch>
+    <!-- Wenn dbg nicht gesetzt oder anders: komplett blocken -->
+    <OnMismatch>DENY</OnMismatch>
+  </turboFilter>
+
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <!-- Level ist egal, weil der TurboFilter vorher entscheidet -->
+  <root level="TRACE">
+    <appender-ref ref="CONSOLE"/>
+  </root>
+
+</configuration>

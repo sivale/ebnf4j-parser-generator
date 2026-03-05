@@ -2,9 +2,10 @@ package com.sverko.ebnf;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import org.junit.jupiter.api.Test;
 
 public class TestSvgPrinter {
-
+  @Test
   public void testPrintingOfAntiNodes() throws IOException {
     EbnfParserGenerator generator = new EbnfParserGenerator();
     Parser testParser = generator.getParser(Path.of("src/main/resources/testSvgPrinter.ebnf"));
@@ -12,9 +13,11 @@ public class TestSvgPrinter {
     printer.printParseTreeToFile("/tmp/parse-tree.svg");
   }
 
-  public static void main(String[] args) throws IOException {
+  @Test
+  public void testPrintingOfEbnfParseTree() throws IOException {
     SvgPrinter printer = new SvgPrinter(EbnfParseTree.getStartNode());
     printer.printParseTreeToFile("/tmp/main-parse-tree.svg");
   }
+
 
 }

@@ -83,7 +83,7 @@ public class LoopNode extends ParseNode {
         tokens.setLoopProbe(sent, true);
         int probeResult;
         try {
-          probeResult = downNode.callReceived(sent);
+          probeResult = callDown(sent);
         } finally {
           tokens.setLoopProbe(sent, oldProbe);
         }
@@ -133,7 +133,7 @@ public class LoopNode extends ParseNode {
       }
 
       // ===== Normal iteration (not standing on suffix-UW) =====
-      int curResult = downNode.callReceived(sent);
+      int curResult = callDown(sent);
 
       // same-position => done (no progress)
       if (curResult == sent) {
