@@ -112,7 +112,9 @@ public class ParseTreeBuilder implements ParseNodeEventListener {
             tail = tail.parent.returnDownNode(new OrNode().setDownNode(new PositionNode().setDownNode(tail))).returnRightNode(new OrNode());
           }
         } else if (tail instanceof NonTerminalNode) {
-          if (tail.hasParent() && tail.parent instanceof PositionNode) {
+          if (tail.hasParent() && tail.parent instanceof OrNode) {
+            tail = tail.parent.returnRightNode(new OrNode());
+          } else if (tail.hasParent() && tail.parent instanceof PositionNode) {
             tail = tail.parent.parent.returnDownNode(new OrNode().setDownNode(tail)).returnRightNode(new OrNode());
           } else {
             tail = tail.parent.returnDownNode(new OrNode().setDownNode(tail)).returnRightNode(new OrNode());

@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 public class TerminalNodeFactory {
   public static TerminalNode createSimpleTerminalNode(String allowed){
     return new TerminalNode(allowed, (s) -> s.equals(allowed),
-        "== " + quote(allowed));
+        quote(allowed));
   }
 
   public static TerminalNode cstn(String allowed){

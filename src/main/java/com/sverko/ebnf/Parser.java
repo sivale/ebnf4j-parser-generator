@@ -40,6 +40,10 @@ public class Parser {
     return parse(startNode);
   }
 
+  public int parse(TokenQueue q) {
+    return parse(q, startNode);
+  }
+
   public int parse(String text) {
     return parse(lexer.lexText(text), startNode);
   }

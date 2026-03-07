@@ -4,7 +4,7 @@
   <turboFilter class="ch.qos.logback.classic.turbo.MDCFilter">
     <MDCKey>dbg</MDCKey>
     <!--Value !=1 disables logging -->
-    <Value>0</Value>
+    <Value>1</Value>
     <!-- Wenn dbg=1: normal weiterverarbeiten -->
     <OnMatch>NEUTRAL</OnMatch>
     <!-- Wenn dbg nicht gesetzt oder anders: komplett blocken -->
