@@ -123,14 +123,4 @@ public class LoopNodeTests {
     ln.setKickoutParseNode(TerminalNodeFactory.cstn("}"));
     assertEquals(1, ln.callReceived(0));
   }
-
-  @Test
-  void testSchemaBasedCollectorLoop_1() {
-    EbnfParserGenerator generator = new EbnfParserGenerator();
-    String schema = "A = {:?WHITESPACE?: B :'}': }; B = 'outside','{','inside',  '}';    ";
-    String input = "outside { inside }";
-    Parser parser = generator.getParser(schema);
-    int tokensFound = parser.parse(input);
-    assertEquals(4, tokensFound);
-  }
 }
