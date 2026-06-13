@@ -8,12 +8,20 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class SvgPrinter {
+
+  private static final double NON_TERMINAL_WIDTH = 70.0;
+  private static final double NON_TERMINAL_HEIGHT = 50.0;
+  private static final double NON_TERMINAL_HORIZONTAL_PADDING = 5.0;
+  private static final double NON_TERMINAL_VERTICAL_PADDING = 5.0;
+  private static final double NON_TERMINAL_BASE_FONT_SIZE = 12.0;
+  private static final double NON_TERMINAL_LINE_HEIGHT_FACTOR = 1.2;
 
   Set<SvgNode> svgNodeList = new HashSet<>();
   Map<ParseNode, SvgNode> sisterNodes = new HashMap<>();
@@ -299,44 +307,43 @@ public class SvgPrinter {
               "</text>\n");
         } break;
         case NON_TERMINAL_NODE: {
-          sb.append("<rect width='70' height='50'" +
-              " x='" + (node.col * 100 - 10 + offsetFromLeft) +
-              "' y='" + (node.row * 100 + offsetFromTop) +
+          double rectX = node.col * 100 - 10 + offsetFromLeft;
+          double rectY = node.row * 100 + offsetFromTop;
+          double centerX = rectX + (NON_TERMINAL_WIDTH / 2.0);
+          double centerY = rectY + (NON_TERMINAL_HEIGHT / 2.0);
+
+          sb.append("<rect width='" + NON_TERMINAL_WIDTH + "' height='" + NON_TERMINAL_HEIGHT + "'" +
+              " x='" + rectX +
+              "' y='" + rectY +
               "' style='fill:none;stroke:#000000;stroke-width:1' />\n");
-          String[] lines = node.textInside.split("_");
-          double longestLine = 0;
+          String[] lines = splitNonTerminalLines(node.textInside);
+          double longestLineWidth = 0;
           for (String line : lines) {
             double lineWidth = getStringWidth(line);
-            if (longestLine < lineWidth) {
-              longestLine = lineWidth;
+            if (longestLineWidth < lineWidth) {
+              longestLineWidth = lineWidth;
             }
           }
 
-          double scaleFactorCanditate = getScaleFactor(longestLine);
-          double scaleFactor = scaleFactorCanditate < 1? scaleFactorCanditate : 1;
-          double newLineOffset = 14*scaleFactor;
-          double baseLineHight = 8.748;
-          double vPadding = (50 - (lines.length * baseLineHight * scaleFactor + (lines.length-1) * newLineOffset)) / 2;
-          double lineOffset = 0.0;
-          lineOffset += vPadding+baseLineHight;
-          for (String line : lines) {
-            double textWidth = getStringWidth(line)*scaleFactor;
-            double marginLeft;
-            if (textWidth <= 60) {
-              marginLeft = (70 - textWidth) / 2;
-            } else {
-              marginLeft = 5;
-            }
+          double fontSize = getNonTerminalFontSize(longestLineWidth, lines.length);
+          double lineHeight = fontSize * NON_TERMINAL_LINE_HEIGHT_FACTOR;
+          double blockHeight = lineHeight * lines.length;
+          double firstLineCenterY = centerY - (blockHeight / 2.0) + (lineHeight / 2.0);
+
+          for (int i = 0; i < lines.length; i++) {
+            double lineCenterY = firstLineCenterY + (i * lineHeight);
             sb.append(
                 "<g>\n"+
                     "<text "
-                        + "x='"+(((node.col * 100) -10) + offsetFromLeft + marginLeft)+"' "
-                        + "y='"+((node.row * 100) + offsetFromTop + lineOffset)
-                        +"' font-family='sans-serif' font-size='" + getFontSize(longestLine)+"px'>"
+                        + "x='" + centerX + "' "
+                        + "y='" + lineCenterY + "' "
+                        + "font-family='sans-serif' "
+                        + "font-size='" + fontSize + "px' "
+                        + "text-anchor='middle' "
+                        + "dominant-baseline='middle'>"
             );
-            sb.append(line);
+            sb.append(lines[i]);
             sb.append("</text>\n</g>\n");
-            lineOffset += newLineOffset;
           }
         }
         break;
@@ -571,6 +578,32 @@ public class SvgPrinter {
 
   public double getScaleFactor(double width){
     return 60 / width;
+  }
+
+  private String[] splitNonTerminalLines(String text) {
+    if (text == null || text.isBlank()) {
+      return new String[] {""};
+    }
+
+    String[] lines = Arrays.stream(text.split("[\\s_]+"))
+        .filter(part -> !part.isEmpty())
+        .toArray(String[]::new);
+
+    return lines.length == 0 ? new String[] {""} : lines;
+  }
+
+  private double getNonTerminalFontSize(double longestLineWidth, int lineCount) {
+    double availableWidth = NON_TERMINAL_WIDTH - (2 * NON_TERMINAL_HORIZONTAL_PADDING);
+    double availableHeight = NON_TERMINAL_HEIGHT - (2 * NON_TERMINAL_VERTICAL_PADDING);
+
+    double widthLimitedFontSize = NON_TERMINAL_BASE_FONT_SIZE;
+    if (longestLineWidth > 0) {
+      widthLimitedFontSize = NON_TERMINAL_BASE_FONT_SIZE * (availableWidth / longestLineWidth);
+    }
+
+    double heightLimitedFontSize = availableHeight / (lineCount * NON_TERMINAL_LINE_HEIGHT_FACTOR);
+
+    return Math.min(NON_TERMINAL_BASE_FONT_SIZE, Math.min(widthLimitedFontSize, heightLimitedFontSize));
   }
 
   public double getGlyphWidth(String s) {

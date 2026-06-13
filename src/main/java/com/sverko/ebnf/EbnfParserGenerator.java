@@ -1,5 +1,6 @@
 package com.sverko.ebnf;
 
+import com.sverko.ebnf.result.ResultTree;
 import com.sverko.ebnf.tools.ParseNodeParserFactory;
 import com.sverko.ebnf.tools.UnicodeString;
 import java.io.IOException;
@@ -38,7 +39,7 @@ public class EbnfParserGenerator extends Parser {
   }
 
   public Parser getParser(Path schemaLocation, boolean strictWhitespaceHandling) throws IOException {
-    Lexer schemaLexer = new Lexer(Set.of("\\n","\\t","\\s","{:"));
+    Lexer schemaLexer = new Lexer(Set.of("\\n","\\t","\\s","{:", "@trivia"));
     TokenQueue ebnfSchema = schemaLexer.lexText(schemaLocation);
     return getParser(ebnfSchema, strictWhitespaceHandling);
   }
@@ -63,7 +64,7 @@ public class EbnfParserGenerator extends Parser {
   }
 
   public Parser getParser(UnicodeString schema, boolean strictWhitespaceHandling) {
-    Lexer schemaLexer = new Lexer(Set.of("\\n","\\t","\\s","{:"));
+    Lexer schemaLexer = new Lexer(Set.of("\\n","\\t","\\s","{:", "@trivia"));
     TokenQueue ebnfSchema = schemaLexer.lexText(schema);
     return getParser(ebnfSchema, strictWhitespaceHandling);
   }
@@ -76,7 +77,7 @@ public class EbnfParserGenerator extends Parser {
   public void processEbnfSchema() {
     addDefaultSpecialSequences();
     assignParseNodeEventListeners();
-    int tokensFound = startNode.callReceived(tokenQueue.getFirstToken());
+    int tokensFound = parse(tokenQueue);
     while (tokensFound < tokenQueue.rawSize() && tokenQueue.isUnhandledWhitespace(tokensFound)) {
       tokensFound++;
     }
@@ -88,6 +89,8 @@ public class EbnfParserGenerator extends Parser {
       System.out.println(
           "WARNING only " + tokensFound + " of " + tokenQueue.rawSize() + " tokens have been processed");
     }
+    ResultTree resultTree = getResultTree();
+    resultTree.readSequentiallyAsCondensedAssignments();
   }
 
   public ParseNode getFirstNode() {
@@ -130,12 +133,15 @@ public class EbnfParserGenerator extends Parser {
     namedNodes.add("start repeat symbol");
     namedNodes.add("end repeat symbol");
     namedNodes.add("start collect symbol");
+    namedNodes.add("bouncer");
+    namedNodes.add("kickout");
     namedNodes.add("end collect symbol");
     namedNodes.add("terminator symbol");
     namedNodes.add("special sequence");
     namedNodes.add("except symbol");
     namedNodes.add("integer");
     namedNodes.add("repetition symbol");
+    namedNodes.add("trivia directive");
     return namedNodes;
   }
   public void assignParseNodeEventListeners() {

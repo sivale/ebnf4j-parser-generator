@@ -1,0 +1,21 @@
+stage('prepare') {
+    steps {
+        prepareBuild()
+    }
+}
+
+// ignored separator
+
+stage('build java') {
+    steps {
+        buildJava()
+    }
+}
+
+@Library('ignored')
+
+stage('sonar') {
+    steps {
+        sonarAnalysis()
+    }
+}

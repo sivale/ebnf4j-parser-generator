@@ -2,12 +2,27 @@ package com.sverko.ebnf;
 
 public class PositionNode extends ParseNode {
 
+  private boolean triviaConfigured;
+  private String triviaSelector;
+
   PositionNode() {
     super();
   }
 
   PositionNode(String name) {
     super(name);
+  }
+
+  PositionNode setTriviaSelector(String triviaSelector) {
+    this.triviaConfigured = true;
+    this.triviaSelector = triviaSelector;
+    return this;
+  }
+
+  PositionNode disableTrivia() {
+    this.triviaConfigured = true;
+    this.triviaSelector = null;
+    return this;
   }
 
   @Override
@@ -27,41 +42,70 @@ public class PositionNode extends ParseNode {
     if (!tokens.checkIndex(token)) return END_OF_QUEUE;
 
     int sent = token;
+    int positionResultCp = (parser != null) ? parser.checkpointResult() : -1;
 
     while (true) {
       // Also allow sent == rawSize() inside the loop (can happen after pumping)
       if (sent == tokens.rawSize()) {
         int downNodeResult = callDown(sent);
         if (downNodeResult >= sent) {
-          return forwardToRightOrUp(downNodeResult);
+          int forwarded = forwardToRightOrUp(downNodeResult);
+          if (forwarded < 0 && parser != null) {
+            parser.rollbackResultTo(positionResultCp);
+          }
+          return forwarded;
+        }
+        if (parser != null) {
+          parser.rollbackResultTo(positionResultCp);
         }
         return downNodeResult;
       }
 
-      if (!tokens.checkIndex(sent)) return END_OF_QUEUE;
+      if (!tokens.checkIndex(sent)) {
+        if (parser != null) {
+          parser.rollbackResultTo(positionResultCp);
+        }
+        return END_OF_QUEUE;
+      }
 
+      int resultCp = (parser != null) ? parser.checkpointResult() : -1;
       int downNodeResult = callDown(sent);
 
       if (downNodeResult >= sent) {
-        return forwardToRightOrUp(downNodeResult);
+        int forwarded = forwardToRightOrUp(downNodeResult);
+        if (forwarded < 0 && parser != null) {
+          parser.rollbackResultTo(positionResultCp);
+        }
+        return forwarded;
       }
 
-      // end of queue protection if the unhandled whitespace is the last token
-      if (!tokens.checkIndex(sent + 1)) {
-        return NOT_FOUND;
+      if (parser != null) {
+        parser.rollbackResultTo(resultCp);
       }
 
-      // jump over unhandled whitespace
-      if (downNodeResult == NOT_FOUND &&
-          tokens.isUnhandledWhitespace(sent) &&
-          !tokens.isAnRequest(sent) &&
-          !tokens.isLoopProbe(sent)
-      ) {
-        sent++;
-        continue;
+      if (downNodeResult == NOT_FOUND
+          && !tokens.isAnRequest(sent)
+          && !tokens.isLoopProbe(sent)
+          && (parser == null || !parser.isMatchingTrivia())) {
+        if (triviaConfigured && triviaSelector != null && parser != null) {
+          int triviaResult = parser.matchTrivia(triviaSelector, sent);
+          if (triviaResult > sent) {
+            parser.recordTriviaMatch(sent, triviaResult, triviaSelector);
+            sent = triviaResult;
+            continue;
+          }
+        } else if (!triviaConfigured
+            && tokens.isUnhandledWhitespace(sent)
+            && tokens.checkIndex(sent + 1)) {
+          sent++;
+          continue;
+        }
       }
 
       // no match no whitespace jump: return NOT_FOUND or END_OF_QUEUE
+      if (parser != null) {
+        parser.rollbackResultTo(positionResultCp);
+      }
       return downNodeResult;
     }
   }

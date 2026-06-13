@@ -19,3 +19,27 @@
 
 ---
 
+## Trivia-Direktive
+
+Mit `@trivia(NAME);` wird eine Regel festgelegt, die zwischen den Elementen aller
+nachfolgenden EBNF-Regeln automatisch übersprungen und als Trivia im ResultTree
+erfasst wird:
+
+```ebnf
+@trivia(WS);
+
+A = 'one' | 'two';
+B = 'A', 'B';
+
+@trivia(none);
+
+C = 'strict';
+WS = { ?WHITESPACE? };
+```
+
+Die Direktive gilt bis zur nächsten `@trivia`-Direktive. `@trivia(none);` und
+`@trivia();` schalten sie aus. Payload wird immer vor Trivia geprüft.
+
+Collector-Sequenzen behalten ihren eigenen Bouncer. Am Eintritt in deren Payload
+ist die Regel daher exakt; innerhalb einer erfolgreich begonnenen Payload gelten
+wieder die Trivia-Einstellungen ihrer Definition.

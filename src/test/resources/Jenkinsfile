@@ -1,0 +1,138 @@
+#!groovy
+
+@Library(['build']) _
+
+import finance.egp.jenkinslibrary.git.GitHandler
+
+final componentName = 'balancesheet-parent'
+pipeline {
+
+    agent { label 'cing-jdk21' }
+
+    options {
+        timeout(time: 30, unit: 'MINUTES')
+    }
+
+    stages {
+
+        stage('prepare') {
+            steps {
+                prepareBuild()
+            }
+        }
+
+        stage('build java') {
+            steps {
+                buildJava()
+            }
+        }
+
+        stage('sonar') {
+            steps {
+                sonarAnalysis()
+            }
+        }
+
+        stage('package and upload') {
+            when {
+                anyOf {
+                    expression { isReleaseBranch() }
+                    expression { isSnapshot() }
+                }
+            }
+            steps {
+                uploadModules()
+            }
+        }
+
+        stage('git tag') {
+            when {
+                allOf {
+                    expression { isReleaseBranch() }
+                    expression { !isSnapshot() }
+                }
+            }
+            steps {
+                gitTag()
+            }
+        }
+
+        stage('promote parent') {
+            when {
+                allOf {
+                    expression { isReleaseBranch() }
+                    expression { !isSnapshot() }
+                }
+            }
+            steps {
+                echo "Promoting parent"
+
+                script {
+                def jiraIssues = getJiraIssues().replaceAll(' ', '_')
+                targetBranch = jiraIssues
+                }
+
+                echo "Target branch: ${targetBranch}"
+
+                promoteParentWithPullRequest('afibls', 'egp-accounting-report-service', targetBranch)
+                promoteParentWithPullRequest('afibls', 'egp-balancesheet-common', targetBranch)
+                promoteParentWithPullRequest('afibls', 'egp-balancesheet-e2e-nightly-test-batch', targetBranch)
+                promoteParentWithPullRequest('afibls', 'egp-balancesheet-report-service', targetBranch)
+            }
+        }
+    }
+
+
+    post {
+        failure {
+            script {
+                if (isMasterBranch()) {
+                    withCredentials([string(credentialsId: 'TEAMS_BUILD_NOTIFICATION_WEBHOOK', variable: 'WEBHOOK_URL')]) {
+                        sendMicrosoftTeamsMessageToWebhook(
+                            "Master Build ${componentName} fehlgeschlagen",
+                            "Der Build-Job in ${componentName} ist fehlgeschlagen (siehe [Jenkins](${BUILD_URL})).",
+                            false,
+                            WEBHOOK_URL
+                        )
+                    }
+                }
+            }
+        }
+        fixed {
+            script {
+                if (isMasterBranch()) {
+                    withCredentials([string(credentialsId: 'TEAMS_BUILD_NOTIFICATION_WEBHOOK', variable: 'WEBHOOK_URL')]) {
+                        sendMicrosoftTeamsMessageToWebhook(
+                            "Master Build ${componentName} fixed",
+                            "Der Build-Job in ${componentName} ist nach einem früheren Fehlschlag nun wieder erfolgreich (siehe [Jenkins](${BUILD_URL})).",
+                            true,
+                            WEBHOOK_URL
+                        )
+                    }
+                    // sendMessage("Master Build fixedassetsacc-parent wieder erfolgreich", "Der Build-Job in fixedassetsacc-parent ist nach einem früheren Fehlschlag nun wieder erfolgreich (siehe [Jenkins](${BUILD_URL})).", true)
+                }
+            }
+        }
+    }
+}
+
+void promoteParentWithPullRequest(String project, String repo, String branch) {
+  String url = "${GitHandler.ATRUVIA_BITBUCKET_BASE_URL}/${project}/${repo}.git"
+
+  // Create branch first, promoteParent on a non-existing branch fails
+  sh "mkdir ${repo}"
+  dir("${repo}") {
+    script {
+      try {
+        gitCreateBranch url: url, branchName: branch, shallow: true
+      }
+      catch (err) {
+        echo err.getMessage()
+      }
+    }
+  }
+  sh "rm -rf ${repo}"
+
+  promoteParent repository: "${project}/${repo}", targetBranch: branch
+  gitCreatePullRequest url: url, sourceBranch: branch, targetBranch: 'master', title: 'Update parent', merge: false
+}

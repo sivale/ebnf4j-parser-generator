@@ -26,7 +26,11 @@ public class AntiNode extends ParseNode {
 
       int result = tokens.withAnRequest(sentFinal, () -> {
         // 1) Anti-check
+        int antiCp = (parser != null) ? parser.checkpointResult() : -1;
         int downNodeResult = callDown(sentFinal);
+        if (parser != null) {
+          parser.rollbackResultTo(antiCp);
+        }
         if (downNodeResult >= sentFinal) {
           return NOT_FOUND;
         }
@@ -34,7 +38,13 @@ public class AntiNode extends ParseNode {
         // 2) Continue right (PN must not pump due to anRequest)
         int rightResult;
         if (hasRightNode()) {
+          int rightCp = (parser != null) ? parser.checkpointResult() : -1;
           rightResult = callRight(sentFinal);
+          if (rightResult == NOT_FOUND || rightResult == END_OF_QUEUE || rightResult == Integer.MIN_VALUE) {
+            if (parser != null) {
+              parser.rollbackResultTo(rightCp);
+            }
+          }
         } else {
           rightResult = sentFinal + 1;
         }

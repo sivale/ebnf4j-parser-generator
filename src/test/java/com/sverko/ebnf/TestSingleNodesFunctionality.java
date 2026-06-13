@@ -254,7 +254,7 @@ public class TestSingleNodesFunctionality {
                 setDownNode(TerminalNodeFactory.createSimpleTerminalNode("aa")).
             returnRightNode(new PositionNode()).
                 setDownNode(TerminalNodeFactory.createSimpleTerminalNode("bb"));
-        ntn.callReceived(0);
+        new Parser().parse(ntn.tokens, ntn);
         assertEquals("aabb", ntn.resultString);
     }
 

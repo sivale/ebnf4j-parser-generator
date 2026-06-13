@@ -23,7 +23,7 @@ public class TestParseBranches {
         startNode.tokens = TokenQueue.ofList(Arrays.asList("a"));
         startNode.returnDownNode(new PositionNode())
                  .setDownNode(TerminalNodeFactory.createSimpleTerminalNode("a"));
-        assertEquals(startNode.callReceived(startNode.tokens.getFirstToken()), 1);
+        assertEquals(parser.parse(startNode.tokens, startNode), 1);
     }
 
     @Test
@@ -37,6 +37,6 @@ public class TestParseBranches {
         startNode.tokens = TokenQueue.ofList(Arrays.asList("abcd","efgh","ijkl"));
         startNode.returnDownNode(new PositionNode())
                 .setDownNode(TerminalNodeFactory.createSimpleTerminalNode("abcd"));
-        assertEquals(startNode.callReceived(startNode.tokens.getFirstToken()), 1);
+        assertEquals(parser.parse(startNode.tokens, startNode), 1);
     }
 }

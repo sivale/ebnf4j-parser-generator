@@ -26,7 +26,7 @@ public class TestNodeCompositions {
         pn1.returnRightNode(new PositionNode())
                 .returnDownNode(new NonTerminalNode("C"))
                 .setDownNode(TerminalNodeFactory.createSimpleTerminalNode("cc"));
-        assertEquals(ntn.callReceived(0),2);
+        assertEquals(new Parser().parse(ntn.tokens, ntn),2);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class TestNodeCompositions {
         or1.returnRightNode(new OrNode())
                 .returnDownNode(new NonTerminalNode("C"))
                 .setDownNode(TerminalNodeFactory.createSimpleTerminalNode("cc"));
-        assertEquals(ntn.callReceived(0),1);
+        assertEquals(new Parser().parse(ntn.tokens, ntn),1);
     }
 }
 

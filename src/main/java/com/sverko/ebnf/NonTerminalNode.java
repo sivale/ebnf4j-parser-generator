@@ -13,9 +13,13 @@ public class NonTerminalNode extends ParseNode {
 
   @Override
   public int callReceived(int token) {
-  if(!tokens.get(token).isEmpty() && !Character.isWhitespace(tokens.get(token).charAt(0))) {
-    log.debug("{} entered with {}", name,tokens.get(token));
-  }
+    parser.parseNodeStack.push(this);
+    if (parser != null) {
+      parser.enterNonTerminal(this);
+    }
+    if (!tokens.get(token).isEmpty() && !Character.isWhitespace(tokens.get(token).charAt(0))) {
+      log.debug("{} entered with {}", name, tokens.get(token));
+    }
 
     this.frmPtr = token;
     int receivedResult = this.callDown(token);
@@ -25,11 +29,9 @@ public class NonTerminalNode extends ParseNode {
 
       boolean anReq = tokens.isAnRequest(token);
       if (!anReq) {
-        // Raw span (includes unhandled whitespace)
         String raw = tokens.getSubstring(token, receivedResult);
         this.resultString = raw;
 
-        // Trimmed span (excludes leading/trailing UNHANDLED whitespace)
         int trimmedFrom = token;
         while (trimmedFrom < receivedResult && tokens.isUnhandledWhitespace(trimmedFrom)) {
           trimmedFrom++;
@@ -47,9 +49,13 @@ public class NonTerminalNode extends ParseNode {
       tokens.setLastTokenFound(receivedResult);
     } else {
       if (!tokens.get(token).isEmpty() && !Character.isWhitespace(tokens.get(token).charAt(0))) {
-        log.debug("{} did not receive: {}",name, tokens.get(token));
+        log.debug("{} did not receive: {}", name, tokens.get(token));
       }
     }
+    if (parser != null) {
+      parser.leaveNonTerminal(this, receivedResult >= 0 && receivedResult > token);
+    }
+    parser.parseNodeStack.pop();
     return receivedResult;
   }
 
