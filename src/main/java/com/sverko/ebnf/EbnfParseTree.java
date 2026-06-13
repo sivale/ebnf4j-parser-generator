@@ -10,9 +10,10 @@ public class EbnfParseTree {
 
   public static ParseNode getStartNode() {
 
-    ParseNode startNode = new PositionNode("ebnf-tree");
+    ParseNode startNode = new PositionNode("ebnf tree");
     startNode.returnDownNode(createNonTerminalNode("syntax"))
         .returnDownNode(new LoopNode())
+        .returnDownNode(new OrNode())
         .returnDownNode(new PositionNode())
         .returnDownNode(createNonTerminalNode("syntax rule"))
         .returnDownNode(new LoopNode().setName("loopy"))
@@ -172,8 +173,31 @@ public class EbnfParseTree {
             .returnDownNode(new PositionNode())
             .returnDownNode(createNonTerminalNode("start collect symbol"))
             .returnDownNode(TerminalNodeFactory.cstn("{:"));
-        nodeMap.get("collector sequence").getDownNode()
+        nodeMap.get("start collect symbol").parent
+            .returnRightNode(new PositionNode())
+            .returnDownNode(createNonTerminalNode("bouncer"))
+            .returnDownNode(new LoopNode(0,1))
+            .returnDownNode(new PositionNode())
+            .returnDownNode(new OrNode())
+            .linkDownNode(nodeMap.get("terminal string"))
+            .returnRightNode(new OrNode())
+            .linkDownNode(nodeMap.get("meta identifier"))
+            .returnRightNode(new OrNode())
+            .linkDownNode(nodeMap.get("special sequence"));
+        nodeMap.get("bouncer").downNode.downNode
+            .returnRightNode(new PositionNode())
+            .returnDownNode(TerminalNodeFactory.cstn(":"));
+        nodeMap.get("bouncer").parent
             .returnRightNode(new PositionNode().linkDownNode(nodeMap.get("definitions list")))
+            .returnRightNode(new PositionNode())
+            .returnDownNode(createNonTerminalNode("kickout"))
+            .returnDownNode(new LoopNode(0,1))
+            .returnDownNode(new PositionNode())
+            .setDownNode(TerminalNodeFactory.cstn(":"));
+        nodeMap.get("kickout").downNode.downNode
+            .returnRightNode(new PositionNode())
+            .linkDownNode(nodeMap.get("bouncer"));
+        nodeMap.get("kickout").parent
             .returnRightNode(new PositionNode())
             .returnDownNode(createNonTerminalNode("end collect symbol"))
             .returnDownNode(TerminalNodeFactory.cstn("}"));
@@ -233,6 +257,48 @@ public class EbnfParseTree {
         .returnDownNode(createNonTerminalNode("terminator symbol"))
         .returnDownNode(new PositionNode())
         .returnDownNode(TerminalNodeFactory.createSimpleTerminalNode(";"));
+
+    ParseNode syntaxEntryAlternatives = nodeMap.get("syntax rule").parent.parent;
+    ParseNode triviaDirective = createNonTerminalNode("trivia directive");
+    syntaxEntryAlternatives
+        .returnRightNode(new OrNode())
+        .returnDownNode(new PositionNode())
+        .setDownNode(triviaDirective);
+
+    PositionNode directiveStart = new PositionNode();
+    triviaDirective.setDownNode(directiveStart);
+    directiveStart.setDownNode(TerminalNodeFactory.cstn("@trivia"));
+
+    PositionNode openParenthesis = new PositionNode();
+    directiveStart.setRightNode(openParenthesis);
+    openParenthesis.setDownNode(TerminalNodeFactory.cstn("("));
+
+    PositionNode optionalSelectorPosition = new PositionNode();
+    openParenthesis.setRightNode(optionalSelectorPosition);
+    LoopNode optionalSelector = new LoopNode(1);
+    optionalSelectorPosition.setDownNode(optionalSelector);
+
+    ParseNode triviaSelector = createNonTerminalNode("trivia selector");
+    optionalSelector.setDownNode(new PositionNode().setDownNode(triviaSelector));
+    PositionNode selectorStart = new PositionNode();
+    triviaSelector.setDownNode(selectorStart);
+    selectorStart.setDownNode(TerminalNodeFactory.createCharacterRangeBasedTerminalNode(
+        codePoint -> Character.isLetter(codePoint) || codePoint == '_',
+        "trivia selector start"));
+    selectorStart.setRightNode(new PositionNode()
+        .setDownNode(new LoopNode()
+            .setDownNode(TerminalNodeFactory.createCharacterRangeBasedTerminalNode(
+                codePoint -> Character.isLetterOrDigit(codePoint) || codePoint == '_',
+                "trivia selector character"))));
+
+    PositionNode closeParenthesis = new PositionNode();
+    optionalSelectorPosition.setRightNode(closeParenthesis);
+    closeParenthesis.setDownNode(TerminalNodeFactory.cstn(")"));
+
+    PositionNode directiveTerminator = new PositionNode();
+    closeParenthesis.setRightNode(directiveTerminator);
+    directiveTerminator.setDownNode(TerminalNodeFactory.cstn(";"));
+
     return startNode;
   }
 

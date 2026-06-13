@@ -32,6 +32,9 @@ public class TerminalNode extends ParseNode {
     String cur = tokens.get(token);
     // normal match if compareFunction says "yes" then consume exactly 1 token
     if (compareFunction.apply(cur)) {
+      if (parser != null) {
+        parser.recordTerminalMatch(token, cur);
+      }
       // if token was "unhandled whitespace" then it is now "handled"
       // can be rolled back by calling tokens.rollback()
       if (tokens.isUnhandledWhitespace(token)) {

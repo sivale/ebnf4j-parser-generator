@@ -1,51 +1,213 @@
 package com.sverko.ebnf;
 
+import com.sverko.ebnf.tools.TerminalNodeFactory;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.Set;
+
 public class LoopNode extends ParseNode {
   public enum LoopType { COLLECTOR, STRUCTURAL }
   LoopType loopType = LoopType.STRUCTURAL;
   int min = 0, max = 0;
+  ParseNode bouncerParseNode;
+  ParseNode kickoutParseNode;
+  boolean collectEdgeTrivia;
+  boolean collectorScanner;
+  boolean triviaConfigured;
+  String triviaSelector;
 
   public LoopNode(int min, int max) {
     this.min = min;
     this.max = max;
     loopType = LoopType.COLLECTOR;
+    initBouncerParseNode();
   }
 
   public LoopNode(int max) {
     this.min = 0;
     this.max = max;
     loopType = LoopType.COLLECTOR;
+    initBouncerParseNode();
   }
 
-  public LoopNode() { }
+  public LoopNode() {
+    initBouncerParseNode();
+  }
 
+  public ParseNode getBouncerParseNode() {
+    return bouncerParseNode;
+  }
 
-// DESIGN NOTE (Suffix-UW handling) UW=Unhandled Whitespace
-// -------------------------------
-// Problem: PositionNode may auto-skip ("pump") unhandled whitespace (UW) on NOT_FOUND,
-// which can make collector-style loops (e.g. {?LETTER?}) accidentally span across
-// token boundaries ("first second" gets merged).
-//
-// At the same time, structural loops (e.g. {"foo","bar","baz"}) must be able to
-// continue across UW/newlines so that multiple iterations can be parsed from
-// multi-line inputs.
-//
-// Additionally, UW is not always a separator: it can be DATA inside an atomic
-// terminal (e.g. "United Kingdom") or inside char-classes like ?BMP?.
-//
-// Solution:
-// 1) If we stand on suffix-UW after having matched payload, we first run a PROBE
-//    starting exactly on this UW token. During the probe, we mark the token with
-//    isLoopProbe so PositionNode will NOT pump it away (and node-events can be
-//    suppressed if needed).
-//    - Probe SUCCESS => UW is DATA in this context => treat probe result as a real match.
-//    - Probe NOT_FOUND => UW is a separator candidate.
-// 2) Only if probe fails, we apply the heuristic:
-//    lastTokensFound == 1 => collector-like => stop on suffix-UW (leave UW for upper nodes)
-//    lastTokensFound  > 1 => structural-like => skip UW and continue with next iteration.
-//
-// This keeps collectors from merging tokens, allows structural repeats across
-// whitespace/newlines, and preserves terminals/char-classes that include whitespace.
+  public LoopNode setBouncerParseNode(ParseNode bouncerParseNode) {
+    this.bouncerParseNode = bouncerParseNode;
+    return this;
+  }
+
+  public ParseNode getKickoutParseNode() {
+    return kickoutParseNode;
+  }
+
+  public LoopNode setKickoutParseNode(ParseNode kickoutParseNode) {
+    this.kickoutParseNode = kickoutParseNode;
+    return this;
+  }
+
+  public LoopNode setCollectEdgeTrivia(boolean collectEdgeTrivia) {
+    this.collectEdgeTrivia = collectEdgeTrivia;
+    return this;
+  }
+
+  public LoopNode setCollectorScanner(boolean collectorScanner) {
+    this.collectorScanner = collectorScanner;
+    return this;
+  }
+
+  boolean isCollectorScanner() {
+    return collectorScanner;
+  }
+
+  LoopNode setTriviaSelector(String triviaSelector) {
+    this.triviaConfigured = true;
+    this.triviaSelector = triviaSelector;
+    return this;
+  }
+
+  LoopNode disableTrivia() {
+    this.triviaConfigured = true;
+    this.triviaSelector = null;
+    return this;
+  }
+
+  private void initBouncerParseNode() {
+    TerminalNode tn = TerminalNodeFactory.createCharacterRangeBasedTerminalNode(
+        Character::isWhitespace, "ws");
+    bouncerParseNode = new PositionNode("loop bouncer").setDownNode(tn);
+  }
+
+  int bouncerCheck(int token) {
+    if (!isBouncerCandidate(token)) {
+      return NOT_FOUND;
+    }
+    return boundaryCheck(bouncerParseNode, token);
+  }
+
+  int kickoutCheck(int token) {
+    if (kickoutParseNode == null || !tokens.checkIndex(token)) {
+      return NOT_FOUND;
+    }
+    return boundaryCheck(kickoutParseNode, token);
+  }
+
+  private boolean isBouncerCandidate(int token) {
+    return bouncerParseNode != null
+        && tokens.checkIndex(token)
+        && !tokens.isAnRequest(token)
+        && !tokens.isLoopProbe(token);
+  }
+
+  private int boundaryCheck(ParseNode boundaryNode, int token) {
+    wireBoundaryNode(boundaryNode);
+    int tokenCp = tokens.checkpoint();
+    int lastTokenFound = tokens.getLastTokenFound();
+    int resultCp = (parser != null) ? parser.checkpointResult() : -1;
+    int result = boundaryNode.callReceived(token);
+    tokens.rollbackTo(tokenCp);
+    tokens.setLastTokenFound(lastTokenFound);
+    if (parser != null) {
+      parser.rollbackResultTo(resultCp);
+    }
+    return result;
+  }
+
+  private int matchCurrentToken(int token, boolean preventInnerPump,
+      int pendingTriviaFrom, int pendingTriviaTo) {
+    int resultCp = (parser != null) ? parser.checkpointResult() : -1;
+    int result;
+
+    if (parser != null && pendingTriviaFrom >= 0 && pendingTriviaTo > pendingTriviaFrom) {
+      parser.recordTriviaMatch(
+          pendingTriviaFrom, pendingTriviaTo, getBouncerTriviaCategory());
+    }
+
+    if (preventInnerPump) {
+      boolean oldProbe = tokens.isLoopProbe(token);
+      tokens.setLoopProbe(token, true);
+      try {
+        result = callDown(token);
+      } finally {
+        tokens.setLoopProbe(token, oldProbe);
+      }
+    } else {
+      result = callDown(token);
+    }
+
+    if (result <= token && parser != null) {
+      parser.rollbackResultTo(resultCp);
+    }
+    return result;
+  }
+
+  private String getBouncerTriviaCategory() {
+    if (triviaConfigured && triviaSelector != null) {
+      return triviaSelector;
+    }
+    String terminalTag = findFirstTerminalTag(
+        bouncerParseNode, Collections.newSetFromMap(new IdentityHashMap<>()));
+    if (terminalTag != null && !terminalTag.isBlank()) {
+      return terminalTag;
+    }
+    if (bouncerParseNode != null
+        && bouncerParseNode.getName() != null
+        && !bouncerParseNode.getName().isBlank()
+        && !"name not set".equals(bouncerParseNode.getName())) {
+      return bouncerParseNode.getName();
+    }
+    return "loop bouncer";
+  }
+
+  private String findFirstTerminalTag(ParseNode node, Set<ParseNode> visited) {
+    if (node == null || !visited.add(node)) {
+      return null;
+    }
+    if (node instanceof TerminalNode terminalNode) {
+      return terminalNode.getTag();
+    }
+
+    String downTag = findFirstTerminalTag(node.getDownNode(), visited);
+    return downTag != null ? downTag : findFirstTerminalTag(node.getRightNode(), visited);
+  }
+
+  private int finishLoop(int token, boolean hasMin, int matchedIterations,
+      int furthestMatch, int pendingTriviaFrom, int pendingTriviaTo) {
+    if (hasMin && matchedIterations < min) {
+      return NOT_FOUND;
+    }
+    if (collectEdgeTrivia
+        && matchedIterations > 0
+        && pendingTriviaFrom >= 0
+        && pendingTriviaTo > pendingTriviaFrom) {
+      if (parser != null) {
+        parser.recordTriviaMatch(
+            pendingTriviaFrom, pendingTriviaTo, getBouncerTriviaCategory());
+      }
+      return Math.max(pendingTriviaTo, Math.max(furthestMatch, token));
+    }
+    return Math.max(furthestMatch, token);
+  }
+
+  private void wireBoundaryNode(ParseNode node) {
+    if (node == null) {
+      return;
+    }
+    node.tokens = tokens;
+    node.parser = parser;
+    if (node.hasDownNode()) {
+      wireBoundaryNode(node.getDownNode());
+    }
+    if (node.hasRightNode()) {
+      wireBoundaryNode(node.getRightNode());
+    }
+  }
 
   @Override
   public int callReceived(int token) {
@@ -57,117 +219,89 @@ public class LoopNode extends ParseNode {
       return hasMin ? END_OF_QUEUE : token;
     }
     int sent = token;
-
-    // Track: did we already match real payload (non-UW start token)?
     boolean hadNonWhitespaceMatch = false;
-
-    // Last successful end-index
     int furthestMatch = token;
-
-    // For min>0: how many iterations have matched
     int matchedIterations = 0;
+    int pendingTriviaFrom = -1;
+    int pendingTriviaTo = -1;
 
     while (true) {
       if (!tokens.checkIndex(sent)) {
-        // If we're out of input:
-        if (hasMin && matchedIterations < min) return NOT_FOUND;
-        return Math.max(furthestMatch, token);
+        return finishLoop(
+            token, hasMin, matchedIterations, furthestMatch, pendingTriviaFrom, pendingTriviaTo);
       }
 
-      // ===== Suffix-UW handling (the core) =====
-      if (hadNonWhitespaceMatch && tokens.isUnhandledWhitespace(sent)) {
+      int kickoutResult = kickoutCheck(sent);
+      if (kickoutResult > sent) {
+        return finishLoop(
+            token, hasMin, matchedIterations, furthestMatch, pendingTriviaFrom, pendingTriviaTo);
+      }
 
-        // 1) PROBE: can the body consume/match starting ON this whitespace token?
-        //    (PN must not pump it away, and events should be suppressed during probe)
-        boolean oldProbe = tokens.isLoopProbe(sent);
-        tokens.setLoopProbe(sent, true);
-        int probeResult;
-        try {
-          probeResult = callDown(sent);
-        } finally {
-          tokens.setLoopProbe(sent, oldProbe);
+      boolean probeAgainstBouncer = (hadNonWhitespaceMatch || collectEdgeTrivia)
+          && (triviaConfigured || isBouncerCandidate(sent));
+      int curResult = matchCurrentToken(
+          sent, probeAgainstBouncer, pendingTriviaFrom, pendingTriviaTo);
+
+      if (curResult > sent) {
+        pendingTriviaFrom = -1;
+        pendingTriviaTo = -1;
+        matchedIterations++;
+        furthestMatch = curResult;
+
+        if (!tokens.isUnhandledWhitespace(sent)) {
+          hadNonWhitespaceMatch = true;
         }
 
-        if (probeResult > sent) {
-          // Whitespace is DATA in this context (e.g. "United Kingdom", ?BMP?, etc.)
-          int curResult = probeResult;
-
-          // progress
-          furthestMatch = curResult;
-
-          // Count iteration if needed (min>0 case)
-          matchedIterations++;
-
-          // Respect max (if max==0 -> treat as unbounded)
-          if (max != 0 && matchedIterations >= max) return curResult;
-
-          // Advance to next token after the last consumed token
-          sent = tokens.getNextToken(curResult - 1);
-          if (sent < 0) {
-            if (hasMin && matchedIterations < min) return NOT_FOUND;
-            return Math.max(furthestMatch, token);
-          }
-
-          // Note: hadNonWhitespaceMatch stays true (we already had payload)
-          // lastTokensFound is not updated from probe; we keep the heuristic based on real iterations
-          continue;
+        if (max != 0 && matchedIterations >= max) {
+          return curResult;
         }
 
-        if (loopType == LoopType.COLLECTOR) {
-          if (hasMin && matchedIterations < min) return NOT_FOUND;
-          return furthestMatch;
+        sent = tokens.getNextToken(curResult - 1);
+        if (sent < 0) {
+          return finishLoop(
+              token, hasMin, matchedIterations, furthestMatch, pendingTriviaFrom, pendingTriviaTo);
         }
-
-        // structural: skip one or more UW tokens so next iteration can start
-        int s = sent;
-        do {
-          s = tokens.getNextToken(s);
-          if (s < 0 || !tokens.checkIndex(s)) {
-            if (hasMin && matchedIterations < min) return NOT_FOUND;
-            return Math.max(furthestMatch, token);
-          }
-        } while (tokens.isUnhandledWhitespace(s));
-
-        sent = s;
         continue;
       }
 
-      // ===== Normal iteration (not standing on suffix-UW) =====
-      int curResult = callDown(sent);
+      if (probeAgainstBouncer) {
+        if (triviaConfigured) {
+          int triviaResult = triviaSelector != null && parser != null
+              ? parser.matchTrivia(triviaSelector, sent)
+              : NOT_FOUND;
+          if (triviaResult > sent) {
+            if (pendingTriviaFrom < 0) {
+              pendingTriviaFrom = sent;
+            }
+            pendingTriviaTo = triviaResult;
+            sent = triviaResult;
+            continue;
+          }
+          return finishLoop(
+              token, hasMin, matchedIterations, furthestMatch, pendingTriviaFrom, pendingTriviaTo);
+        }
+        if (loopType == LoopType.STRUCTURAL) {
+          int bouncerResult = bouncerCheck(sent);
+          if (bouncerResult > sent) {
+            if (pendingTriviaFrom < 0) {
+              pendingTriviaFrom = sent;
+            }
+            pendingTriviaTo = bouncerResult;
+            sent = bouncerResult;
+            continue;
+          }
+        }
+        return finishLoop(
+            token, hasMin, matchedIterations, furthestMatch, pendingTriviaFrom, pendingTriviaTo);
+      }
 
-      // same-position => done (no progress)
       if (curResult == sent) {
-        // If we haven't met min yet, this is a failure
-        if (hasMin && matchedIterations < min) return NOT_FOUND;
-        return curResult;
+        return finishLoop(
+            token, hasMin, matchedIterations, curResult, pendingTriviaFrom, pendingTriviaTo);
       }
 
-      // not found / error
-      if (curResult < 0) {
-        if (hasMin && matchedIterations < min) return NOT_FOUND;
-        return Math.max(furthestMatch, token);
-      }
-
-      matchedIterations++;
-
-      // mark that we matched real payload (using your original “start token isn’t UW” heuristic)
-      if (!tokens.isUnhandledWhitespace(sent)) {
-        hadNonWhitespaceMatch = true;
-      }
-
-      // reached max iterations (if max==0 -> unbounded)
-      if (max != 0 && matchedIterations >= max) {
-        return curResult;
-      }
-
-      furthestMatch = curResult;
-
-      // advance to the next token after the last consumed token
-      sent = tokens.getNextToken(curResult - 1);
-      if (sent < 0) {
-        if (hasMin && matchedIterations < min) return NOT_FOUND;
-        return Math.max(furthestMatch, token);
-      }
+      return finishLoop(
+          token, hasMin, matchedIterations, furthestMatch, pendingTriviaFrom, pendingTriviaTo);
     }
   }
 
@@ -177,6 +311,8 @@ public class LoopNode extends ParseNode {
     LoopNode other = (LoopNode) o;
     return this.max == other.max
         && this.min == other.min
-        && this.loopType == other.loopType;
+        && this.loopType == other.loopType
+        && this.collectEdgeTrivia == other.collectEdgeTrivia
+        && this.collectorScanner == other.collectorScanner;
   }
 }

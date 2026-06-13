@@ -2,8 +2,10 @@ package com.sverko.ebnf;
 
 import com.sverko.ebnf.tools.StringUtils;
 import com.sverko.ebnf.tools.TerminalNodeFactory;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,6 +14,9 @@ public class ParseTreeBuilder implements ParseNodeEventListener {
   private ParseNode nonTerminalNode = null;
   private ParseNode firstNonTerminalNode = null;
   private ParseNode tail = null;
+  private ParseNode currentRuleNode;
+  private boolean triviaConfigured;
+  private String triviaSelector;
   private final Map<String, ParseNode> definedNtnNodes = new HashMap<>();
   public final Set<String> terminalStrings = new HashSet<>();
   private final Parser generator;
@@ -55,6 +60,7 @@ public class ParseTreeBuilder implements ParseNodeEventListener {
 
       case "defining symbol":
         definedNtnNodes.put(nonTerminalNode.name, nonTerminalNode);
+        currentRuleNode = nonTerminalNode;
         break;
 
       case "terminal string":
@@ -191,7 +197,7 @@ public class ParseTreeBuilder implements ParseNodeEventListener {
         break;
 
       case "start collect symbol":
-        tail = tail.returnDownNode(new LoopNode(0, 0));
+        tail = tail.returnDownNode(new LoopNode(0, 0).setCollectorScanner(true));
 
       case "end option symbol":
       case "end repeat symbol":
@@ -212,6 +218,13 @@ public class ParseTreeBuilder implements ParseNodeEventListener {
         break;
 
       case "terminator symbol":
+        applyTriviaPolicy(currentRuleNode);
+        currentRuleNode = null;
+        tail = null;
+        break;
+
+      case "trivia directive":
+        configureTriviaDirective(e.getTrimmed());
         tail = null;
         break;
 
@@ -255,6 +268,56 @@ public class ParseTreeBuilder implements ParseNodeEventListener {
       out.append(ch);
     }
     return out.toString();
+  }
+
+  private void configureTriviaDirective(String directive) {
+    int openParenthesis = directive.indexOf('(');
+    int closeParenthesis = directive.lastIndexOf(')');
+    String selector = openParenthesis >= 0 && closeParenthesis > openParenthesis
+        ? directive.substring(openParenthesis + 1, closeParenthesis).strip()
+        : "";
+
+    triviaConfigured = true;
+    triviaSelector = selector.isEmpty() || "none".equalsIgnoreCase(selector) ? null : selector;
+  }
+
+  private void applyTriviaPolicy(ParseNode ruleNode) {
+    if (!triviaConfigured || ruleNode == null) {
+      return;
+    }
+    if (ruleNode.hasDownNode() && !(ruleNode.getDownNode() instanceof PositionNode)) {
+      ParseNode body = ruleNode.getDownNode();
+      PositionNode entryPosition = new PositionNode();
+      entryPosition.setDownNode(body);
+      ruleNode.setDownNode(entryPosition);
+    }
+    applyTriviaPolicy(
+        ruleNode, ruleNode, Collections.newSetFromMap(new IdentityHashMap<>()));
+  }
+
+  private void applyTriviaPolicy(ParseNode node, ParseNode ruleNode, Set<ParseNode> visited) {
+    if (node == null || !visited.add(node)) {
+      return;
+    }
+    if (node instanceof NonTerminalNode && node != ruleNode) {
+      return;
+    }
+    if (node instanceof PositionNode positionNode) {
+      if (positionNode.parent instanceof OrNode || triviaSelector == null) {
+        positionNode.disableTrivia();
+      } else {
+        positionNode.setTriviaSelector(triviaSelector);
+      }
+    }
+    if (node instanceof LoopNode loopNode && !loopNode.isCollectorScanner()) {
+      if (triviaSelector == null) {
+        loopNode.disableTrivia();
+      } else {
+        loopNode.setTriviaSelector(triviaSelector);
+      }
+    }
+    applyTriviaPolicy(node.getDownNode(), ruleNode, visited);
+    applyTriviaPolicy(node.getRightNode(), ruleNode, visited);
   }
 
   private ParseNode getNextLoopNodeParent(ParseNode tail) {
